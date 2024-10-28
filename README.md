@@ -3,6 +3,7 @@ layout: pubtex
 title: PubTeX
 ---
 
+
 # PubTeX
 
 This is a template for publicly hosting LaTeX files with GitHub actions.
