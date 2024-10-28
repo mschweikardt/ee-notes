@@ -16,5 +16,6 @@ jobs:
           files: |
             examples/paper.tex
             examples/slides.tex
+            mna/mna.tex
           handouts: |
             examples/slides.tex

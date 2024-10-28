@@ -1,0 +1,1207 @@
+\documentclass{article}[11pt]
+\usepackage[a4paper,left=3cm,right=3cm, top=2cm]{geometry}
+
+\usepackage{hyperref}
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{circuitikz}
+
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
+\setcounter{MaxMatrixCols}{20}
+
+\usepackage{nicematrix}
+
+\title{Modified Nodal Analysis}
+\author{Matthias Schweikardt \\ 
+\href{mailto:mschweikardt@posteo.de}{\tt{mschweikardt@posteo.de}}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document summarizes information how to build up matrices for Modified 
+Nodal Analysis (MNA).
+\end{abstract}
+
+\let\thefootnote\relax\footnotetext{
+This work is relased under the 
+\href{https://creativecommons.org/licenses/by/4.0/}{CC BY 4.0} license.
+Please find the actual version of this document on 
+\href{https://mschweikardt.github.io/ee-notes/}{github}.
+}
+
+\section{Overview}
+\begin{equation*}
+\underbrace{
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &\mathbf{A} &           &           &           &           &           &          &\mathbf{B} &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &\mathbf{C} &           &           &           &           &           &          &\mathbf{D} &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+}_{\mathbf{M}}
+\underbrace{
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+}_{\mathbf{x}}
+=
+\underbrace{
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+}_{\mathbf{y}}
+\end{equation*}
+
+\begin{itemize}
+\item[$m$] Number of nets (except ground)
+\item[$n$] Number of currents through const. voltage sources, iprobes, controlled sources and the nullor
+\item[$\mathbf{A}$] $m  \times m$ matrix
+\item[$\mathbf{B}$] $m  \times n$ matrix
+\item[$\mathbf{C}$] $n  \times m$ matrix
+\item[$\mathbf{D}$] $n  \times n$ matrix
+\item[$\mathbf{x}$] $(m+n) \times 1$ vector
+\item[$\mathbf{y}$] $(m+n) \times 1$ vector
+\end{itemize}
+
+
+\newpage
+\section{Conductance (G)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [R,o-o,l=$G$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &     G     &           &    -G     &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &    -G     &           &     G     &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+\section{Resistor (R)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [R,o-o,l=$R$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &   R^{-1}  &           &  -R^{-1}  &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &  -R^{-1}  &           &   R^{-1}  &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+\newpage
+
+\section{Capacitor (C)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [C,o-o,l=$C$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           & sC        &           & -sC       &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           & -sC       &           & sC        &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\section{Inductance(L)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [L,o-o,l=$L$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &(sL)^{-1}  &           &(-sL)^{-1} &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &(-sL)^{-1} &           &(sL)^{-1}  &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Current Source (I)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [american current source,o-o,l=$I$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+       -I     \\
+       +I     \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+              \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\section{Voltage Source (V)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [american voltage source,o-o,l=$V$,i=$i_1$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &     -1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &     +1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &     1     &           &    -1     &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       V      \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Current Probe (CP)}
+\begin{circuitikz}
+\coordinate (A) at (-1.5,0);
+\coordinate (B) at (1.5,0);
+\draw (A) to [short,o-o,i=$i_1$] (B);
+\node[anchor=south] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=south] () at (B) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &     +1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &     -1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &     1     &           &    -1     &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Voltage Controlled Voltage Source (VCVS)}
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0);
+\draw (B) to [short,o-] ++ (0.5,0);
+\draw (C) to [short,o-, i<_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled voltage source,l=$A$] (x|-D)
+          to [short,-o] (D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{D}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &    -A     &           &     A     &           &    -1     &           &    +1     &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+        0     \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0);
+\draw (B) to [short,o-] (D);
+\draw (C) to [short,o-, i<_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled voltage source,l=$A$] (x|-D)
+          to [short,-o] (D);
+\draw (B) to [short,o-*] (x|-D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &    -A     &           &   A-1     &           &     1     &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+        0     \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+
+\newpage
+
+\section{Voltage Controlled Current Source (VCCS)}
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0);
+\draw (B) to [short,o-] ++ (0.5,0);
+\draw (C) to [short,o-,i_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled current source,l=$g_{\mathrm{m}}$] (x|-D)
+          to [short,-o] (D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{D}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &    -1     &           &    +1     &           &           &           &           &           &           & g_{\mathrm{m}}^{-1}  &  &       &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0);
+\draw (B) to [short,o-] (D);
+\draw (C) to [short,o-,i_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled current source,l=$g_{\mathrm{m}}$] (x|-D)
+          to [short,-o] (D);
+\draw (B) to [short,o-*] (x|-D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &     -1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &     +1   &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &    -1     &           &    +1     &           &           &           &           &           &           & g_{\mathrm{m}}^{-1}  &  &       &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+              \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Current Controlled Voltage Source (CCVS)}
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0) coordinate (x)
+          to [short,i_=$i_2$] (x|-B)
+          to [short,-o] (B);
+\draw (B) to [short,o-] ++ (0.5,0);
+\draw (C) to [short,o-, i<_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled voltage source,l=$R$] (x|-D)
+          to [short,-o] (D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{D}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &    -1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &    +1     &           &   -1      &           &           &          &           &    -R    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &    +1     &           &     -1    &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+       0      \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (B) to [short,o-] (D);
+\draw (A) to [short,o-] ++ (0.5,0) coordinate (x)
+          to [short,i_=$i_2$,-*] (x|-B);
+\draw (C) to [short,o-, i<_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled voltage source,l=$R$] (x|-D)
+          to [short,-o] (D);
+\draw (B) to [short,o-*] (x|-D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &    -1    &           &    -1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &     -1    &           &    +1     &           &           &           &           &          &           &    -R    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &    +1     &           &     -1    &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+       0      \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Current Controlled Current Source (CCCS)}
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (A) to [short,o-] ++ (0.5,0) coordinate (x)
+          to [short,i_=$i_2$] (x|-B)
+          to [short,-o] (B);
+\draw (B) to [short,o-] ++ (0.5,0);
+\draw (C) to [short,o-,i_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled current source,l=$B$] (x|-D)
+          to [short,-o] (D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{D}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &    -1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &     1    &           &    -B    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &    +1     &           &     -1    &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+        0     \\
+              \\
+        0     \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+
+\begin{circuitikz}
+\coordinate (A) at (0,2);
+\coordinate (B) at (0,0);
+\coordinate (C) at (3,2);
+\coordinate (D) at (3,0);
+\draw (B) to [short,o-] (D);
+\draw (A) to [short,o-] ++ (0.5,0) coordinate (x)
+          to [short,i_=$i_2$,-*] (x|-B);
+\draw (C) to [short,o-,i_=$i_1$] ++ (-1.5,0) coordinate (x)
+          to [american controlled current source,l=$B$] (x|-D)
+          to [short,-o] (D);
+\draw (B) to [short,o-*] (x|-D);
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &    -1    &           &    -1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &           &           &           &           &           &           &           &           &           &     1    &           &    -B    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &    +1     &           &     -1    &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+       0      \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\newpage
+
+\section{Nullor (NO)}
+
+\begin{circuitikz}
+\coordinate (A) at (-0.5,2);
+\coordinate (B) at (-0.5,0);
+\coordinate (C) at (2.5,2);
+\coordinate (D) at (2.5,0);
+
+\draw (0.5, 1) ellipse (0.3 and 0.6);
+\draw (1.5, 1.3) ellipse (0.3 and 0.3);
+\draw (1.5, 0.7) ellipse (0.3 and 0.3);
+
+\draw (A) to [short,o-,i=$i_2$] ++ (1,0) -- ++ (0,-0.4);
+\draw (B) to [short,o-] ++ (1,0) -- ++ (0,0.4);
+\draw (C) to [short,o-,i_=$i_1$] ++ (-1,0) -- ++ (0,-0.4);
+\draw (D) to [short,o-] ++ (-1,0) -- ++ (0,0.4);
+
+\node[anchor=east] () at (A) {$V_{\mathrm{A}}$};
+\node[anchor=east] () at (B) {$V_{\mathrm{B}}$};
+\node[anchor=west] () at (C) {$V_{\mathrm{C}}$};
+\node[anchor=west] () at (D) {$V_{\mathrm{B}}$};
+\end{circuitikz}
+
+\begin{equation*}
+\begin{bNiceArray}{Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}|Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}Wc{5mm}}[first-row,first-col=2,margin]
+           &           &\mathrm{A} &           &\mathrm{B} &           &\mathrm{C} &           &\mathrm{D} &           &           &    i_1   &           &    i_2   &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{A} &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{B} &           &           &           &           &           &           &           &           &           &           &          &           &    -1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{C} &           &           &           &           &           &           &           &           &           &           &    +1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+\mathrm{D} &           &           &           &           &           &           &           &           &           &           &    -1    &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\\hline
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\
+   i_1     &           &     1     &           &    -1     &           &           &           &           &           &           &          &           &          &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\  
+   i_2     &           &           &           &           &           &           &           &           &           &           &          &           &    +1    &         \\
+           &           &           &           &           &           &           &           &           &           &           &          &           &          &         \\        
+\end{bNiceArray}
+\begin{bNiceArray}{c}[margin]
+              \\
+V_{\mathrm{A}}\\
+              \\
+V_{\mathrm{B}}\\
+              \\
+V_{\mathrm{C}}\\
+              \\
+V_{\mathrm{D}}\\
+              \\\hline
+              \\
+   i_1        \\
+              \\
+   i_2        \\
+              \\   
+\end{bNiceArray}
+=
+\begin{bNiceArray}{Wc{7mm}}[margin]
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\\hline
+              \\
+       0      \\
+              \\
+       0      \\
+              \\   
+\end{bNiceArray}
+\end{equation*}
+
+\end{document}
