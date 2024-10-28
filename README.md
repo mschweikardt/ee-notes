@@ -13,7 +13,7 @@ It roughly works as follows:
 2. Whenever you push your changes to `main`, your files are compiled and pushed to the `gh-pages` branch.
 3. You can now download them directly or publish the branch with GitHub Pages
 
-You also get this nice front page for free :)
+You also get this nice front page for free :) 
 
 ### Some examples
 
