@@ -7,15 +7,37 @@
            , footskip   =  1.25cm
            ]{geometry}
 
+\usepackage{amsmath}
+
 % No intendation
 \setlength\parindent{0pt}
 
 \usepackage{hyperref}
 
+\usepackage{siunitx}
+
+\usepackage{listings}
+  \lstset{
+    basicstyle=\ttfamily,
+    escapeinside=||,
+    xleftmargin=1cm
+  }
+
+\usepackage{float}
+
+\usepackage{tikz}
+  \usetikzlibrary{patterns}
+
+\usepackage{cleveref}
+\crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+
+
 \usepackage{acronym}
 \usepackage[acronym,nonumberlist]{glossaries}
 \makeglossaries
 \newacronym{spice}{SPICE}{Simulation Program with Integrated Circuit Emphasis}
+\newacronym{lef}{LEF}{Library Exchange Format}
+
 
 % Section and subsection enumeration
 \renewcommand{\thesection}{\Roman{section}.} 

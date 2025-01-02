@@ -1,0 +1,98 @@
+\makeatletter
+\tikzset{ hatch distance/.store in=\hatchdistance
+        , hatch distance=5pt,
+        , hatch thickness/.store in=\hatchthickness
+        , hatch thickness=5pt
+        }
+
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{north east hatch}
+    {\pgfqpoint{-1pt}{-1pt}}% below left
+    {\pgfqpoint{\hatchdistance}{\hatchdistance}}% above right
+    {\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+    {
+      \pgfsetcolor{\tikz@pattern@color}
+      \pgfsetlinewidth{\hatchthickness}
+      \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+      \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+      \pgfusepath{stroke}
+    }
+
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{north west hatch}
+    {\pgfqpoint{-1pt}{-1pt}}% below left
+    {\pgfqpoint{\hatchdistance}{\hatchdistance}}% above right
+    {\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+    {
+      \pgfsetcolor{\tikz@pattern@color}
+      \pgfsetlinewidth{\hatchthickness}
+      \pgfpathmoveto{\pgfqpoint{0pt}{\hatchdistance}}
+      \pgfpathlineto{\pgfqpoint{\hatchdistance}{0pt}}
+      \pgfusepath{stroke}
+    }
+
+\makeatother
+
+\pgfdeclarepatternformonly{poly dots}
+                          {\pgfqpoint{0.25pt}{0.25pt}}
+                          {\pgfqpoint{1.25pt}{1.25pt}}
+                          {\pgfqpoint{1.0pt}{1.0pt}}%
+{
+  \pgfpathcircle{\pgfqpoint{0.5pt}{0.5pt}}{.2pt}
+  \pgfpathcircle{\pgfqpoint{1.0pt}{1.0pt}}{.2pt}
+  \pgfusepath{fill}
+}
+
+\pgfdeclarepatternformonly{oxide dots}
+                          {\pgfqpoint{0.0pt}{0.0pt}}
+                          {\pgfqpoint{2.0pt}{2.0pt}}
+                          {\pgfqpoint{1.0pt}{1.0pt}}%
+{
+  \pgfpathcircle{\pgfqpoint{0.25pt}{0.25pt}}{.2pt}
+  \pgfpathcircle{\pgfqpoint{0.75pt}{0.75pt}}{.2pt}
+  \pgfusepath{fill}
+}
+
+\pgfdeclarepatternformonly{nwell dots}
+                          {\pgfqpoint{-1pt}{-1pt}}
+                          {\pgfqpoint{5pt}{5pt}}
+                          {\pgfqpoint{6pt}{6pt}}
+{
+  \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{.3pt}
+  \pgfpathcircle{\pgfqpoint{3pt}{3pt}}{.3pt}
+  \pgfusepath{fill}
+}
+
+\definecolor{metal1}{RGB}{0,0,205}
+\definecolor{poly}{RGB}{50,205,50}
+\definecolor{oxide}{RGB}{255,0,0}
+
+\tikzstyle{GatPoly_drawing}=[ draw=poly
+                          , pattern=poly dots
+                          , pattern color=poly
+                          , line width=0.3pt
+                          ]
+
+\tikzstyle{Activ_drawing}=[ draw=red
+                          , pattern color=red
+                          , pattern=oxide dots
+                          , line width=0.2pt
+                          ]
+
+\tikzstyle{Metal1_drawing}=[ draw=metal1
+                           , pattern=north east hatch
+                           , hatch distance=3.5pt
+                           , hatch thickness=.2pt
+                           , pattern color=metal1
+                           , line width=0.25pt
+                           ] 
+
+\tikzstyle{Metal1_drawing_big}=[ draw=metal1
+                         , pattern=north east hatch
+                         , hatch distance=6pt
+                         , hatch thickness=.2pt
+                         , pattern color=metal1
+                         , line width=0.25pt
+                         ]
+
+
+\tikzstyle{NWell_drawing}=[orange,densely dotted,thick]
+\tikzstyle{pSD_drawing}=[purple,densely dashed,semithick]
