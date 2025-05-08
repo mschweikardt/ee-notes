@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git submodule update --init --recursive
-
 cd notes
 
 for dir in *; do
