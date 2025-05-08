@@ -17,6 +17,10 @@
 \usepackage{hyperref}
 
 \usepackage{siunitx}
+\sisetup{
+  per-mode=fraction,
+  fraction-function=\tfrac
+}
 
 \usepackage{listings}
   \lstset{
@@ -45,7 +49,7 @@
 \newacronym{dft}{DFT}{Discrete Fourier Transform}
 \newacronym{dtft}{DTFT}{Discrete-Time Fourier Transform}
 \newacronym{fft}{FFT}{Fast Fourier Transform}
-
+\newacronym{mosfet}{MOSFET}{Metal–Oxide–Semiconductor Field-Effect Transistor}
 
 % Section and subsection enumeration
 \renewcommand{\thesection}{\Roman{section}.} 
@@ -53,7 +57,7 @@
 
 % literature
 \usepackage[backend=biber, isbn=true, sorting=none]{biblatex}
-\addbibresource{./../literature.bib}
+\addbibresource{./../../literature.bib}
 
 % definitions
 \def \whatis       {Notes}
@@ -88,6 +92,9 @@
 
 % Comment environment
 \usepackage{comment}
+
+% Subcaptions
+\usepackage{subcaption}
 
 % Defince title of document
 \newcommand{\notetitle}{
