@@ -43,7 +43,11 @@ jobs:
           name: result
           path: |
             *.pdf
-
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+          
   cleanup:
     runs-on: ubuntu-latest
     permissions: write-all
