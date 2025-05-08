@@ -1,6 +1,8 @@
 \documentclass{article}[11pt]
 
 \include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+\include{./../../tikzlib/figs/nmos-3t-testbench-a.tex}
 
 \def \title        {MOSFET Square Law}
 \def \date         {May 8, 2025}
@@ -15,5 +17,9 @@
 \notetitle
 
 \section{Introduction}
+
+\begin{circuitikz}
+  \NmosThreetTestbenchA
+\end{circuitikz}
 
 \end{document}

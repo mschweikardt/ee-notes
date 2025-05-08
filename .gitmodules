@@ -1,0 +1,3 @@
+[submodule "tikzlib"]
+	path = tikzlib
+	url = git@github.com:mschweikardt/tikzlib.git
