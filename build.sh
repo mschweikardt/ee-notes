@@ -5,7 +5,7 @@ cd notes
 for dir in *; do
   echo $dir
   cd $dir
-  pdflatex main.tex
+  make
   cp main.pdf ./../../$dir.pdf
   cd ..
 done
