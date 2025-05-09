@@ -78,11 +78,10 @@ piecewise function.
 These "pieces" (a.k.a. operating regions) depend on the applied voltages 
 $V_{\mathrm{DS}}$, $V_{\mathrm{GS}}$ and the model parameter 
 $V_{\mathrm{TH}}$.
-Table \ref{tab:regions} explains these regions. 
+Tab.~\ref{tab:regions} explains these regions. 
 
 \begin{table}[H]
 \centering
-\label{tab:regions}
 \caption{\gls{mosfet} operating regions}
 \begin{tabular}{cccc}
 \toprule
@@ -91,6 +90,7 @@ Mode                 & $V_{\mathrm{GS}}$      & $V_{\mathrm{DS}}$               
 \textit{ohmic}       & $\geq V_{\mathrm{TH}}$ & $< V_{\mathrm{GS}}-V_{\mathrm{TH}}$   & \eqref{eq:id-ohmic}      \\ 
 \textit{saturation}  & $\geq V_{\mathrm{TH}}$ & $\geq V_{\mathrm{GS}}-V_{\mathrm{TH}}$& \eqref{eq:id-saturation} \\ \toprule
 \end{tabular}
+\label{tab:regions}
 \end{table}
 
 These regions are called \textit{off}, \textit{ohmic} (a.k.a. \textit{triode}) 
