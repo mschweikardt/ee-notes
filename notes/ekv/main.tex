@@ -1,0 +1,118 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+\include{./../../tikzlib/figs/ekv-ic-vs-vgseff.tex}
+
+
+\def \title  {EKV MOSFET Model}
+\def \date   {May 9, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/ekv.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/ekv}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+EKV%
+\footnote{Named by their inventors Enz, Krummenacher and Vittoz}
+is an analytical \gls{mosfet} model \cite{enz-ekv-90}.
+The drain current of the transistor is
+\begin{equation}
+I_{\mathrm{D}} = I_{\mathrm{S}} \left(\mathrm{IC}_{\mathrm{F}}-\mathrm{IC}_{\mathrm{R}}\right),
+\end{equation}
+with the specific current $I_{\mathrm{S}}$ (unit A), the forward 
+inversion coefficient 
+$\mathrm{IC}_{\mathrm{F}}(V_{\mathrm{G}}, V_{\mathrm{S}})$ and 
+the backward inversion coefficient 
+$\mathrm{IC}_{\mathrm{R}}(V_{\mathrm{G}}, V_{\mathrm{D}})$.
+The inversion coefficient $\mathrm{IC}$ is a proxy for the inversion level of 
+the channel of the \gls{mosfet}.
+
+\medskip
+
+The specific current is given by
+\begin{equation}
+  I_{\mathrm{S}} = 2 n V_{\mathrm{T}}^2 K \frac{W}{L},
+\end{equation}
+with the temperature voltage $V_{\mathrm{T}}$%
+\footnote{$V_{\mathrm{T}}=\frac{k_{\mathrm{B}} T }{e}$, with the 
+Boltzmann constant $k_{\mathrm{B}}$, the absolute temperature $T$
+in \si{\kelvin} and the charge of an electron $e$.}
+,
+the subthreshold slope $n$ and the transconductance coefficient $K'$ 
+(conf. \cite{mosfet-square-law}).
+Here, we will only investigate the forward region, so 
+$\mathrm{IC}_{\mathrm{R}} \rightarrow 0$.
+
+\medskip
+
+The forward inversion coefficient is given by 
+(subscript $\mathrm{F}$ omitted)
+
+\begin{equation}\label{eq:ic}
+  \mathrm{IC} = \ln\left(1+\exp\left\{\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right\}\right)^2.
+\end{equation}
+
+
+When $V_{\mathrm{GS}}-V_{\mathrm{TH}} \gg 0$, we can approximate 
+it with
+
+\begin{equation}\label{eq:ic-quad}
+  \mathrm{IC}_{\mathrm{quad}} = \left(\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right)^2
+\end{equation}
+
+and for $V_{\mathrm{GS}}-V_{\mathrm{TH}} \ll 0$ with
+
+\begin{equation}\label{eq:ic-exp}
+  \mathrm{IC}_{\mathrm{exp}} = \exp\left\{\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{n V_{\mathrm{T}}}\right\}.
+\end{equation}
+
+$\mathrm{IC}_{\mathrm{quad}}$ is quadratic and is therefore a 
+reasonable approximation for the \textit{saturation} region, while 
+$\mathrm{IC}_{\mathrm{exp}}$ is exponential and is a good 
+approximation for the \textit{subthrehsold} region.
+Fig. \ref{fig:plot} plots \eqref{eq:ic}, \eqref{eq:ic-quad} and  
+\eqref{eq:ic-exp}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \EkvIcVsVgseff
+  \end{tikzpicture}
+  \caption{$\mathrm{IC}$, $\mathrm{IC}_{\mathrm{exp}}$ and 
+    $\mathrm{IC}_{\mathrm{quad}}$ as a function of 
+    $\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}$ with added 
+    inversion regions}
+  \label{fig:plot}
+\end{figure}
+
+
+Neither $\mathrm{IC}_{\mathrm{quad}}$ or $\mathrm{IC}_{\mathrm{exp}}$
+are sufficient to approximate the behavior of $\mathrm{IC}$
+close to $V_{\mathrm{GS}}=V_{\mathrm{TH}}$.
+
+\medskip
+
+Tab.~\ref{tab:ekv-regions} summarizes the individual $\mathrm{IC}$ ranges,
+their corresponding inversion level and curvature.
+
+\begin{table}[h]
+\centering
+\label{tab:ekv-regions}
+\caption{EKV regions}
+\begin{tabular}{ccccc}
+\toprule
+Identifier           & Name                   & $\mathrm{IC}$  & Curvature     & Current             \\ \midrule
+SI                   & strong inversion       & $\geq 10$      & quadratic     & drift               \\ 
+MI                   & moderate inversion     & $0.1$-$10$     & ?             & drift and diffusion \\ 
+WI                   & weak inversion         & $\leq 0.1$     & exponential   & diffusion           \\ \toprule
+\end{tabular}
+\end{table}
+
+\printbibliography
+
+\end{document}
