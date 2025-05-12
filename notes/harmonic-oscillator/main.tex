@@ -360,13 +360,17 @@ They are depicted in Tab.~\ref{tab:pz}.
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
     \begin{tikzpicture}[scale=1.2]
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
+        ({2*sin(\x)},{2*cos(\x)});
       \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
       \node[anchor=west] at (0,2.5) {Im};
+      \node[anchor=west] at (0, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0,-2) {$-j \omega_0$};
 
-      \node[cross out,draw=black,thick] at (-1.5, 0) {};
-      \node[anchor=south] at (-1.5, 0.1) {$p_{1,2}$};
+      \node[cross out,draw=black,thick] at (-2, 0) {};
+      \node[anchor=south] at (-1.6, 0) {$p_{1,2}$};
     \end{tikzpicture}
     \caption{Critically damped}
     \label{fig:pz:critdamped}
