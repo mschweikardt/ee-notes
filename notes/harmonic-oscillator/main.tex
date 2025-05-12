@@ -282,8 +282,7 @@ p_{1,2} = - \zeta \omega_0 \pm \omega_0 \sqrt{\zeta^2-1} = - \alpha \pm \omega_0
 
 \medskip
 
-For $0<\zeta < 1$ (conf. \ref{subsec:steady-state:underdamped}), we transform 
-\eqref{eq:poles} to
+For $0<\zeta < 1$ (conf. Tab. \ref{tab:pz}), we transform \eqref{eq:poles} to
 \begin{equation}\label{eq:poles-underdamped}
 p_{1,2} = - \alpha \pm j \omega_{\mathrm{d}},
 \end{equation}
@@ -320,18 +319,21 @@ $\infty$                 & 0                         & 1                        
 \label{tab:char-fs}
 \end{table}
 
+Depending on $Q$, we can define four different cases. 
+They are depicted in Tab.~\ref{tab:pz}.
+
 \begin{table}[H]
   \centering
-  \caption{Poles and zeros of $\underline{F}(s)$}
+  \caption{Poles of $\underline{F}(s)$}
   \begin{tabular}{ccccc}
   \toprule
-                             & \textbf{Overdamped}               & \textbf{Critically damped} & \textbf{Underdamped}                    & \textbf{Undamped}     \\ \midrule
-  $Q$                        & $\left(0, \nicefrac{1}{2}\right)$ & $\nicefrac{1}{2}$          & $\left(\nicefrac{1}{2}, \infty\right)$  & $\rightarrow \infty$  \\ 
-  $\zeta$                    & $\left(1, \infty\right)$          & $1$                        & $\left(0, 1\right)$                     & $0$                   \\ \hline
-  $p_{1,2}$                  & $\neq$                            & $=$                        & $\neq$                                  & complex conj.         \\
-  $\Re\left(p_{1,2}\right)$  & $<0$                              & $<0$                       & $<0$                                    & $=0$                  \\
-  $\Im\left(p_{1,2}\right)$  & $=0$                              & $=0$                       & $\neq0$                                 & $\neq0$               \\
-  Plot                       & \ref{fig:pz:overdamped}           & \ref{fig:pz:critdamped}    & \ref{fig:pz:underdamped}                & \ref{fig:pz:undamped} \\ \toprule
+                           & \textbf{Overdamped}               & \textbf{Critically damped} & \textbf{Underdamped}                    & \textbf{Undamped}     \\ \midrule
+  $Q$                       & $\left(0, \nicefrac{1}{2}\right)$ & $\nicefrac{1}{2}$          & $\left(\nicefrac{1}{2}, \infty\right)$ & $\rightarrow \infty$  \\ 
+  $\zeta$                   & $\left(1, \infty\right)$          & $1$                        & $\left(0, 1\right)$                    & $0$                   \\ \hline
+  $p_{1,2}$                 & $\neq$                            & $=$                        & complex conj.                          & complex conj.         \\
+  $\Re\left(p_{1,2}\right)$ & $<0$                              & $<0$                       & $<0$                                   & $=0$                  \\
+  $\Im\left(p_{1,2}\right)$ & $=0$                              & $=0$                       & $\neq0$                                & $\neq0$               \\
+  Plot                      & \ref{fig:pz:overdamped}           & \ref{fig:pz:critdamped}    & \ref{fig:pz:underdamped}               & \ref{fig:pz:undamped} \\ \toprule
   \end{tabular}
   \label{tab:pz}
 \end{table}
@@ -424,7 +426,7 @@ $\infty$                 & 0                         & 1                        
   \label{fig:squarelawtransf}
 \end{figure}
 
-\section{Transient Response}
+\section{Step Response}
 
 \begin{equation}
 x(t) =
@@ -432,14 +434,6 @@ x(t) =
 0 & \mathrm{when} \ t < 0    \\
 1 & \mathrm{when} \ t \geq 0 \\
 \end{cases} 
-\end{equation}
-
-\begin{equation}
-y(t) = y_{\mathrm{p}}(t) + y_{\mathrm{h}}(t)
-\end{equation}
-
-\begin{equation}
- y_{\mathrm{p}}(t) = 1
 \end{equation}
 
 \begin{equation}
@@ -503,52 +497,36 @@ y'(0)=
 
   \draw[magenta] plot[smooth,domain=0:3, samples=501] 
     ({\x},{1-e^(-pi*sqrt(2)*\x)*cos(sqrt(1-1/4*0.5)*360*\x)});
-
 \end{tikzpicture}
 
-\subsection{Overdamped}\label{subsec:step:overdamped}
-\begin{equation}
- y_{\mathrm{h}}(t) = c_1 e^{-p_1 t} + c_2 e^{-p_2 t}
-\end{equation}
 
-\subsection{Critically damped}\label{subsec:step:critdamped}
 
-\begin{equation}
- y_{\mathrm{h}}(t) = (c_1+t c_2) e^{-\alpha t}
-\end{equation}
-
-\begin{tikzpicture}
-  \begin{axis}[ xlabel=$\epsilon$
-              , xmin=1e-3
-              , xmax=1
-              , ymin=0
-              , ymax=1.5
-              , ylabel=$\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
-              , grid=major
-              , ytick={0,0.25,...,1.5}
-              , xmode=log
-              ]
-      \addplot [  draw=black
-                , domain=0.01:1.5
-                , samples=501
-                , smooth
-                , semithick
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ xlabel=$\epsilon$
+                , xmin=1e-3
+                , xmax=1
+                , ymin=0
+                , ymax=1.5
+                , ylabel=$\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
+                , grid=major
+                , ytick={0,0.25,...,1.5}
+                , xmode=log
                 ]
-                ({e^(-2*pi*x)*(1+2*pi*x)},{x});
-  \end{axis}              
-\end{tikzpicture}
-
-\subsection{Underdamped}\label{subsec:step:underdamped}
-
-\begin{equation}
- y_{\mathrm{h}}(t) = c_1 e^{-\alpha t} \sin\left(\omega_{\mathrm{r}t}\right) + c_2 e^{-\alpha t} \cos\left(\omega_{\mathrm{r}t}\right)
-\end{equation}
-
-\subsection{Undamped}\label{subsec:step:undamped}
-
-\begin{equation}
- y_{\mathrm{h}}(t) = c_1 \sin\left(\omega_{\mathrm{0}t}\right) + c_2 \cos\left(\omega_{\mathrm{0}t}\right)
-\end{equation}
+        \addplot [  draw=black
+                  , domain=0.01:1.5
+                  , samples=501
+                  , smooth
+                  , semithick
+                  ]
+                  ({e^(-2*pi*x)*(1+2*pi*x)},{x});
+    \end{axis}              
+  \end{tikzpicture}
+  \caption{Relative settling time $\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
+    vs. deviation $\epsilon$ from final value in the critically damped case}
+  \label{fig:settling-crit-damped}
+\end{figure}
 
 \section{Examples}\label{sec:examples}
 
