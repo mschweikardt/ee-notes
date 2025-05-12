@@ -1,8 +1,8 @@
 \documentclass{article}[11pt]
 
-\include{./../../preamble.tex}
-\include{./../../tikzlib/preamble.tex}
-\include{./../../tikzlib/figs/rlc-series-schematic-a.tex}
+\input{./../../preamble.tex}
+\input{./../../tikzlib/preamble.tex}
+\input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
 
 \def \title  {Harmonic Oscillator}
 \def \date   {May 11, 2025}
@@ -19,7 +19,7 @@
 \section{Introduction}
 
 \begin{equation}
-\frac{1}{\omega_0^2} \frac{\mathrm{d}^2<}{\mathrm{d}t^2} + 2\frac{\zeta}{\omega_0}\frac{\mathrm{d}<}{\mathrm{d}t} + y = x
+\frac{1}{\omega_0^2} \frac{\mathrm{d}^2y}{\mathrm{d}t^2} + 2\frac{\zeta}{\omega_0}\frac{\mathrm{d}y}{\mathrm{d}t} + y = x
 \end{equation}
 
 \begin{equation}
@@ -35,17 +35,22 @@ Q =\frac{1}{2\zeta}
 \caption{Variables}
 \begin{tabular}{cl}
 \toprule
-Variable              & Description                        \\ \midrule
-$x(t)$                & Input Signal (time domain)         \\ 
-$y(t)$                & Output Signal (time domain)        \\ 
-$\underline{X}(s)$    & Input Signal (frequency domain)    \\ 
-$\underline{Y}(s)$    & Output Signal (frequency domain)   \\
-$\omega_0$            & Undamped (angular) frequency       \\
-$\omega_{\mathrm{m}}$ & Peak (angular) frequency           \\
-$\omega_{\mathrm{r}}$ & Resonant (angular) frequency       \\
-$\zeta$               & Damping ratio                      \\
-$Q$                   & Quality                            \\
-$\alpha$              & Decay                              \\ \toprule
+Variable              & Description                            \\ \midrule
+$x(t)$                & Input Signal (time domain)             \\ 
+$y(t)$                & Output Signal (time domain)            \\ 
+$\underline{X}(s)$    & Input Signal (frequency domain)        \\ 
+$\underline{Y}(s)$    & Output Signal (frequency domain)       \\
+$\omega_0$            & Undamped (angular) frequency           \\
+$\omega_{\mathrm{m}}$ & Peak (angular) frequency               \\
+$\omega_{\mathrm{r}}$ & Resonant (angular) frequency           \\
+$\omega_{\mathrm{d}}$ & Damped (angular) oscillating frequency \\
+$\zeta$               & Damping ratio                          \\
+$Q$                   & Quality                                \\
+$\alpha$              & Decay                                  \\ 
+$T_{\mathrm{s}}$      & Settling time                          \\
+$T_{\mathrm{m}}$      & ??                                     \\ 
+$\epsilon$            & Deviation from settled signal          \\
+??                    & ??                                     \\ \toprule
 \end{tabular}
 \label{tab:variables}
 \end{table}
@@ -102,7 +107,6 @@ $\alpha$              & Decay                              \\ \toprule
                 , semithick
                 ]
                 ({sqrt(1-1/2/x^2)},{2*x^2/sqrt(4*x^2-1)});
-
 
       \addplot [  draw=black
                 , domain=0.5:5.5
@@ -263,6 +267,11 @@ It is obvious that $\left|\underline{F}(j\omega_{\mathrm{m}})\right| \approx Q$
 for $Q \gg 1$.
 The locus $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
 is shown in Fig.~\ref{fig:plot-fs} (dashed line).
+We refer to $\omega_{\mathrm{m}}$ when $Q\geq\nicefrac{1}{\sqrt{2}}$%
+\footnote{The case $Q = \nicefrac{1}{\sqrt{2}}$  results
+in a Butterworth filter response 
+(conf. subsection \ref{subsec:examples:butterworth}).}
+as resonant frequent $\omega_{\mathrm{r}}$.
 
 \medskip
 
@@ -276,15 +285,15 @@ p_{1,2} = - \zeta \omega_0 \pm \omega_0 \sqrt{\zeta^2-1} = - \alpha \pm \omega_0
 For $0<\zeta < 1$ (conf. \ref{subsec:steady-state:underdamped}), we transform 
 \eqref{eq:poles} to
 \begin{equation}\label{eq:poles-underdamped}
-p_{1,2} = - \alpha \pm j \omega_{\mathrm{r}},
+p_{1,2} = - \alpha \pm j \omega_{\mathrm{d}},
 \end{equation}
-with the resonant frequency 
+with the damped oscillating frequency 
 \begin{equation}\label{eq:poles}
-\omega_{\mathrm{r}} = \omega_0 \sqrt{1-\zeta^2} = \omega_0 \sqrt{1-\frac{1}{4 Q^2}}
+\omega_{\mathrm{d}} = \omega_0 \sqrt{1-\zeta^2} = \omega_0 \sqrt{1-\frac{1}{4 Q^2}}
 \end{equation}
 and
 \begin{equation}
-\left|\underline{F}(j\omega_{\mathrm{r}})\right| = \frac{4 Q^2}{\sqrt{16 Q^2 -3}}.
+\left|\underline{F}(j\omega_{\mathrm{d}})\right| = \frac{4 Q^2}{\sqrt{16 Q^2 -3}}.
 \end{equation}
 
 Tab.~\ref{tab:char-fs} summarizes some interesting values of
@@ -295,14 +304,15 @@ $\underline{F}(j\omega)$.
   $\left|\underline{F}(j\omega)\right|$ for different $Q$}
 \begin{tabular}{cccccc}
 \toprule
-$Q$                      & $\zeta$                   & $\nicefrac{\omega_{\mathrm{m}}}{\omega_0}$ & $\left|\nicefrac{\underline{F}(\omega_{\mathrm{m}})}{\underline{F}(\omega_{\mathrm{0}})}\right|$ & $\nicefrac{\omega_{\mathrm{r}}}{\omega_0}$ & $\left|\nicefrac{\underline{F}(\omega_{\mathrm{r}})}{\underline{F}(\omega_{\mathrm{0}})}\right|$ \\ \midrule
+$Q$                      & $\zeta$                   & $\nicefrac{\omega_{\mathrm{r}}}{\omega_0}$ & $\left|\nicefrac{\underline{F}(\omega_{\mathrm{r}})}{\underline{F}(\omega_{\mathrm{0}})}\right|$ & $\nicefrac{\omega_{\mathrm{d}}}{\omega_0}$ & $\left|\nicefrac{\underline{F}(\omega_{\mathrm{d}})}{\underline{F}(\omega_{\mathrm{0}})}\right|$ \\ \midrule
 0.1                      & 5                         & -                                          & -                                                                                                & -                                          & -                                                                                                \\
 0.25                     & 2                         & -                                          & -                                                                                                & -                                          & -                                                                                                \\ 
-0.5                      & 1                         & -                                          & -                                                                                                & 0                                          & 2                                                                                                \\ 
+0.5                      & 1                         & -                                          & -                                                                                                & 0                                          & 2                                                                                                \\
+$\nicefrac{1}{\sqrt{3}}$ & $\nicefrac{\sqrt{3}}{2}$  & -                                          & -                                                                                                & 0.5                                        & 1.512                                                                                            \\ 
 $\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & 0                                          & $\sqrt{2}$                                                                                       & $\nicefrac{1}{\sqrt{2}}$                   & 1.265                                                                                            \\
 0.85                     & 0.588                     & 0.555                                      & 1.237                                                                                            & 0.809                                      & 1.162                                                                                            \\  
-1                        & 0.5                       & $\nicefrac{1}{\sqrt{2}}$                   & 1.155                                                                                            & 0.866                                      & 1.109                                                                                            \\  
-$\sqrt{2}$               & 0.354                     & 0.866                                      & 1.069                                                                                            & 0.935                                      & 1.05                                                                                             \\
+1                        & 0.5                       & $\nicefrac{1}{\sqrt{2}}$                   & 1.155                                                                                            & $\nicefrac{\sqrt{3}}{2}$                   & 1.109                                                                                            \\  
+$\sqrt{2}$               & 0.354                     & $\nicefrac{\sqrt{3}}{2}$                   & 1.069                                                                                            & 0.935                                      & 1.05                                                                                             \\
 2                        & 0.25                      & 0.935                                      & 1.033                                                                                            & 0.968                                      & 1.024                                                                                            \\ 
 5                        & 0.1                       & 0.99                                       & 1.005                                                                                            & 0.995                                      & 1.004                                                                                            \\ 
 $\infty$                 & 0                         & 1                                          & 1                                                                                                & 1                                          & 1                                                                                                \\ \toprule
@@ -310,128 +320,109 @@ $\infty$                 & 0                         & 1                        
 \label{tab:char-fs}
 \end{table}
 
-
-\subsection{Overdamped}\label{subsec:steady-state:overdamped}
-
-\begin{itemize}
-  \item $\zeta > 1$
-  \item $Q < \frac{1}{2}$  
-  \item $p_{1,2}$ are different (real part negative, no imaginary)
-\end{itemize}
-
+\begin{table}[H]
+  \centering
+  \caption{Poles and zeros of $\underline{F}(s)$}
+  \begin{tabular}{ccccc}
+  \toprule
+                             & \textbf{Overdamped}               & \textbf{Critically damped} & \textbf{Underdamped}                    & \textbf{Undamped}     \\ \midrule
+  $Q$                        & $\left(0, \nicefrac{1}{2}\right)$ & $\nicefrac{1}{2}$          & $\left(\nicefrac{1}{2}, \infty\right)$  & $\rightarrow \infty$  \\ 
+  $\zeta$                    & $\left(1, \infty\right)$          & $1$                        & $\left(0, 1\right)$                     & $0$                   \\ \hline
+  $p_{1,2}$                  & $\neq$                            & $=$                        & $\neq$                                  & complex conj.         \\
+  $\Re\left(p_{1,2}\right)$  & $<0$                              & $<0$                       & $<0$                                    & $=0$                  \\
+  $\Im\left(p_{1,2}\right)$  & $=0$                              & $=0$                       & $\neq0$                                 & $\neq0$               \\
+  Plot                       & \ref{fig:pz:overdamped}           & \ref{fig:pz:critdamped}    & \ref{fig:pz:underdamped}                & \ref{fig:pz:undamped} \\ \toprule
+  \end{tabular}
+  \label{tab:pz}
+\end{table}
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[scale=1.2]
-    \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
-    \node[anchor=west] at (1,0) {Re};
-    \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
-    \node[anchor=west] at (0,2.5) {Im};
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
 
-    \node[cross out,draw=black,thick] at (-2, 0) {};
-    \node[cross out,draw=black,thick] at (-1, 0) {};
-    \node[anchor=south] at (-2, 0.1) {$p_2$};
-    \node[anchor=south] at (-1, 0.1) {$p_1$};
-  \end{tikzpicture}
-  \caption{Pole-zero plot in the overdamped case}
-  \label{fig:pz:overdamped}
+      \node[cross out,draw=black,thick] at (-2, 0) {};
+      \node[cross out,draw=black,thick] at (-1, 0) {};
+      \node[anchor=south] at (-2, 0.1) {$p_2$};
+      \node[anchor=south] at (-1, 0.1) {$p_1$};
+    \end{tikzpicture}
+    \caption{Overdamped}
+    \label{fig:pz:overdamped}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
+
+      \node[cross out,draw=black,thick] at (-1.5, 0) {};
+      \node[anchor=south] at (-1.5, 0.1) {$p_{1,2}$};
+    \end{tikzpicture}
+    \caption{Critically damped}
+    \label{fig:pz:critdamped}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
+        ({2*sin(\x)},{2*cos(\x)});
+
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
+
+      \node[cross out,draw=black,thick] at (-1.414,  1.414) {};
+      \node[cross out,draw=black,thick] at (-1.414, -1.414) {};
+      \node[anchor=south] at (-1.5, 1.5) {$p_1$};
+      \node[anchor=north] at (-1.5,-1.5) {$p_2$};
+
+      \draw[densely dashed] (0, 1.414) -- (-1.414, 1.414) -- 
+                            (-1.414, -1.414) -- (0, -1.414);
+
+      \node[anchor=west] at (0, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0,-2) {$-j \omega_0$};
+
+      \node[anchor=west] at (0, 1.414) {$ j \omega_{\mathrm{d}}$};
+      \node[anchor=west] at (0,-1.414) {$-j \omega_{\mathrm{d}}$};
+
+      \node[anchor=north,fill=white,inner sep=1pt] at (-1.414,0) {$-\alpha$};
+    \end{tikzpicture}
+    \caption{Underdamped}
+    \label{fig:pz:underdamped}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
+
+      \node[cross out,draw=black,thick] at (0,  2) {};
+      \node[cross out,draw=black,thick] at (0, -2) {};
+      \node[anchor=east] at (-0.1, 2) {$p_1$};
+      \node[anchor=east] at (-0.1,-2) {$p_2$};
+
+      \node[anchor=west] at (0.05, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0.05,-2) {$-j \omega_0$};
+    \end{tikzpicture}
+    \caption{Undamped}
+    \label{fig:pz:undamped}
+  \end{subfigure}
+  \caption{Pole-zero plot}
+  \label{fig:squarelawtransf}
 \end{figure}
-
-
-\subsection{Critically damped}\label{subsec:steady-state:critdamped}
-
-\begin{itemize}
-  \item $\zeta = 1$
-  \item $Q = \frac{1}{2}$  
-  \item $p_{1,2}$ are equal and real (negative)
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[scale=1.2]
-    \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
-    \node[anchor=west] at (1,0) {Re};
-    \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
-    \node[anchor=west] at (0,2.5) {Im};
-
-    \node[cross out,draw=black,thick] at (-1.5, 0) {};
-    \node[anchor=south] at (-1.5, 0.1) {$p_{1,2}$};
-  \end{tikzpicture}
-  \caption{Pole-zero plot in the critically damped case}
-  \label{fig:pz:crit}
-\end{figure}
-
-\subsection{Underdamped}\label{subsec:steady-state:underdamped}
-
-\begin{itemize}
-  \item $0<\zeta < 1$
-  \item $Q > \frac{1}{2}$  
-  \item $p_{1,2}= -\zeta \omega_0 \pm j \omega_0 \sqrt{1-\zeta^2}$ 
-  \item $p_{1,2}$ are different (same negative real part, imaginary part different sign)
-  \item $\left|p_{1,2}\right| = \omega_0$ (distance from origin independent of $\zeta$)
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[scale=1.2]
-    \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
-      ({2*sin(\x)},{2*cos(\x)});
-
-    \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
-    \node[anchor=west] at (1,0) {Re};
-    \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
-    \node[anchor=west] at (0,2.5) {Im};
-
-    \node[cross out,draw=black,thick] at (-1.414,  1.414) {};
-    \node[cross out,draw=black,thick] at (-1.414, -1.414) {};
-    \node[anchor=south] at (-1.5, 1.5) {$p_1$};
-    \node[anchor=north] at (-1.5,-1.5) {$p_2$};
-
-    \draw[densely dashed] (0, 1.414) -- (-1.414, 1.414) -- 
-                          (-1.414, -1.414) -- (0, -1.414);
-
-    \node[anchor=west] at (0, 2) {$ j \omega_0$};
-    \node[anchor=west] at (0,-2) {$-j \omega_0$};
-
-    \node[anchor=west] at (0, 1.414) {$ j \omega_{\mathrm{r}}$};
-    \node[anchor=west] at (0,-1.414) {$-j \omega_{\mathrm{r}}$};
-
-    \node[anchor=north,fill=white,inner sep=1pt] at (-1.414,0) {$-\alpha$};
-  \end{tikzpicture}
-  \caption{Pole-zero plot in the underdamped case}
-  \label{fig:pz:underdamped}
-\end{figure}
-
-\subsection{Undamped}
-
-\begin{itemize}
-  \item $\zeta=0$
-  \item $Q \rightarrow \infty$  
-  \item $p_{1,2} = \pm j \omega_0$  
-    (real part is zero, imaginary part different sign)
-  \item $\left|p_{1,2}\right| = \omega_0$
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[scale=1.2]
-    \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
-    \node[anchor=west] at (1,0) {Re};
-    \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
-    \node[anchor=west] at (0,2.5) {Im};
-
-    \node[cross out,draw=black,thick] at (0,  2) {};
-    \node[cross out,draw=black,thick] at (0, -2) {};
-    \node[anchor=east] at (-0.1, 2) {$p_1$};
-    \node[anchor=east] at (-0.1,-2) {$p_2$};
-
-    \node[anchor=west] at (0.05, 2) {$ j \omega_0$};
-    \node[anchor=west] at (0.05,-2) {$-j \omega_0$};
-  \end{tikzpicture}
-  \caption{Pole-zero plot in the undamped case}
-  \label{fig:pz:undamped}
-\end{figure}
-
 
 \section{Transient Response}
 
@@ -451,6 +442,70 @@ y(t) = y_{\mathrm{p}}(t) + y_{\mathrm{h}}(t)
  y_{\mathrm{p}}(t) = 1
 \end{equation}
 
+\begin{equation}
+ T_0 = \frac{2\pi}{\omega_0}
+\end{equation}
+
+\begin{equation}
+ T_{\mathrm{d}} = \frac{2\pi}{\omega_d} 
+                = \frac{2\pi}{\omega_0 \sqrt{1-\zeta^2}}
+                = \frac{T_0}{\sqrt{1-\zeta^2}} 
+                = \frac{T_0}{\sqrt{1-\frac{1}{4 Q^2}}}                 
+\end{equation}
+
+\begin{equation}
+y(t)=
+\begin{cases}
+-                                  & \mathrm{when} \ Q <\frac{1}{2} \\
+1 - e^{-\omega_0 t} (1+\omega_0 t) & \mathrm{when} \ Q = \frac{1}{2} \\
+-                                  & \mathrm{when} \ \frac{1}{2} < Q  \\
+1 - \cos(\omega_0 t)               & \mathrm{when} \  Q \rightarrow \infty \\
+\end{cases} 
+\end{equation}
+
+\begin{equation}
+y'(0)=
+\begin{cases}
+-        & \mathrm{when} \ Q <\frac{1}{2} \\
+\omega_0 & \mathrm{when} \ Q = \frac{1}{2} \\
+-        & \mathrm{when} \ \frac{1}{2} < Q  \\
+0        & \mathrm{when} \  Q \rightarrow \infty \\
+\end{cases} 
+\end{equation}
+
+
+\begin{tikzpicture}[scale=4]
+  \draw[{Latex[round,scale=1.2,round]}-{Latex[round,scale=1.2,round]}] 
+    (-0.15,2.25) -- (-0.15,0) -- (4,0);
+  \draw (0,0) -- (0,-0.05);
+  \draw (1,0) -- (1,-0.05);
+
+  \draw[densely dashed] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1});
+
+  \draw[green] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-e^(-2*pi*\x)*(1+2*pi*\x)});
+
+  %\draw[red] plot[smooth,domain=0:4, samples=501] 
+  %  ({\x},{1-e^(-\x)*(1+\x)});
+
+  \draw[blue] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-cos(360*\x)});
+
+  \draw[orange] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-e^(-pi/5*\x)*cos(sqrt(1-1/4/(5)^2)*360*\x)});
+
+  \draw[purple] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-e^(-pi/1*\x)*cos(sqrt(1-1/4/(1)^2)*360*\x)});
+
+  \draw[yellow] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-e^(-pi/0.85*\x)*cos(sqrt(1-1/4/(0.85)^2)*360*\x)});
+
+  \draw[magenta] plot[smooth,domain=0:3, samples=501] 
+    ({\x},{1-e^(-pi*sqrt(2)*\x)*cos(sqrt(1-1/4*0.5)*360*\x)});
+
+\end{tikzpicture}
+
 \subsection{Overdamped}\label{subsec:step:overdamped}
 \begin{equation}
  y_{\mathrm{h}}(t) = c_1 e^{-p_1 t} + c_2 e^{-p_2 t}
@@ -461,6 +516,27 @@ y(t) = y_{\mathrm{p}}(t) + y_{\mathrm{h}}(t)
 \begin{equation}
  y_{\mathrm{h}}(t) = (c_1+t c_2) e^{-\alpha t}
 \end{equation}
+
+\begin{tikzpicture}
+  \begin{axis}[ xlabel=$\epsilon$
+              , xmin=1e-3
+              , xmax=1
+              , ymin=0
+              , ymax=1.5
+              , ylabel=$\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
+              , grid=major
+              , ytick={0,0.25,...,1.5}
+              , xmode=log
+              ]
+      \addplot [  draw=black
+                , domain=0.01:1.5
+                , samples=501
+                , smooth
+                , semithick
+                ]
+                ({e^(-2*pi*x)*(1+2*pi*x)},{x});
+  \end{axis}              
+\end{tikzpicture}
 
 \subsection{Underdamped}\label{subsec:step:underdamped}
 
@@ -474,9 +550,9 @@ y(t) = y_{\mathrm{p}}(t) + y_{\mathrm{h}}(t)
  y_{\mathrm{h}}(t) = c_1 \sin\left(\omega_{\mathrm{0}t}\right) + c_2 \cos\left(\omega_{\mathrm{0}t}\right)
 \end{equation}
 
-\section{Examples}
+\section{Examples}\label{sec:examples}
 
-\subsection{Butterworth}
+\subsection{Butterworth}\label{subsec:examples:butterworth}
 
 \begin{equation}
 \underline{F}_{\mathrm{BW,2}} = \frac{\underline{Y}(s)}{\underline{X}(s)} 

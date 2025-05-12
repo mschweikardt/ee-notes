@@ -173,4 +173,7 @@
 % Indentation in footnote
 \makeatletter
 \renewcommand\@makefntext[1]{\leftskip=2em\hskip-0.5em\@makefnmark#1}
-\makeatother
+\makeatother         
+
+% qty with the siunitx definition
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
