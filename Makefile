@@ -2,10 +2,10 @@ FILE=main
 COMPILER=pdflatex
 
 ${FILE}.pdf: ${FILE}.tex ./../../literature.bib
-	${COMPILER} ${FILE}.tex
+	${COMPILER} -shell-escape ${FILE}.tex
 	biber ${FILE}
-	${COMPILER} ${FILE}.tex
-	${COMPILER} ${FILE}.tex
+	${COMPILER} -shell-escape ${FILE}.tex
+	${COMPILER} -shell-escape ${FILE}.tex
 
 .PHONY: clean
 
