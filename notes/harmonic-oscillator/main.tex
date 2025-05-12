@@ -57,7 +57,7 @@ $\epsilon$            & Deviation from settled signal          \\
 
 \section{Steady-state}
 
-\begin{equation}
+\begin{equation}\label{eq:fs}
 \underline{F}(s) = \frac{\underline{Y}(s)}{\underline{X}(s)} 
                  = \frac{\omega_0^2}{s^2 + 2 \zeta \omega_0 s + \omega_0^2 }
                  = \frac{\omega_0^2}{s^2 + 2 \alpha s + \omega_0^2 }
@@ -138,7 +138,7 @@ $\epsilon$            & Deviation from settled signal          \\
                 {1/sqrt((1-x^2)^2+x^2/0.25^2)};
 
     \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q025) 
-      at ($(q01.north west) + (0,0.15)$) {$Q=0.25$};
+      at ($(q01.north west) + (0,0.05)$) {$Q=0.25$};
     \draw[thin,gray] (q025.east) -- (axis cs:0.35,0.605);
 
       %Q=0.5
@@ -225,7 +225,7 @@ $\epsilon$            & Deviation from settled signal          \\
     \draw[thin,gray] (q5.west) -- (axis cs:1.15,2.524);
 
     \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (qinfty) 
-      at ($(q5.north west) + (0,1)$) {$Q \rightarrow \infty$};
+      at ($(q5.north west) + (0,0.4)$) {$Q \rightarrow \infty$};
     \draw[thin,gray] (qinfty.west) -- (axis cs:1.12,3.93);
     \draw[thin,gray] (qinfty.west) -- (axis cs:0.85,3.6);
 
@@ -561,24 +561,21 @@ Q_{\mathrm{BS,2}}(s) = \frac{1}{\sqrt{3}}
   \label{fig:series-res}
 \end{figure}
 
-\begin{equation}
+\begin{equation}\label{eq:rlc-series:fs}
 \underline{F}(s) = \frac{\underline{V}_{\mathrm{O}}(s)}{\underline{V}_{\mathrm{I}}(s)} 
                  = \frac{\frac{1}{sC}}{R+sL+\frac{1}{sC}}
                  = \frac{1}{1 + sRC+s^2LC}
                  = \frac{\frac{1}{LC}}{s^2+s \frac{R}{L} + \frac{1}{LC}}                 
 \end{equation}
 
-
+A coefficient comparison between \eqref{eq:rlc-series:fs} and \eqref{eq:fs}
+results in 
 \begin{equation}
 \omega_0 = \frac{1}{\sqrt{LC}}
 \end{equation}
-
+and
 \begin{equation}
-\frac{\omega_0}{Q} = \frac{R}{L}
-\end{equation}
-
-\begin{equation}
-Q = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}
+Q = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}.
 \end{equation}
 
 \begin{equation}
