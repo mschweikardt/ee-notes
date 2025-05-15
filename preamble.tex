@@ -53,10 +53,18 @@
 \newacronym{fft}{FFT}{Fast Fourier Transform}
 \newacronym{mosfet}{MOSFET}{Metal–Oxide–Semiconductor Field-Effect Transistor}
 \newacronym{clm}{CLM}{Channel Length Modulation}
+\newacronym{de}{DE}{differential equation}
+\newacronym{soi}{SOI}{silicon-on-insulator}
 
 % Section and subsection enumeration
 \renewcommand{\thesection}{\Roman{section}.} 
 \renewcommand{\thesubsection}{\thesection\Alph{subsection}}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{0.2em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}{\thesubsection}{0.2em}{}
 
 % literature
 \usepackage[backend=biber, isbn=true, sorting=none]{biblatex}
@@ -180,3 +188,19 @@
 
 % TikZ compatibility
 \pgfplotsset{compat=1.18}
+
+
+\makeatletter
+\pgfmathdeclarefunction{myatan2}{2}{%
+\begingroup%
+  \pgfmathfloattofixed{#1}\edef\tempa{\pgfmathresult}%
+  \pgfmathfloattofixed{#2}%
+  \pgfkeys{pgf/fpu=false}%
+  \pgfmathparse{atan2(\tempa,\pgfmathresult)}\pgfkeys{/pgf/fpu}%
+  \pgfmathfloatparsenumber{\pgfmathresult}%
+  \pgfmath@smuggleone\pgfmathresult%
+\endgroup
+}
+\makeatother
+
+\usepackage{tabularx}

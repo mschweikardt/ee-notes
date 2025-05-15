@@ -41,9 +41,11 @@ The specific current is given by
 with the temperature voltage $V_{\mathrm{T}}$%
 \footnote{$V_{\mathrm{T}}=\frac{k_{\mathrm{B}} T }{e}$, with the 
 Boltzmann constant $k_{\mathrm{B}}$, the absolute temperature $T$
-in \si{\kelvin} and the charge of an electron $e$.}
-,
-the subthreshold slope $n$ and the transconductance coefficient $K'$ 
+in \si{\kelvin} and the charge of an electron $e$.},
+the subthreshold slope $n$ 
+\footnote{$n$ is between 1.2 and 1.5 in a bulk technology and smaller 
+for \gls{soi} transistors\cite{jespers-gmid-17}.}
+ and the transconductance coefficient $K'$ 
 (conf. \cite{mosfet-square-law}).
 Here, we will only investigate the forward region, so 
 $\mathrm{IC}_{\mathrm{R}} \rightarrow 0$.
@@ -85,7 +87,7 @@ Fig. \ref{fig:plot} plots \eqref{eq:ic}, \eqref{eq:ic-quad} and
   \end{tikzpicture}
   \caption{$\mathrm{IC}$, $\mathrm{IC}_{\mathrm{exp}}$ and 
     $\mathrm{IC}_{\mathrm{quad}}$ as a function of 
-    $\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}$ with added 
+    $\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{n V_{\mathrm{T}}}$ with added 
     inversion regions}
   \label{fig:plot}
 \end{figure}
@@ -98,7 +100,7 @@ close to $V_{\mathrm{GS}}=V_{\mathrm{TH}}$.
 
 Tab.~\ref{tab:ekv-regions} summarizes the individual $\mathrm{IC}$ ranges,
 their corresponding inversion level and curvature.
-
+S
 \begin{table}[h]
 \centering
 \caption{EKV regions}
