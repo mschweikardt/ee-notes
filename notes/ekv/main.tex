@@ -26,9 +26,9 @@ I_{\mathrm{D}} = I_{\mathrm{S}} \left(\mathrm{IC}_{\mathrm{F}}-\mathrm{IC}_{\mat
 \end{equation}
 with the specific current $I_{\mathrm{S}}$ (unit A), the forward 
 inversion coefficient 
-$\mathrm{IC}_{\mathrm{F}}(V_{\mathrm{G}}, V_{\mathrm{S}})$ and 
+$\mathrm{IC}_{\mathrm{F}}(V_{\mathrm{G}}, V_{\mathrm{S}})$ (unitless) and 
 the backward inversion coefficient 
-$\mathrm{IC}_{\mathrm{R}}(V_{\mathrm{G}}, V_{\mathrm{D}})$.
+$\mathrm{IC}_{\mathrm{R}}(V_{\mathrm{G}}, V_{\mathrm{D}})$ (unitless).
 The inversion coefficient $\mathrm{IC}$ is a proxy for the inversion level of 
 the channel of the \gls{mosfet}.
 
@@ -51,7 +51,7 @@ for \gls{soi} transistors\cite{jespers-gmid-17}.}
 Here, we will only investigate the forward region, so 
 $\mathrm{IC}_{\mathrm{R}} \rightarrow 0$.
 
-\medskip
+\bigskip
 
 The forward inversion coefficient is given by 
 (subscript $\mathrm{F}$ omitted)
@@ -81,7 +81,7 @@ approximation for the \textit{subthreshold} region.
 Fig. \ref{fig:plot} plots \eqref{eq:ic}, \eqref{eq:ic-quad} and  
 \eqref{eq:ic-exp}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{tikzpicture}
     \EkvIcVsVgseff
@@ -97,7 +97,7 @@ Neither $\mathrm{IC}_{\mathrm{quad}}$ or $\mathrm{IC}_{\mathrm{exp}}$
 are sufficient to approximate the behavior of $\mathrm{IC}$
 close to $V_{\mathrm{GS}}=V_{\mathrm{TH}}$.
 
-\medskip
+\bigskip
 
 Tab.~\ref{tab:ekv-regions} summarizes the individual $\mathrm{IC}$ ranges,
 their corresponding inversion level and curvature.
@@ -114,14 +114,76 @@ WI                   & weak inversion         & $\leq 0.1$     & exponential   &
 \label{tab:ekv-regions}
 \end{table}
 
+\bigskip
+
 The drain current in \textit{strong inversion} is
-\begin{equation}\label{eq:ic-exp}
+\begin{equation}\label{eq:id-si}
   I_{\mathrm{D,SI}} = I_{\mathrm{S}} \cdot \mathrm{IC}_{\mathrm{quad}}
                     = 2 n V_{\mathrm{T}}^2 K' \frac{W}{L} \cdot \left(\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right)^2
                     \stackrel{n=1}{=} \frac{1}{2} K' \frac{W}{L} \left(V_{\mathrm{GS}}-V_{\mathrm{TH}}\right)^2
 \end{equation}
 and matches the square law in the saturation region 
 \cite{mosfet-square-law}.
+
+\bigskip
+
+The transconductance is
+\begin{equation}\label{eq:gm}
+\begin{split}
+ g_{\mathrm{m}}
+ &= \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{GS}}} \\
+ &= \frac{I_{\mathrm{S}}}{n V_{\mathrm{T}}} \frac{\exp\left\{\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right\}}{\exp\left\{\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right\}+1} \ln\left(1+\exp\left\{\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right\}\right)\\
+ &= \frac{I_{\mathrm{S}}}{n V_{\mathrm{T}}} \left(1-\exp\left\{-\sqrt{\mathrm{IC}}\right\}\right) \sqrt{\mathrm{IC}}
+\end{split}
+\end{equation}
+and therefore the efficiency
+\begin{equation}\label{eq:gmid}
+\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} = \frac{1}{n V_{\mathrm{T}}}  \frac{1-\exp\left\{-\sqrt{\mathrm{IC}}\right\}}{\sqrt{\mathrm{IC}}}.
+\end{equation}
+A plot of the normalized efficiency $\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} n V_{\mathrm{T}}$
+is provided in Fig.~\ref{fig:plot2}.
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ ylabel=$\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} n V_{\mathrm{T}}$
+                , xlabel=$\mathrm{IC}$
+                , xmode=log
+                , ymin=0
+                , ymax=1
+                , xmin=0.001
+                , xmax=100
+                , clip=true
+                , grid=both
+                , width= 12cm
+                ]
+
+    \draw[dashed] (axis cs:0.1,0) -- (axis cs:0.1,1);
+    \draw[dashed] (axis cs:10,0) -- (axis cs:10,1);
+
+     \addplot[ mark=none
+          , thick
+          , domain=0.001:100
+          , samples=2300
+          , smooth
+          , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Normalized efficiency 
+    $\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} n V_{\mathrm{T}}$ vs. 
+    inversion coefficient $\mathrm{IC}$}
+  \label{fig:plot2}
+\end{figure}
+A series expansion of \eqref{eq:gmid} is
+\begin{equation}\label{eq:gmid-exp}
+\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} \approx \frac{1}{n V_{\mathrm{T}}} \left(1- \frac{\sqrt\mathrm{IC}}{2} + \frac{\mathrm{IC}}{6} - \frac{\mathrm{IC}^{\nicefrac{3}{2}}}{24} + \mathcal{O}(\mathrm{IC}^2)\right).
+\end{equation}
+It converges to $\nicefrac{1}{n V_{\mathrm{T}}}$ when $\mathrm{IC} \rightarrow 0$.
+Therefore, the maximum efficiency a transistor can achieve is
+\begin{equation}\label{eq:gmid-max}
+\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}}\bigg|_{\mathrm{max}} = \frac{1}{n V_{\mathrm{T}}},
+\end{equation}
+which is about \SI{25.8}{\per\volt}-\SI{38.7}{\per\volt} at 
+room temperature (\SI{300}{\kelvin}).
 
 \printbibliography
 
