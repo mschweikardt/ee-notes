@@ -40,9 +40,10 @@ The specific current is given by
 \end{equation}
 with the temperature voltage $V_{\mathrm{T}}$%
 \footnote{$V_{\mathrm{T}}=\frac{k_{\mathrm{B}} T }{e}$, with the 
-Boltzmann constant $k_{\mathrm{B}}$, the absolute temperature $T$
-in \si{\kelvin} and the charge of an electron $e$.},
-the subthreshold slope $n$ 
+Boltzmann constant $k_{\mathrm{B}}=\SI{1.38d-23}{\joule\per\kelvin}$, 
+the absolute temperature $T$ in \si{\kelvin} and the 
+elementary charge $e=\SI{1.6025d-19}{\ampere\second}$.},
+the subthreshold slope $n$%
 \footnote{$n$ is between 1.2 and 1.5 in a bulk technology and smaller 
 for \gls{soi} transistors\cite{jespers-gmid-17}.}
  and the transconductance coefficient $K'$ 
@@ -113,6 +114,15 @@ WI                   & weak inversion         & $\leq 0.1$     & exponential   &
 \end{tabular}
 \label{tab:ekv-regions}
 \end{table}
+
+The drain current in \textit{strong inversion} is
+\begin{equation}\label{eq:ic-exp}
+  I_{\mathrm{D,SI}} = I_{\mathrm{S}} \cdot \mathrm{IC}_{\mathrm{quad}}
+                    = 2 n V_{\mathrm{T}}^2 K' \frac{W}{L} \cdot \left(\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right)^2
+                    \stackrel{n=1}{=} \frac{1}{2} K' \frac{W}{L} \left(V_{\mathrm{GS}}-V_{\mathrm{TH}}\right)^2
+\end{equation}
+and matches the square law in the saturation region 
+\cite{mosfet-square-law}.
 
 \printbibliography
 
