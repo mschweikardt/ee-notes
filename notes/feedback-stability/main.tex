@@ -1,0 +1,283 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Feedback Stability}
+\def \date   {May 16, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/feedback-stability.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/feedback-stability}
+
+\usepackage[scale=5]{draftwatermark}
+
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.groupplots}
+
+\begin{document}
+
+\notetitle
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node[circle,draw=black,scale=0.6] (sum) at (1.5,0) {};
+    \node[anchor=east] at (0,0) {\underline{X}(s)};
+    \draw[-{Latex[round]},thick] (0,0) -- (sum.west);
+    \node[anchor=south east, font=\footnotesize] at (sum.west) {+};
+
+    \draw[thick] (3,0.7) -- (4.5,0) -- (3,-0.7) -- cycle;
+    \node[] at (3.5,0) {\underline{A}(s)};
+    \draw[-{Latex[round]},thick] (sum.east) -- (3,0);
+    \node[anchor=south,inner sep=2pt] at (2.25,0) {$\underline{Z}(s)$};
+
+    \draw[thick] (4.5,-1.6) -- (3,-2.3) -- (4.5,-3) -- cycle;
+    \node[] at (4,-2.3) {$\underline{\beta}(s)$};
+    \draw[-{Latex[round]},thick] (3,-2.3) -- (1.5,-2.3) -- (sum.south);
+        \node[anchor=south,inner sep=2pt] at (2.25,-2.3) {$\underline{V}(s)$};
+    \node[anchor=north west, font=\footnotesize] at (sum.south) {-};
+
+    \draw[-{Latex[round]},thick] (4.5,0) -- (6.5,0);
+    \node[anchor=west] at (6.5,0) {\underline{Y}(s)};
+    \node[circle,draw=black,fill=black,scale=0.5] () at (5.5,0) {};
+
+    \draw[-{Latex[round]},thick] (5.5,0) -- (5.5,-2.3) -- (4.5,-2.3);
+
+  \end{tikzpicture}
+  \caption{Feedback system}
+  \label{fig:fs}
+\end{figure}
+
+\begin{equation}
+\underline{A}(s) = \frac{\underline{Y}(s)}{\underline{Z}(s)}
+\end{equation}
+
+\begin{equation}
+\underline{\beta}(s) = \frac{\underline{V}(s)}{\underline{Y}(s)}
+\end{equation}
+
+\begin{equation}
+\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s)
+\end{equation}
+
+\begin{equation}\label{eq:fs}
+\underline{F}(s) = \frac{\underline{Y}(s)}{\underline{X}(s)} 
+                 = \frac{\underline{A}(s)}{1+\underline{L}(s)}
+                 = \frac{\underline{A}(s)}{1+\underline{A}(s) \cdot \underline{\beta}(s)}
+\end{equation}
+
+$\underline{F}(s)$ is stable only if 
+$\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s) \neq -1$.
+
+
+\begin{table}[H]
+\centering
+\caption{Variables}
+\begin{tabular}{cl}
+\toprule
+\textbf{Variable}       & \textbf{Description}        \\ \midrule
+$\underline{X}(s)$      & Input signal                \\ 
+$\underline{Y}(s)$      & Output signal               \\
+$\underline{A}(s)$      & Amplification               \\
+$\underline{F}(s)$      & Transfer function           \\
+$\underline{L}(s)$      & Loop gain                   \\
+$\underline{\beta}(s)$  & Feedback (frequency domain) \\
+$\underline{Z}(s)$      & Input signal of amplififer  \\
+$\underline{V}(s)$      & Output signal of feedback   \\
+$f_{\mathrm{3dB}}$      & Bandwidth                   \\
+$A_{\mathrm{0}}$        & DC gain                     \\
+$\mathrm{GBP}$          & Gain-Bandwidth product      \\
+$\mathrm{UGBW}$         & Unity-Gain bandwidth        \\
+$\mathrm{PM}$           & Phase margin                \\
+$\mathrm{GM}$           & Gain margin                 \\ \toprule
+\end{tabular}
+\label{tab:variables}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{groupplot}[
+    group style={ group name=my plots
+                , group size=1 by 2
+                , xlabels at=edge bottom
+                , xticklabels at=edge bottom
+                , vertical sep=2mm
+                }
+      , xmode=log
+      , width=12cm
+      , height=6cm
+      , xlabel=$f$ in \si{\hertz}
+      , xmin=1
+      , xmax=1e8
+      , ymin=0
+      , ymax=29
+      , tickpos=left
+      , ytick align=outside
+      , grid=both
+      , grid style={line width=0.3pt}
+      , domain=1:1e8
+      , samples=200
+      ]
+
+  \nextgroupplot[ ymin=-80
+                , ymax=93
+                , ytick={-80,-60,...,80}
+                , ylabel= $\left|\underline{L}(j 2 \pi f)\right|$ in \si{\decibel}
+                ]
+
+    \addplot[thick] 
+      ({\x},{80-10*log10(1+(\x/1e2)^2)
+               -10*log10(1+(\x/5e5)^2)
+               -10*log10(1+(\x/2e8)^2)});
+
+    \coordinate (f3dbtop) at (axis cs:1e2,\pgfkeysvalueof{/pgfplots/ymax});
+    \draw [densely dashed] (axis cs:1e0,0) -- (axis cs:1e8,0);
+    \draw [densely dashed] (axis cs:1e0,77) -- (axis cs:1e8,77);
+    \draw [densely dashed] (axis cs:1e0,-46) -- (axis cs:1e8,-46);
+
+    \coordinate (ugbwtop) at (axis cs:6.2e5,\pgfkeysvalueof{/pgfplots/ymax});
+
+    \coordinate (coftop) at (axis cs:1e7,\pgfkeysvalueof{/pgfplots/ymax});
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (1,  80)  
+    };
+
+    \node[anchor=south west, inner sep=1.5pt] at (axis cs: 1,80) {A};  
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (1e2,  77)  
+    };
+
+    \node[anchor=south west, inner sep=1.5pt] at (axis cs: 1e2,77) {B};  
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (6.2e5,  0)  
+    };
+
+    \node[anchor=south west, inner sep=1.5pt] 
+      () at (axis cs: 6.2e5,  0) {C};  
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (1e7, -46)  
+    };
+
+    \node[anchor=south west, inner sep=1.5pt] at (axis cs: 1e7,  -46) {F};  
+
+    \draw[ {Latex[round,scale=0.8]}-{Latex[round,scale=0.8]}]
+      (axis cs: 2e5,-46) -- (axis cs: 2e5,0) 
+      node[midway, left, inner sep=1.5pt] () {GM};
+
+    \draw[-{Latex[round,scale=0.8]}]
+      (axis cs: 1,60) -- (axis cs: 1e2,60) 
+      node[midway, below, inner sep=1.5pt] () {$f_{\mathrm{3dB}}$};
+
+    \draw[-{Latex[round,scale=0.8]}]
+      (axis cs: 1,40) -- (axis cs: 6.2e5,40) 
+      node[midway, below, inner sep=1.5pt] () {UGBW};
+
+  \nextgroupplot[ ymin=-225
+                , ymax=5
+                , ylabel= $\arg\underline{L}(j 2 \pi f)$ in \si{\degree}
+                , ytick={0,-45,-90,-135,-180,-225}
+                ]
+
+    \addplot[semithick]({\x},{-atan(x/1e2)-atan(x/5e5)-atan(x/2e8)}); 
+
+    \coordinate (f3dbbot) at (axis cs:1e2,\pgfkeysvalueof{/pgfplots/ymin});
+
+    \draw [densely dashed] (axis cs:1e0,-180) -- (axis cs:1e8,-180);
+
+    \coordinate (ugbwbot) at (axis cs:6.2e5,\pgfkeysvalueof{/pgfplots/ymin});
+    \coordinate (cofbot) at (axis cs:1e7,\pgfkeysvalueof{/pgfplots/ymin});
+
+    \draw [densely dashed] (axis cs:1e0,-141) -- (axis cs:1e8,-141);
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (6.2e5,-141)  
+    };
+
+    \addplot[only marks,mark=*,mark options = {scale=0.6}] coordinates{
+      (1e7,-180)  
+    };
+
+    \node[anchor=south west, inner sep=1.5pt] 
+      () at (axis cs: 6.2e5,  -141) {D};  
+
+    \node[anchor=south west, inner sep=1.5pt] 
+      () at (axis cs: 1e7,  -180) {E};  
+
+    \draw[ {Latex[round,scale=0.8]}-{Latex[round,scale=0.8]}]
+      (axis cs: 2e5,-180) -- (axis cs: 2e5,-141) 
+      node[midway, left, inner sep=1.5pt] () {PM};
+  \end{groupplot}
+
+  \draw [densely dashed] (f3dbtop) -- (f3dbbot);
+  \draw [densely dashed] (ugbwtop) -- (ugbwbot);
+  \draw [densely dashed] (coftop) -- (cofbot);
+  \end{tikzpicture}
+  \caption{Loop gain $\underline{L}(j 2 \pi f)$}
+  \label{fig:ls}
+\end{figure}
+
+Fig.~\ref{fig:ls} shows the magnitude (top) and phase (bottom) of the 
+loop gain $\underline{L}(j 2 \pi f)$.
+In this illustration, the phase is \SI{0}{\degree} for $f \rightarrow 0$.
+In other literature, the phase is set to \SI{180}{\degree} for 
+$f \rightarrow 0$.
+Several points ($\mathrm{A}$ - $\mathrm{F}$) are annotated in the plot, each 
+point has a $x$ value (corresponding to a frequency) and a $y$ value 
+(corresponding either to the magnitude in dB or phase in \si{\degree}.
+
+\medskip
+
+By evaluating the magnitude at $f \rightarrow 0$ (point $\mathrm{A}$), the
+DC gain (corresponding to $y_{\mathrm{A}}$) is extracted.
+We refer to the DC gain as $A_0$ (80 dB in this example).
+Next, the \SI{3}{\decibel} bandwidth $f_{\mathrm{3dB}}$ 
+(a.k.a. cutoff frequency, corner frequency, or break frequency) of the
+plot is evaluated. 
+Therefore, we set
+$$
+y_{\mathrm{B}} = y_{\mathrm{A}} - 3 \mathrm{dB}
+$$
+and extract the matching $x_{\mathrm{B}} = f_{\mathrm{3dB}}$ 
+(\SI{100}{\hertz} in this example).
+Based on that, the \textit{gain-bandwidth product}
+\begin{equation}
+\mathrm{GBP} = A_0 \cdot f_{\mathrm{3dB}}
+\end{equation}
+is calculated (a.k.a. $\mathrm{GBW}$ or $\mathrm{GB}$). 
+You have to convert the DC gain $A_0$ from decibel in the linear domain 
+beforehand (\SI{80}{\decibel} = \qty{10000}).
+The $\mathrm{GBP}$ is \SI{1}{\giga\hertz} in the example shown above.
+The crossover of the magnitude with \SI{0}{\decibel} 
+(unity-gain, i.e. gain of one) results in the point $C$.
+The x coordinate $x_{\mathrm{C}}$ of this point is the 
+\textit{unity-gain bandwidth}
+$\mathrm{UGBW}$ (\SI{620}{\mega\hertz} in this example).
+Next, we obtain the point $\mathrm{D}$ in the phase plot by setting 
+$x_{\mathrm{D}} = x_{\mathrm{C}}$, i.e. evaluate the phase at the 
+$\mathrm{UGBW}$.
+With this point, the \textit{phase margin}
+
+$$
+\mathrm{PM} = 180° + y_{\mathrm{D}}
+$$
+is calculated (\SI{39}{\degree} in this example).
+
+The crossover of the phase with \SI{-180}{\degree} results in the 
+point $\mathrm{E}$.
+By evaluating the magnitude at the same x coordinate, the point 
+$\mathrm{F}$ is obtained ($x_{\mathrm{F}} = x_{\mathrm{E}}$).
+With this point, the \textit{gain margin}
+$$
+\mathrm{GM} = - y_{\mathrm{F}}.
+$$
+is calculated (\SI{46}{\decibel} in this example).
+
+\printbibliography
+
+\end{document}
