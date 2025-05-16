@@ -36,16 +36,24 @@
   \node[anchor=south] at (-1, 0.1) {$-\omega_{\mathrm{z}}$};
 \end{tikzpicture}
 
+
 \begin{equation}
-\begin{split}
-\arg\left(\underline{F}(j\omega)\right) &= \arctan\left(\frac{\omega}{\omega_{\mathrm{z}}}\right) - \arctan\left(\frac{\omega}{\omega_{\mathrm{p}}}\right) \\
-                                        &= \arctan\left(\frac{\omega}{\omega_{\mathrm{z}}}\right) - \arctan\left(\frac{\omega_{\mathrm{z}}}{\omega_{\mathrm{p}}} \frac{\omega}{\omega_{\mathrm{z}}}\right)
-\end{split}
+\delta \stackrel{!}{=} \frac{\omega_{\mathrm{p}}}{\omega_{\mathrm{z}}}
 \end{equation}
 
 \begin{equation}
-\delta = \frac{\omega_{\mathrm{p}}}{\omega_{\mathrm{z}}}
+\left|\underline{F}(j\omega)\right|_{\mathrm{dB}} = 10 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right)
+                                                  - 10 \cdot\log\left(1+\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right)
 \end{equation}
+
+\begin{equation}
+\begin{split}
+\arg\left(\underline{F}(j\omega)\right) &= \arctan\left(\frac{\omega}{\omega_{\mathrm{z}}}\right) - \arctan\left(\frac{\omega}{\omega_{\mathrm{p}}}\right) \\
+                                        &= \arctan\left(\frac{\omega}{\omega_{\mathrm{z}}}\right) - \arctan\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)
+\end{split}
+\end{equation}
+
+
 
 \begin{tikzpicture}
   \begin{axis}[ ylabel=$\left|\underline{F}(j\omega)\right|$ in \si{\decibel}
@@ -133,15 +141,36 @@
   \end{axis}
 \end{tikzpicture}
 
-Peak of phase at
+Peak of phase (dashed line) at
 \begin{equation}
-\frac{\omega_{\mathrm{p}}}{\omega_{\mathrm{z}}} = \sqrt{\delta}
+\frac{\omega_{\mathrm{m}}}{\omega_{\mathrm{z}}} = \sqrt{\delta}
 \end{equation}
 with
 \begin{equation}
-\arg\left(\underline{F}(j\omega)\right) = 
+\arg\left(\underline{F}(j\omega_{\mathrm{m}})\right) = 
   \arctan\left(\sqrt{\delta}\right)-\arctan\left(\frac{1}{\sqrt{\delta}}\right)
 \end{equation}
+
+\begin{tikzpicture}
+  \begin{axis}[ ylabel=$\arg\left(\underline{F}(j\omega_{\mathrm{m}})\right)$ in \si{\degree}
+              , xlabel=$\delta$
+              , xmode=log
+              , ymin=0
+              , ymax=90
+              , xmin=1
+              , xmax=1000
+              , grid=both
+              , width=8cm
+              , ytick={0,15,...,90}
+              ]
+
+     \addplot[ domain=1:1000
+             , samples=301
+             , smooth
+             , thick] {atan(sqrt(x))-atan(1/sqrt(x))}; 
+
+  \end{axis}
+\end{tikzpicture}
 
 \printbibliography
 
