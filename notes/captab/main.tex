@@ -5,9 +5,8 @@
 \include{./../../tikzlib/figs/captab-a.tex}
 
 
-
 \def \title  {Capacity Table}
-\def \date   {May 9, 2025}
+\def \date   {May 16, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/captab.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/captab}
@@ -72,6 +71,215 @@ $w$/\si{\micro\meter} & $s$/\si{\micro\meter}  & $C_{\mathrm{tot}}$/\si{\femto\f
 \end{tabular}
 \label{tab:captab-sky130-m1}
 \end{table}
+
+\begin{tikzpicture}
+  \begin{axis}[ xmin=0
+              , xmax=2
+              , xtick={0,0.25,...,2}
+              , xlabel=$s$ in \si{\micro\meter}
+              , ylabel= $C_{\mathrm{tot}}$ in \si{\pico\farad\per\micro\meter}
+              , grid
+              , ymin=-50
+              , ymax=3000
+              , width=7.5cm
+              , height=8cm
+              , tick label style={font=\footnotesize}
+              , every axis plot/.append style={
+                  y filter/.code={
+                    \pgfmathparse{\pgfmathresult*1000.}\pgfmathresult
+                  }
+                }
+              , legend style={at={(0.95,0.5)},anchor=east, font=\footnotesize}
+              ]
+    \addplot[ mark=square
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=ctot
+            , col sep=comma
+            ] {m1-w014.csv};
+
+    \addplot[ mark=o
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=ctot
+            , col sep=comma
+            ] {m1-w100.csv};
+
+    \addplot[ mark=triangle
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=ctot
+            , col sep=comma
+            ] {m1-w900.csv};
+
+   \legend{ $w=\SI{0.14}{\micro\meter}$
+          , $w=\SI{1}{\micro\meter}$
+          , $w=\SI{9}{\micro\meter}$}
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+  \begin{axis}[ xmin=0
+              , xmax=2
+              , xtick={0,0.25,...,2}
+              , xlabel=$s$ in \si{\micro\meter}
+              , ylabel= $C_{\mathrm{area}}$ in \si{\pico\farad\per\micro\meter}
+              , grid
+              , ymin=-50
+              , ymax=3000
+              , width=7.5cm
+              , height=8cm
+              , tick label style={font=\footnotesize}
+              , every axis plot/.append style={
+                  y filter/.code={
+                    \pgfmathparse{\pgfmathresult*1000.}\pgfmathresult
+                  }
+                }
+              , legend style={at={(0.95,0.5)},anchor=east, font=\footnotesize}
+              ]
+    \addplot[ mark=square
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=carea
+            , col sep=comma
+            ] {m1-w014.csv};
+
+    \addplot[ mark=o
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=carea
+            , col sep=comma
+            ] {m1-w100.csv};
+
+    \addplot[ mark=triangle
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=carea
+            , col sep=comma
+            ] {m1-w900.csv};
+
+   \legend{ $w=\SI{0.14}{\micro\meter}$
+          , $w=\SI{1.00}{\micro\meter}$
+          , $w=\SI{9.00}{\micro\meter}$}
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+  \begin{axis}[ xmin=0
+              , xmax=2
+              , xtick={0,0.25,...,2}
+              , xlabel=$s$ in \si{\micro\meter}
+              , ylabel= $C_{\mathrm{c}}$ in \si{\pico\farad\per\micro\meter}
+              , grid
+              , ymin=-5
+              , ymax=200
+              , width=7.5cm
+              , height=8cm
+              , tick label style={font=\footnotesize}
+              , every axis plot/.append style={
+                  y filter/.code={
+                    \pgfmathparse{\pgfmathresult*1000.}\pgfmathresult
+                  }
+                }
+              , legend style={at={(0.95,0.5)},anchor=east, font=\footnotesize}
+              ]
+    \addplot[ mark=square
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cc
+            , col sep=comma
+            ] {m1-w014.csv};
+
+    \addplot[ mark=o
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cc
+            , col sep=comma
+            ] {m1-w100.csv};
+
+    \addplot[ mark=triangle
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cc
+            , col sep=comma
+            ] {m1-w900.csv};
+
+   \legend{ $w=\SI{0.14}{\micro\meter}$
+          , $w=\SI{1.00}{\micro\meter}$
+          , $w=\SI{9.00}{\micro\meter}$}
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+  \begin{axis}[ xmin=0
+              , xmax=2
+              , xtick={0,0.25,...,2}
+              , xlabel=$s$ in \si{\micro\meter}
+              , ylabel= $C_{\mathrm{frg}}$ in \si{\pico\farad\per\micro\meter}
+              , grid
+              , ymin=-5
+              , ymax=200
+              , width=7.5cm
+              , height=8cm
+              , tick label style={font=\footnotesize}
+              , every axis plot/.append style={
+                  y filter/.code={
+                    \pgfmathparse{\pgfmathresult*1000.}\pgfmathresult
+                  }
+                }
+              , legend style={at={(0.95,0.5)},anchor=east}
+              , legend style = {font=\footnotesize}
+              ]
+    \addplot[ mark=square
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cfrg
+            , col sep=comma
+            ] {m1-w014.csv};
+
+    \addplot[ mark=o
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cfrg
+            , col sep=comma
+            ] {m1-w100.csv};
+
+    \addplot[ mark=triangle
+            , mark options={scale=.9}
+            ]
+            table
+            [ x=s
+            , y=cfrg
+            , col sep=comma
+            ] {m1-w900.csv};
+
+   \legend{ $w=\SI{0.14}{\micro\meter}$
+          , $w=\SI{1.00}{\micro\meter}$
+          , $w=\SI{9.00}{\micro\meter}$}
+  \end{axis}
+\end{tikzpicture}
 
 \printbibliography
 
