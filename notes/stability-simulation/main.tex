@@ -1,0 +1,58 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Stability Simulation}
+\def \date   {May 17, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/stability-simulation.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/stability-simulation}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\cite{kundert-spicespectre-95}
+
+\section{Break the Loop}
+Bad, because
+\begin{itemize}
+  \item disturbs DC operating point
+  \item output may clip to rails
+\end{itemize}
+
+\section{Low-Pass Filter}
+
+Bad, because
+\begin{itemize}
+  \item filter may interferes with measurement
+  \item loading of amplifier
+\end{itemize}
+
+\section{Open the Loop during AC analysis}
+
+Bad, because
+\begin{itemize}
+  \item loading of components changes
+\end{itemize}
+
+\section{Middlebrook's Method}
+
+\begin{equation}
+\underline{L}(s) = \frac{\underline{L}_{\mathrm{v}}(s) \underline{L}_{\mathrm{v}}(s) -1}{\underline{L}_{\mathrm{v}}(s) + \underline{L}_{\mathrm{v}}(s) + 2}
+\end{equation}
+\cite{middlebrook-measloopgain-75}
+
+\section{Tian's Method}
+\cite{tian-stricsmalsigstab-01}
+
+
+\cite{meag-compstab-15}
+
+
+\printbibliography
+
+\end{document}

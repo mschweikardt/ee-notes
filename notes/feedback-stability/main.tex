@@ -76,21 +76,21 @@ $\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s) \neq -1$.
 \caption{Variables}
 \begin{tabular}{cl}
 \toprule
-\textbf{Variable}       & \textbf{Description}        \\ \midrule
-$\underline{X}(s)$      & Input signal                \\ 
-$\underline{Y}(s)$      & Output signal               \\
-$\underline{A}(s)$      & Amplification               \\
-$\underline{F}(s)$      & Transfer function           \\
-$\underline{L}(s)$      & Loop gain                   \\
-$\underline{\beta}(s)$  & Feedback (frequency domain) \\
-$\underline{Z}(s)$      & Input signal of amplififer  \\
-$\underline{V}(s)$      & Output signal of feedback   \\
-$f_{\mathrm{3dB}}$      & Bandwidth                   \\
-$A_{\mathrm{0}}$        & DC gain                     \\
-$\mathrm{GBP}$          & Gain-Bandwidth product      \\
-$\mathrm{UGBW}$         & Unity-Gain bandwidth        \\
-$\mathrm{PM}$           & Phase margin                \\
-$\mathrm{GM}$           & Gain margin                 \\ \toprule
+\textbf{Variable}       & \textbf{Description}            \\ \midrule
+$\underline{X}(s)$      & Input signal                    \\ 
+$\underline{Y}(s)$      & Output signal                   \\
+$\underline{A}(s)$      & (open loop) transfer function   \\
+$\underline{\beta}(s)$  & Feedback transfer function      \\
+$\underline{L}(s)$      & Loop gain                       \\
+$\underline{F}(s)$      & (closed loop) transfer function \\
+$\underline{Z}(s)$      & Input signal of amplififer      \\
+$\underline{V}(s)$      & Output signal of feedback       \\
+$f_{\mathrm{3dB}}$      & Bandwidth                       \\
+$A_{\mathrm{0}}$        & DC gain                         \\
+$\mathrm{GBP}$          & Gain-Bandwidth product          \\
+$\mathrm{UGBW}$         & Unity-Gain bandwidth            \\
+$\mathrm{PM}$           & Phase margin                    \\
+$\mathrm{GM}$           & Gain margin                     \\ \toprule
 \end{tabular}
 \label{tab:variables}
 \end{table}
@@ -226,7 +226,9 @@ Fig.~\ref{fig:ls} shows the magnitude (top) and phase (bottom) of the
 loop gain $\underline{L}(j 2 \pi f)$.
 In this illustration, the phase is \SI{0}{\degree} for $f \rightarrow 0$.
 In other literature, the phase is set to \SI{180}{\degree} for 
-$f \rightarrow 0$.
+$f \rightarrow 0$%
+\footnote{$\underline{L}(s) = -\underline{A}(s) \cdot \underline{\beta}(s)$}
+.
 Several points ($\mathrm{A}$ - $\mathrm{F}$) are annotated in the plot, each 
 point has a $x$ value (corresponding to a frequency) and a $y$ value 
 (corresponding either to the magnitude in dB or phase in \si{\degree}.
@@ -249,7 +251,8 @@ Based on that, the \textit{gain-bandwidth product}
 \begin{equation}
 \mathrm{GBP} = A_0 \cdot f_{\mathrm{3dB}}
 \end{equation}
-is calculated (a.k.a. $\mathrm{GBW}$ or $\mathrm{GB}$). 
+is calculated%
+\footnote{a.k.a. $\mathrm{GBW}$, $\mathrm{GB}$}. 
 You have to convert the DC gain $A_0$ from decibel in the linear domain 
 beforehand (\SI{80}{\decibel} = \qty{10000}).
 The $\mathrm{GBP}$ is \SI{1}{\giga\hertz} in the example shown above.
@@ -257,7 +260,17 @@ The crossover of the magnitude with \SI{0}{\decibel}
 (unity-gain, i.e. gain of one) results in the point $C$.
 The x coordinate $x_{\mathrm{C}}$ of this point is the 
 \textit{unity-gain bandwidth}
-$\mathrm{UGBW}$ (\SI{620}{\mega\hertz} in this example).
+$\mathrm{UGBW}$%
+\footnote{a.k.a. UGB, UGF}
+(\SI{620}{\mega\hertz} in this example%
+\footnote{It is important to notice that $\mathrm{GBP}$ is not necessarily
+equal to the $\mathrm{UGBW}$.}
+).
+Both, $\mathrm{GBP}$ and $\mathrm{UGBW}$ are a measure for the "speed" of
+the system.
+
+\medskip
+
 Next, we obtain the point $\mathrm{D}$ in the phase plot by setting 
 $x_{\mathrm{D}} = x_{\mathrm{C}}$, i.e. evaluate the phase at the 
 $\mathrm{UGBW}$.
