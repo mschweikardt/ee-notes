@@ -5,13 +5,13 @@
 \input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
 
 \def \title  {Harmonic Oscillator}
-\def \date   {May 11, 2025}
+\def \date   {May 18, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/harmonic-oscillator.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/harmonic-oscillator}
 
-\usetikzlibrary{external}
-\tikzexternalize
+%\usetikzlibrary{external}
+%\tikzexternalize
 
 \usepackage[scale=5]{draftwatermark}
 
@@ -21,60 +21,87 @@
 
 \section{Introduction}
 
-\begin{equation}
-\frac{1}{\omega_0^2} \frac{\mathrm{d}^2y}{\mathrm{d}t^2} + 2\frac{\zeta}{\omega_0}\frac{\mathrm{d}y}{\mathrm{d}t} + y = x
+The differential equation of a harmonic oscillator is given by
+\begin{equation}\label{eq:dgl}
+\frac{1}{\omega_0^2} \frac{\mathrm{d}^2y(t)}{\mathrm{d}t^2} 
+  + 2\frac{\zeta}{\omega_0}\frac{\mathrm{d}y(t)}{\mathrm{d}t} + y(t) = x(t).
 \end{equation}
 
-\begin{equation}
-\alpha = \zeta \omega_0
-\end{equation}
-
-\begin{equation}
-Q =\frac{1}{2\zeta}
-\end{equation}
-
+All variables that are used in \eqref{eq:dgl} and hereinafter are summarized 
+in Tab.~\ref{tab:variables}.
 \begin{table}[H]
 \centering
 \caption{Variables}
 \begin{tabular}{cl}
 \toprule
-Variable              & Description                            \\ \midrule
-$x(t)$                & Input Signal (time domain)             \\ 
-$y(t)$                & Output Signal (time domain)            \\ 
-$\underline{X}(s)$    & Input Signal (frequency domain)        \\ 
-$\underline{Y}(s)$    & Output Signal (frequency domain)       \\
-$\omega_0$            & Undamped (angular) frequency           \\
-$\omega_{\mathrm{m}}$ & Peak (angular) frequency               \\
-$\omega_{\mathrm{r}}$ & Resonant (angular) frequency           \\
-$\omega_{\mathrm{d}}$ & Damped (angular) oscillating frequency \\
-$\zeta$               & Damping ratio                          \\
-$Q$                   & Quality                                \\
-$\alpha$              & Decay                                  \\ 
-$T_{\mathrm{s}}$      & Settling time                          \\
-$T_{\mathrm{m}}$      & ??                                     \\ 
-$\epsilon$            & Deviation from settled signal          \\
-??                    & ??                                     \\ \toprule
+Variable              & Description                              \\ \midrule
+$x(t)$                & Input Signal (time domain)               \\ 
+$y(t)$                & Output Signal (time domain)              \\ 
+$\underline{X}(s)$    & Input Signal (frequency domain)          \\ 
+$\underline{Y}(s)$    & Output Signal (frequency domain)         \\
+$\underline{F}(s)$    & Steady-state response (frequency domain) \\
+$\omega_0$            & Undamped (angular) frequency             \\
+$\omega_{\mathrm{m}}$ & Peak (angular) frequency                 \\
+$\omega_{\mathrm{r}}$ & Resonant (angular) frequency             \\
+$\omega_{\mathrm{d}}$ & Damped (angular) oscillating frequency   \\
+$\zeta$               & Damping ratio                            \\
+$Q$                   & Quality                                  \\
+$\alpha$              & Decay                                    \\ 
+$\tau_{\mathrm{g}}$   & Group delay                              \\ 
+$t_{\mathrm{m}}$      & Maximum peak time                        \\ 
+$y_{\mathrm{m}}$      & Maximum peak                             \\ 
+OS                    & Maximum overshoot                        \\ 
+$t_{\mathrm{d}}$      & Delay time                               \\ 
+$t_{\mathrm{r}}$      & Rise time                                \\ 
+$\epsilon$            & Deviation from settled signal            \\
+$t_{\mathrm{s}}$      & Settling time                            \\ \toprule
 \end{tabular}
 \label{tab:variables}
 \end{table}
 
+
+\begin{center}
+\begin{tabular}{p{4cm}p{2cm}p{4cm}}
+  \begin{equation}
+    \alpha = \zeta \omega_0
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    Q =\frac{1}{2\zeta}
+  \end{equation}
+\end{tabular}
+\end{center}
+
 \section{Steady-state}
+
+When we transfer \eqref{eq:dgl} in the frequency domain, we get
 
 \begin{equation}\label{eq:fs}
 \underline{F}(s) = \frac{\underline{Y}(s)}{\underline{X}(s)} 
                  = \frac{\omega_0^2}{s^2 + 2 \zeta \omega_0 s + \omega_0^2 }
                  = \frac{\omega_0^2}{s^2 + 2 \alpha s + \omega_0^2 }
                  = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q} s + \omega_0^2 }
+                 = \frac{1}{\left(\frac{s}{\omega_0}\right)^2 + \frac{s}{Q\omega_0} s + 1 }
+.
 \end{equation}
 
-\begin{equation}
-\left|\underline{F}(j\omega_0)\right| = \frac{1}{2 \zeta} = Q
-\end{equation}
+We can see easily that
+\begin{center}
+\begin{tabular}{p{5cm}p{2cm}p{5cm}}
+  \begin{equation}
+    \left|\underline{F}(j\omega_0)\right| = \frac{1}{2 \zeta} = Q
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    \arg{\underline{F}(j\omega_0)} = -\SI{90}{\degree}.
+  \end{equation}
+\end{tabular}
+\end{center}
 
-\begin{equation}
-\arg{\underline{F}(j\omega_0)} = -\SI{90}{\degree}
-\end{equation}
-
+The magnitude of $\underline{F}(j\omega)$ is plotted in 
+Fig. \ref{fig:plot-fs} for different $Q$.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -243,7 +270,8 @@ $\epsilon$            & Deviation from settled signal          \\
     \draw[thin,gray] (wr.east) -- (axis cs:0.9,1.25);
     \end{axis}
   \end{tikzpicture}
-  \caption{Steady-state solution $\left|\underline{F}(j\omega)\right|$ vs. normalized 
+  \caption{Magnitude of steady-state solution 
+    $\left|\underline{F}(j\omega)\right|$ vs. normalized 
     frequency $\nicefrac{\omega}{\omega_0}$ for different qualities $Q$ and loci 
     of $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
     and $(\omega_{\mathrm{r}}, \left|\underline{F}(j\omega_{\mathrm{r}})\right|)$}
@@ -266,8 +294,10 @@ and
 \frac{2 Q^2}{\sqrt{4Q^2-1}} & \mathrm{when} \ Q\geq\frac{1}{\sqrt{2}}. \\
 \end{cases} 
 \end{equation}
-It is obvious that $\left|\underline{F}(j\omega_{\mathrm{m}})\right| \approx Q$
-for $Q \gg 1$.
+It is obvious that  $\omega_{\mathrm{m}} \rightarrow \omega_{\mathrm{0}}$
+for $Q \rightarrow \infty$ and therefore 
+$\left|\underline{F}(j\omega_{\mathrm{m}})\right| \rightarrow  Q$
+for$Q \rightarrow \infty$.
 The locus $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
 is shown in Fig.~\ref{fig:plot-fs} (dashed line).
 We refer to $\omega_{\mathrm{m}}$ when $Q\geq\nicefrac{1}{\sqrt{2}}$%
@@ -285,7 +315,8 @@ p_{1,2} = - \zeta \omega_0 \pm \omega_0 \sqrt{\zeta^2-1} = - \alpha \pm \omega_0
 
 \medskip
 
-For $0<\zeta < 1$ (conf. Tab. \ref{tab:pz}), we transform \eqref{eq:poles} to
+For $0<\zeta < 1$ (conf. column \textit{Underdamped} in Tab. \ref{tab:pz}), 
+we transform \eqref{eq:poles} to
 \begin{equation}\label{eq:poles-underdamped}
 p_{1,2} = - \alpha \pm j \omega_{\mathrm{d}},
 \end{equation}
@@ -322,6 +353,157 @@ $\infty$                 & 0                         & 1                        
 \label{tab:char-fs}
 \end{table}
 
+
+\begin{equation}
+\arg\left(\underline{F}(j\omega)\right)= 
+  -\atan\left(\frac{\frac{\omega}{Q \omega_0}}
+                   {1-\left(\frac{\omega}{\omega_0}\right)^2}\right)
+\end{equation}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ xlabel=$\nicefrac{\omega}{\omega_0}$
+                , xmin=0
+                , xmax=2
+                , ymin=-180
+                , ymax=0
+                , ylabel=$\arg\left(\underline{F}(j\omega)\right)$ in \si{\degree}
+                , grid=major
+                , ytick={0,-45,-90,...,-180}
+                , height=8cm
+                , width=15cm
+                ]
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q01
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (q01) at (axis cs:0.5,-95) {$Q=0.1$};
+    \draw[thin,gray] (q01.east) -- (0.552,-82.82);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q025
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (q025) at (axis cs:0.5,-105) {$Q=0.25$};
+    \draw[thin,gray] (q025.east) -- (0.592,-74.66);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q05
+            , col sep=comma
+            ] {phase.csv};
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q025
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (q05) at (axis cs:0.5,-115) {$Q=0.5$};
+    \draw[thin,gray] (q05.east) -- (0.66,-66.85);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q1oversqrt3
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (q1oversqrt3) at (axis cs:0.5,-125) {$Q=\nicefrac{1}{\sqrt{3}}$};
+    \draw[thin,gray] (q1oversqrt3.east) -- (0.708,-67.87);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q1oversqrt2
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (q1oversqrt2) at (axis cs:0.5,-135) {$Q=\nicefrac{1}{\sqrt{2}}$};
+    \draw[thin,gray] (q1oversqrt2.east) -- (0.792,-71.59);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q085
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=west,inner sep=0.5pt] 
+      (q085) at (axis cs:1,-55) {$Q=0.85$};
+    \draw[thin,gray] (q085.west) -- (0.832,-72.55);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q1
+            , col sep=comma
+            ] {phase.csv};   
+    \node[font=\small,anchor=west,inner sep=0.5pt] 
+      (q1) at (axis cs:1,-45) {$Q=1$};
+    \draw[thin,gray] (q1.west) -- (0.832,-69.70);
+            
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=qsqrt2
+            , col sep=comma
+            ] {phase.csv};   
+    \node[font=\small,anchor=west,inner sep=0.5pt] 
+      (qsqrt2) at (axis cs:1,-35) {$Q=\sqrt{2}$};
+    \draw[thin,gray] (qsqrt2.west) -- (0.832,-62.38);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q2
+            , col sep=comma
+            ] {phase.csv};
+    \node[font=\small,anchor=west,inner sep=0.5pt] 
+      (q2) at (axis cs:1,-25) {$Q=2$};
+    \draw[thin,gray] (q2.west) -- (0.832,-53.50);
+
+    \addplot[ semithick
+            ]
+            table
+            [ x=w
+            , y=q5
+            , col sep=comma
+            ] {phase.csv};     
+    \node[font=\small,anchor=west,inner sep=0.5pt] 
+      (q5) at (axis cs:1,-15) {$Q=5$};
+    \draw[thin,gray] (q5.west) -- (0.832,-28.40);
+
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Phase of steady-state solution $\arg\left(\underline{F}(j\omega)\right)$}
+  \label{fig:plot-fs-arg}
+\end{figure}
+
+\begin{equation}
+\tau_{\mathrm{g}} = -\frac{\mathrm{d} \arg\left(\underline{F}(j\omega)\right)}{\mathrm{d}\omega}
+                  = \frac{Q}{\omega_0} \frac{1+\left(\frac{\omega}{\omega_0}\right)^2}{Q^2 + \left(1-2Q^2\right) \left(\frac{\omega}{\omega_0}\right)^2 + Q^2 \left(\frac{\omega}{\omega_0}\right)^4}
+\end{equation}
+
+
 Depending on $Q$, we can define four different cases. 
 They are depicted in Tab.~\ref{tab:pz}.
 
@@ -345,7 +527,7 @@ They are depicted in Tab.~\ref{tab:pz}.
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.2]
+    \begin{tikzpicture}[scale=1.0]
       \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
@@ -362,7 +544,7 @@ They are depicted in Tab.~\ref{tab:pz}.
   \hfill
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.2]
+    \begin{tikzpicture}[scale=1.0]
       \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
         ({2*sin(\x)},{2*cos(\x)});
       \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
@@ -381,7 +563,7 @@ They are depicted in Tab.~\ref{tab:pz}.
   \vskip\baselineskip
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.2]
+    \begin{tikzpicture}[scale=1.0]
       \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
         ({2*sin(\x)},{2*cos(\x)});
 
@@ -412,7 +594,7 @@ They are depicted in Tab.~\ref{tab:pz}.
   \hfill
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.2]
+    \begin{tikzpicture}[scale=1.0]
       \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
@@ -433,7 +615,10 @@ They are depicted in Tab.~\ref{tab:pz}.
   \label{fig:squarelawtransf}
 \end{figure}
 
+
 \section{Step Response}
+
+\cite{golnaraghi-acs-10}
 
 \begin{equation}
 x(t) =
@@ -447,66 +632,400 @@ x(t) =
  T_0 = \frac{2\pi}{\omega_0}
 \end{equation}
 
-\begin{equation}
- T_{\mathrm{d}} = \frac{2\pi}{\omega_d} 
+\begin{equation}\label{eq:td}
+ T_{\mathrm{d}} = \frac{2\pi}{\omega_{\mathrm{d}}} 
                 = \frac{2\pi}{\omega_0 \sqrt{1-\zeta^2}}
                 = \frac{T_0}{\sqrt{1-\zeta^2}} 
-                = \frac{T_0}{\sqrt{1-\frac{1}{4 Q^2}}}                 
+                = \frac{T_0}{\sqrt{1-\frac{1}{4 Q^2}}}
 \end{equation}
 
 \begin{equation}
 y(t)=
 \begin{cases}
--                                  & \mathrm{when} \ Q <\frac{1}{2} \\
-1 - e^{-\omega_0 t} (1+\omega_0 t) & \mathrm{when} \ Q = \frac{1}{2} \\
--                                  & \mathrm{when} \ \frac{1}{2} < Q  \\
-1 - \cos(\omega_0 t)               & \mathrm{when} \  Q \rightarrow \infty \\
-\end{cases} 
+1-\left(\frac{p_2}{p_2-p_1} e^{p_1 t}-\frac{p_1}{p_2-p_1} e^{p_2 t}\right)             & \mathrm{when} \ Q <\frac{1}{2} \\
+1 - e^{-\omega_0 t} (1+\omega_0 t)                                                     & \mathrm{when} \ Q = \frac{1}{2} \\
+1-\frac{e^{-\alpha t}}{\sin(\phi)} \cdot \sin\left(\omega_{\mathrm{d}} t + \phi\right) & \mathrm{when} \ \frac{1}{2} < Q  \\
+1 - \cos(\omega_0 t)                                                                   & \mathrm{when} \ Q \rightarrow \infty \\
+\end{cases}, 
 \end{equation}
+with
+\begin{equation}
+\zeta = \cos(\phi).
+\end{equation}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=2.5]
+
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.15,2.75) -- (-0.15,-0.15) -- (4.25,-0.15);
+
+    \node[anchor=south] at  (4.25,-0.15) {$\nicefrac{t}{T_0}$}; 
+    \node[anchor=west]  at  (-0.15,2.75) {$y(t)$}; 
+
+    \draw (0.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+    \draw (0.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0.5};
+    \draw (1.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1};
+    \draw (1.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1.5};
+    \draw (2.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2};
+    \draw (2.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2.5};
+    \draw (3.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3};
+    \draw (3.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3.5};
+    \draw (4.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {4};
+
+    \draw (-0.15,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.15,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.15,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (-0.15,1.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1.5};
+    \draw (-0.15,2.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {2};
+    \draw (-0.15,2.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {2.5};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:2.6, samples=2] 
+      ({0},{\x});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-((-2+sqrt(3))/(2*sqrt(3))*e^(2*pi*(-2-sqrt(3))*\x)-(-2-sqrt(3))/(2*sqrt(3))*e^(2*pi*(-2+sqrt(3))*\x))});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-2*pi*\x)*(1+2*pi*\x)});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.1*2*pi*\x)*sin(360*sqrt(1-0.1^2)*\x+acos(0.1))/sin(acos(0.1))});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+     ({\x},{1-cos(360*\x)});
+
+    \node[font=\small,anchor=south west,inner sep=0.5pt] 
+      (od) at (0.4,2.05) {Critically damped ($Q=0.5$)};
+    \node[font=\small,anchor=south west,inner sep=0.5pt] 
+      (cd) at (0.1,2.25) {Overdamped ($Q=0.25$)};
+    \node[font=\small,anchor=south west,inner sep=0.5pt] 
+      (ud) at (2.5,2.25) {Undamped ($Q \rightarrow \infty$)};
+    \node[font=\small,anchor=south west,inner sep=0.5pt] 
+      (und) at (2.8,2.05) {Underdamped ($Q=5$)};
+
+    \draw[thin,gray] ($(cd.south west) + (0.1,0)$) -- (0.4,0.445);
+    \draw[thin,gray] ($(od.south) + (-0.1,0)$) -- (0.6,0.89);
+    \draw[thin,gray] ($(ud.south west) + (0.1,0)$) -- (2.5,2);
+    \draw[thin,gray] ($(und.south west) + (0.1,0)$) -- (3,0.85);
+  \end{tikzpicture}
+  \caption{Step response for different $Q$}
+  \label{fig:step-response}
+\end{figure}
+
+\begin{itemize}
+  \item $y(t) \rightarrow 1$ for $t \rightarrow \infty$ when $Q < \infty$.
+  \item $y(t) > 1$ only for $Q > 0.5$. 
+  \item The period in the \textit{underdamped} case is higher than in the 
+    \textit{undamped} case (conf. \eqref{eq:td}).
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=2.5]
+
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.15,2.25) -- (-0.15,-0.15) -- (4.25,-0.15);
+
+    \node[anchor=south] at  (4.25,-0.15) {$\nicefrac{t}{T_0}$}; 
+    \node[anchor=west]  at  (-0.15,2.25) {$y(t)$}; 
+
+    \draw (0.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+    \draw (0.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0.5};
+    \draw (1.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1};
+    \draw (1.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1.5};
+    \draw (2.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2};
+    \draw (2.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2.5};
+    \draw (3.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3};
+    \draw (3.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3.5};
+    \draw (4.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {4};
+
+    \draw (-0.15,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.15,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.15,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (-0.15,1.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1.5};
+    \draw (-0.15,2.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {2};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:2.1, samples=2] 
+      ({0},{\x});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.1*2*pi*\x)*sin(360*sqrt(1-0.1^2)*\x+acos(0.1))/sin(acos(0.1))});
+
+    \draw [semithick,densely dashed] plot
+          [ 
+          , domain=0:4
+          , samples=501
+          , smooth
+          ] ({\x},{1+exp(-0.1*2*pi*\x)});
+    \draw [semithick,densely dashed] plot
+          [ 
+          , domain=0:4
+          , samples=501
+          , smooth
+          ] ({\x},{1-exp(-0.1*2*pi*\x)});
+
+    \node[anchor=west,inner sep=0.5pt] (t) 
+      at (1.5,1.75) {$1+\exp\left\{-\alpha t\right\}$}; 
+    \node[anchor=west,inner sep=0.5pt] (b) 
+      at (2.0,0.25) {$1-\exp\left\{-\alpha t\right\}$};   
+
+    \draw[thin,gray] (t.west) -- (0.97,1.55);  
+    \draw[thin,gray] (b.west) -- (1.5,0.61);  
+  \end{tikzpicture}
+  \caption{Underdamped step response for $Q=5$ including evelopes}
+  \label{fig:step-response-env}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=2.5]
+
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.15,2.75) -- (-0.15,-0.15) -- (4.25,-0.15);
+
+    \node[anchor=south] at  (4.25,-0.15) {$\nicefrac{t}{T_0}$}; 
+    \node[anchor=west]  at  (-0.15,2.75) {$y(t)$}; 
+
+    \draw (0.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+    \draw (0.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0.5};
+    \draw (1.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1};
+    \draw (1.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {1.5};
+    \draw (2.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2};
+    \draw (2.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {2.5};
+    \draw (3.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3};
+    \draw (3.5,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {3.5};
+    \draw (4.0,-0.15) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {4};
+
+    \draw (-0.15,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.15,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.15,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (-0.15,1.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1.5};
+    \draw (-0.15,2.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {2};
+    \draw (-0.15,2.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {2.5};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:4, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.15:2.6, samples=2] 
+      ({0},{\x});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.1*2*pi*\x)*sin(360*sqrt(1-0.1^2)*\x+acos(0.1))/sin(acos(0.1))});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.25*2*pi*\x)*sin(360*sqrt(1-0.25^2)*\x+acos(0.25))/sin(acos(0.25))});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.354*2*pi*\x)*sin(360*sqrt(1-0.354^2)*\x+acos(0.354))/sin(acos(0.354))});
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.5*2*pi*\x)*sin(360*sqrt(1-0.5^2)*\x+acos(0.5))/sin(acos(0.5))});      
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.588*2*pi*\x)*sin(360*sqrt(1-0.588^2)*\x+acos(0.588))/sin(acos(0.588))});      
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.707*2*pi*\x)*sin(360*sqrt(1-0.707^2)*\x+acos(0.707))/sin(acos(0.707))});  
+
+    \draw[semithick] plot[smooth,domain=0:4, samples=501] 
+      ({\x},{1-e^(-0.866*2*pi*\x)*sin(360*sqrt(1-0.866^2)*\x+acos(0.866))/sin(acos(0.866))});  
+
+    \draw [semithick,densely dashed] plot
+          [ 
+          , domain=0.6:13
+          , samples=501
+          , smooth
+          ] ({\x/sqrt(4*\x^2-1)},{1+exp(-pi/sqrt(4*\x^2-1))});
+
+    \node[font=\small,anchor=east,inner sep=0.5pt] 
+      (ok) at (0.5,1.9) {$(t_{\mathrm{m}},y_{\mathrm{m}})$}; 
+
+    \node[font=\small,anchor=west,inner sep=0.5pt] (q5) at (0.75,2.5) {$Q=5$}; 
+    \node[font=\small,anchor=west,inner sep=0.5pt] (q2) at (0.85,2.3) {$Q=2$}; 
+    \node[font=\small,anchor=west,inner sep=0.5pt] (qsqrt2) at (0.95,2.1) {$Q=\sqrt{2}$}; 
+    \node[font=\small,anchor=west,inner sep=0.5pt] (q1) at (1.05,1.9) {$Q=1$};
+    \node[font=\small,anchor=west,inner sep=0.5pt] (qoversqrt3) at (0.9,0.38) {$Q=\nicefrac{1}{\sqrt{3}}$};
+    \node[font=\small,anchor=west,inner sep=0.5pt] (qoversqrt2) at (0.75,0.25) {$Q=\nicefrac{1}{\sqrt{2}}$};
+    \node[font=\small,anchor=west,inner sep=0.5pt] (q085) at (0.6,0.12) {$Q=0.85$};
+
+    \draw[thin,gray] (q5.west) -- (0.55,1.7);
+    \draw[thin,gray] (q2.west) -- (0.58,1.41);
+    \draw[thin,gray] (qsqrt2.west) -- (0.59,1.29);   
+    \draw[thin,gray] (q1.west) -- (0.62,1.16);  
+    \draw[thin,gray] (qoversqrt3.west) -- (0.7,0.98); 
+    \draw[thin,gray] (qoversqrt2.west) -- (0.49,0.965); 
+    \draw[thin,gray] (q085.west) -- (0.4,0.95);     
+  \end{tikzpicture}
+  \caption{Underdamped step responses}
+  \label{fig:step-response-ud}
+\end{figure}
 
 \begin{equation}
-y'(0)=
-\begin{cases}
--        & \mathrm{when} \ Q <\frac{1}{2} \\
-\omega_0 & \mathrm{when} \ Q = \frac{1}{2} \\
--        & \mathrm{when} \ \frac{1}{2} < Q  \\
-0        & \mathrm{when} \  Q \rightarrow \infty \\
-\end{cases} 
+t_{\mathrm{m}} = T_0 \frac{Q}{\sqrt{4Q^2-1}}
+\end{equation}
+\begin{equation}
+y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}
 \end{equation}
 
-
-\begin{tikzpicture}[scale=4]
-  \draw[{Latex[round,scale=1.2,round]}-{Latex[round,scale=1.2,round]}] 
-    (-0.15,2.25) -- (-0.15,0) -- (4,0);
-  \draw (0,0) -- (0,-0.05);
-  \draw (1,0) -- (1,-0.05);
-
-  \draw[densely dashed] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1});
-
-  \draw[green] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-e^(-2*pi*\x)*(1+2*pi*\x)});
-
-  %\draw[red] plot[smooth,domain=0:4, samples=501] 
-  %  ({\x},{1-e^(-\x)*(1+\x)});
-
-  \draw[blue] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-cos(360*\x)});
-
-  \draw[orange] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-e^(-pi/5*\x)*cos(sqrt(1-1/4/(5)^2)*360*\x)});
-
-  \draw[purple] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-e^(-pi/1*\x)*cos(sqrt(1-1/4/(1)^2)*360*\x)});
-
-  \draw[yellow] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-e^(-pi/0.85*\x)*cos(sqrt(1-1/4/(0.85)^2)*360*\x)});
-
-  \draw[magenta] plot[smooth,domain=0:3, samples=501] 
-    ({\x},{1-e^(-pi*sqrt(2)*\x)*cos(sqrt(1-1/4*0.5)*360*\x)});
-\end{tikzpicture}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ xlabel=$Q$ 
+                , xmin=0.5
+                , xmax=10
+                , ymin=0.001
+                , ymax=1
+                , ylabel=$\mathrm{OS}$
+                , grid=both
+                , xtick={0.5,1,...,10}
+                , ymode=log
+                , width=15cm
+                , height=8cm
+                ]
+        \addplot [  draw=black
+                  , domain=0.501:10
+                  , samples=501
+                  , smooth
+                  , semithick
+                  ]
+                  ({x},{e^(-pi/sqrt(4*x^2-1))});
+    \end{axis}              
+  \end{tikzpicture}
+  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q$ (only underdamped case)}
+  \label{fig:os}
+\end{figure}
 
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=4]
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
+
+    \node[anchor=south] at  (1,-0.05) {$t$}; 
+    \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
+
+    \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0.5});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+      ({0},{\x});
+
+    \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
+      ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+
+    \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
+      (0,0.5) -- (0.225,0.5) node[above,midway] {$t_{\mathrm{d}}$};
+
+  \end{tikzpicture}
+  \caption{Definition of the delay time $t_{\mathrm{d}}$}
+  \label{fig:td-def}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=4]
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
+
+    \node[anchor=south] at  (1,-0.05) {$t$}; 
+    \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
+
+    \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.05,0.1) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.1};
+    \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.05,0.9) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.9};
+    \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0.5});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0.1});     
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+      ({\x},{0.9});   
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+      ({0},{\x});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+      ({0.08},{\x});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+      ({0.42},{\x});
+
+    \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
+      ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+
+    \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
+      (0.08,0.92) -- (0.42,0.92) node[above,midway,fill=white,inner sep=1pt] {$t_{\mathrm{r}}$};
+  \end{tikzpicture}
+  \caption{Definition of the rising time $t_{\mathrm{r}}$}
+  \label{fig:tr-def}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=4]
+    \fill[lightgray] (-0.05,0.98) rectangle (1.35,1.02);
+
+    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+      (-0.05,1.3) -- (-0.05,-0.05) -- (1.5,-0.05);
+
+    \node[anchor=south] at  (1.5,-0.05) {$t$}; 
+    \node[anchor=west]  at  (-0.05,1.3) {$y(t)$}; 
+
+    \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+    \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+    \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+    \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.3, samples=2] 
+      ({\x},{1});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.3, samples=2] 
+      ({\x},{0});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.3, samples=2] 
+      ({\x},{0.5});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.1, samples=2] 
+      ({0},{\x});
+    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.1, samples=2] 
+      ({0.95},{\x});
+    \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
+      (0.0,1.09) -- (0.95,1.09) node[above,midway,fill=white,inner sep=1pt] {$t_{\mathrm{s}}$};
+
+    \draw[semithick] plot[smooth,domain=0:1.3, samples=101] 
+      ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+
+    \draw[-{Latex[round,scale=0.65,round]}]  (1.35,1.08) -- (1.35,1.02);
+    \draw[-{Latex[round,scale=0.65,round]}]  (1.35,0.94) -- (1.35,0.98);
+    \draw[]  (1.35,1.02) -- (1.35,0.98);
+    \node[anchor=west] at (1.35,1) {$\epsilon$};
+
+  \end{tikzpicture}
+  \caption{Definition of the settling time $t_{\mathrm{s}}$}
+  \label{fig:ts-def}
+\end{figure}
 
 \begin{figure}[H]
   \centering
@@ -544,8 +1063,15 @@ y'(0)=
                  = \frac{\omega_0^2}{s^2 + \sqrt{2} \omega_0 s + \omega_0^2 }
 \end{equation}
 
+
+
 \begin{equation}
 Q_{\mathrm{BW,2}}(s) = \frac{1}{\sqrt{2}}
+\end{equation}
+
+\begin{equation}
+\left|\underline{F}_{\mathrm{BW,2}}\right|
+                 = \frac{1}{\sqrt{1+\left(\frac{\omega}{\omega_0}\right)^4}}
 \end{equation}
 
 \subsection{Bessel}
