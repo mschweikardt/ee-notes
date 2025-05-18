@@ -1,0 +1,168 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+\include{./../../tikzlib/figs/nmos-4t-testbench-a.tex}
+
+\def \title  {BSIM-4}
+\def \date   {May 18, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/bsim-4.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/bsim-4}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+BSIM-4 has hundreds of model parameters, this why they are not explained in 
+detail.
+This model does in principle the same than the square-law 
+model\cite{mosfet-square-law}, it maps the applied voltages on the drain 
+current (I-V characteristic). 
+These (complicated) equations that map the voltages on the current are made 
+available by \gls{spice} simulators.
+All major commercial and open-source \gls{spice} simulators provide a 
+BSIM-4 model. 
+However, they may be not exactly identical to that put on the official 
+BSIM-4 web site \cite{liu-mosfetmodel-01} ,e.g., some RF simulators add an 
+additional gate resistance to the model which is not present in the origin model.
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \NmosFourtTestbenchA
+  \end{circuitikz}
+  \caption{Definition of $V_{\mathrm{GS}}$, $V_{\mathrm{DS}}$, $V_{\mathrm{SB}}$ and $I_{\mathrm{D}}$}
+  \label{fig:testbench}
+\end{figure}
+
+
+Several interim results (operating points) of these equations can be 
+investigated by designers.
+They allow a deeper insight in the behavior of the device and will help 
+designers in size their circuits more easily.
+An excerpt of a some operating points is shown in Tab. \ref{tab:oppoints}.
+
+\begin{table}[H]
+\centering
+\caption{Some BSIM-4 operating points in Ngspice}
+\begin{tabular}{ccl}
+\toprule
+\textbf{Identifier}  & \textbf{Variable}      & \textbf{Description}                                   \\ \midrule
+\texttt{vth}         & $V_{\mathrm{TH}}$      & Threshold voltage                                      \\ 
+\texttt{gm}          & $g_{\mathrm{m}}$       & Intrinsic transconductance                             \\ 
+\texttt{gmbs}        & $g_{\mathrm{mb}}$      & Intrinsic backgate transconductance                    \\ 
+\texttt{gds}         & $g_{\mathrm{DS}}$      & Intrinsic Drain-Source conductance                     \\ 
+\texttt{vdsat}       & $V_{\mathrm{DS,sat}}$  & Saturation voltage                                     \\ 
+\texttt{vds}         & $V_{\mathrm{DS,i}}$    & Intrinsic Drain-Source voltage                         \\ 
+\texttt{vgs}         & $V_{\mathrm{GS,i}}$    & Intrinsic Gate-Source voltage                          \\ 
+\texttt{qg}          & $Q_{\mathrm{G}}$       & Intrinsic Gate charge                                  \\ 
+\texttt{qd}          & $Q_{\mathrm{D}}$       & Intrinsic Drain charge                                 \\ 
+\texttt{qs}          & $Q_{\mathrm{S}}$       & Intrinsic Source charge                                \\ 
+\texttt{qb}          & $Q_{\mathrm{B}}$       & Intrinsic Bulk charge                                  \\ 
+\texttt{cgg}         & $C_{\mathrm{GG,i}}$    & Intrinsic Gate capacitance                             \\ 
+\texttt{cdd}         & $C_{\mathrm{DD,i}}$    & Intrinsic Drain capacitance                            \\ 
+\texttt{css}         & $C_{\mathrm{SS,i}}$    & Intrinsic Source capacitance                           \\ 
+\texttt{cbb}         & $C_{\mathrm{BB,i}}$    & Intrinsic Bulk capacitance                             \\ 
+\texttt{cds}         & $c_{\mathrm{DS,i}}$    & Intrinsic Drain-Source transcapacitance                \\ 
+\texttt{csd}         & $c_{\mathrm{SD,i}}$    & Intrinsic Source-Drain transcapacitance                \\ 
+\texttt{cdg}         & $c_{\mathrm{DG,i}}$    & Intrinsic Drain-Gate transcapacitance                  \\ 
+\texttt{cgd}         & $c_{\mathrm{GD,i}}$    & Intrinsic Gate-Drain transcapacitance                  \\ 
+\texttt{cdb}         & $c_{\mathrm{DB,i}}$    & Intrinsic Drain-Bulk transcapacitance                  \\ 
+\texttt{cbd}         & $c_{\mathrm{BD,i}}$    & Intrinsic Bulk-Drain transcapacitance                  \\ 
+\texttt{csg}         & $c_{\mathrm{SG,i}}$    & Intrinsic Source-Gate transcapacitance                 \\ 
+\texttt{cgs}         & $c_{\mathrm{GS,i}}$    & Intrinsic Gate-Source transcapacitance                 \\
+\texttt{cbg}         & $c_{\mathrm{BG,i}}$    & Intrinsic Source-Gate transcapacitance                 \\
+\texttt{cgb}         & $c_{\mathrm{GB,i}}$    & Intrinsic Gate-Source transcapacitance                 \\
+\texttt{csb}         & $c_{\mathrm{SB,i}}$    & Intrinsic Source-Bulk transcapacitance                 \\
+\texttt{cbs}         & $c_{\mathrm{BS,i}}$    & Intrinsic Bulk-Source transcapacitance                 \\
+\texttt{capbd}       & $C_{\mathrm{DB,j}}$    & Extrinsic Bulk-Drain junction capacitance              \\
+\texttt{capbs}       & $C_{\mathrm{SB,j}}$    & Extrinsic Bulk-Source junction capacitance             \\
+\texttt{cgso}        & $C_{\mathrm{GSO}}$     & Extrinsic Gate-Source overlap and fringing capacitance \\
+\texttt{cgdo}        & $C_{\mathrm{GDO}}$     & Extrinsic Gate-Drain overlap and fringing capacitance  \\
+\texttt{cgbo}        & $C_{\mathrm{GBO}}$     & Extrinsic Gate-Bulk overlap and fringing capacitance   \\ \toprule
+\end{tabular}
+\label{tab:oppoints}
+\end{table}
+
+Different \gls{spice} simulators have different naming conventions for 
+operating points.
+The nomenclature presented here correspond to the Ngspice circuit simulator.
+
+\section{Intrinsic and Extrinsic}
+
+The model of a MOSFET can be divided into an intrinsic and extrinsic part.
+
+The intrinsic part describes the transistor itself (MOS structure), 
+whereas the the extrinsic part models contact resistances, junctions and 
+overlap capacitances.
+
+Fig. \ref{fig:intr-extr} shows a model of a transistor 
+(terminals $D$, $G$, $S$ and $B$) with an intrinsic MOS transistor 
+(terminals $D'$, $G$, $S'$ and $B$) in the middle and various extrinsic 
+components around.
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \ctikzset{bipoles/diode/width=0.3}
+    \ctikzset{bipoles/diode/height=0.3}
+
+    \node[nfet](mos) at (0,0) {};
+    \node[]() at (0.2,0.2) {$M_{\mathrm{i}}$};
+
+    \draw (mos.drain) to [short,- ] ++ (0,0.5) coordinate (draindiode)
+                      to [short,-o] ++ (0,1)   node[right] (d2) {$D'$}
+                      to [short,- ] ++ (0,1)   coordinate (c)
+                      to [R,l_=$R_{\mathrm{D}}$,-o] ++ (0,2) node[right] (d) {$D$};
+
+    \draw (mos.source) to [short,- ]  ++ (0,-0.5) coordinate (sourcediode)
+                       to [short,-o]  ++ (0,-1)   node[right] (s2) {$S'$}
+                       to [R,l=$R_{\mathrm{S}}$,-o] ++ (0,-2) node[right] (s) {$S$};
+
+    \draw (mos.bulk) to [short,-] ++ (2,0) coordinate (b)
+                     to [short,-] (draindiode-|b)
+                     to [D,-*,l_=$D_{\mathrm{DB,j}}$] (draindiode);
+
+    \draw (b) to [short,*-] (sourcediode-|b)
+              to [D,-*,l=$D_{\mathrm{SB,j}}$] (sourcediode);
+
+    \draw (mos.gate) to [short,-*] ++ (-1,0) coordinate (g)
+                     to [short,-] (g|-draindiode) coordinate (x)
+                     to [C,l=$C_{\mathrm{GDO}}$] (draindiode);
+
+    \draw (g) to [short,-] (g|-sourcediode)
+              to [C,l_=$C_{\mathrm{GSO}}$] (sourcediode); 
+
+    \draw (x) to [short,*-] (x|-c) coordinate (x)
+              to [C,l=$C_{\mathrm{GBO}}$] (x-|c)
+              to [short,-] (x-|b)
+              to [short,-*] (b|-draindiode);
+
+    \draw (g) to [short,-o] ++ (-0.75,0) node[left] {$G$};
+    \draw (b) to [short,-o] ++ ( 0.75,0) node[right] {$B$};
+  \end{circuitikz}
+  \caption{Intrinsic and Extrinsic components of a MOS transistor}
+  \label{fig:intr-extr}
+\end{figure}
+
+$R_{\mathrm{D}}$ and $R_{\mathrm{S}}$ model the resistance of the Drain and 
+Source regions. 
+The diodes $D_{\mathrm{DB,j}}$ and $D_{\mathrm{SB,j}}$ belong to the junction 
+of the Drain and Source regions.
+They are reverse biased in normal operation mode of the transistor. 
+The small signal model of these diodes consist of a capacitance and 
+a conductance.
+The overlap and fringing capacitance of the Gate with all other terminals are 
+described with $C_{\mathrm{GSO}}$, $C_{\mathrm{GDO}}$ and $C_{\mathrm{GBO}}$.
+
+\cite{bsim480-man}
+\cite{ngspice-44}
+\cite{tsividis-mosfetmodel-11}
+
+\printbibliography
+
+\end{document}
