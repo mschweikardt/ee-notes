@@ -906,6 +906,34 @@ y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\rig
   \label{fig:os}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ xlabel=$Q$ 
+                , xmin=0.5
+                , xmax=1
+                , ymin=0.0001
+                , ymax=1
+                , ylabel=$\mathrm{OS}$
+                , grid=both
+                , xtick={0.5,0.55,...,1}
+                , ymode=log
+                , width=15cm
+                , height=8cm
+                ]
+        \addplot [  draw=black
+                  , domain=0.501:1
+                  , samples=501
+                  , smooth
+                  , semithick
+                  ]
+                  ({x},{e^(-pi/sqrt(4*x^2-1))});
+    \end{axis}              
+  \end{tikzpicture}
+  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q$ (only underdamped case)}
+  \label{fig:os}
+\end{figure}
+
 
 \begin{figure}[H]
   \centering
@@ -994,12 +1022,12 @@ $Q$                      & $\zeta$                   & $\nicefrac{t_{\mathrm{d}}
 0.25                     & 2                         & -                                & -                                                                      & -                                                                      \\ 
 0.5                      & 1                         & -                                & -                                                                      & -                                                                      \\ 
 $\nicefrac{1}{\sqrt{3}}$ & $\nicefrac{\sqrt{3}}{2}$  & -                                & -                                                                      & -                                                                      \\ 
-$\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & 0                                & -                                                                      & -                                                                      \\ 
-0.85                     & 0.588                     & 0.555                            & -                                                                      & -                                                                      \\ 
-1                        & 0.5                       & $\nicefrac{1}{\sqrt{2}}$         & -                                                                      & -                                                                      \\ 
-$\sqrt{2}$               & 0.354                     & $\nicefrac{\sqrt{3}}{2}$         & -                                                                      & -                                                                      \\ 
-2                        & 0.25                      & 0.935                            & -                                                                      & -                                                                      \\ 
-5                        & 0.1                       & 0.99                             & -                                                                      & -                                                                      \\ \toprule
+$\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & -                                & -                                                                      & -                                                                      \\ 
+0.85                     & 0.588                     & -                                & -                                                                      & -                                                                      \\ 
+1                        & 0.5                       & -                                & -                                                                      & -                                                                      \\ 
+$\sqrt{2}$               & 0.354                     & -                                & -                                                                      & -                                                                      \\ 
+2                        & 0.25                      & -                                & -                                                                      & -                                                                      \\ 
+5                        & 0.1                       & -                                & -                                                                      & -                                                                      \\ \toprule
 \end{tabular}
 \label{tab:char-td-tr}
 \end{table}
@@ -1124,7 +1152,7 @@ results in
 \end{equation}
 and
 \begin{equation}
-Q = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}.
+Q_{\mathrm{S}} = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}.
 \end{equation}
 
 \begin{equation}
@@ -1132,7 +1160,16 @@ Q = \frac{X}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}
 \end{equation}
 
 \subsection{Parallel RLC}
-tbd
+\begin{equation}
+\underline{F}(s) = \frac{\underline{I}_{\mathrm{O}}(s)}{\underline{I}_{\mathrm{I}}(s)} 
+                 = \frac{\frac{1}{sL}}{\frac{1}{R}+sC+\frac{1}{sL}}
+                 = \frac{1}{1 + \frac{sL}{R}+s^2LC}
+                 = \frac{\frac{1}{LC}}{s^2+s \frac{1}{RC} + \frac{1}{LC}}                 
+\end{equation}
+
+\begin{equation}
+Q_{\mathrm{P}} = R \sqrt{\frac{C}{L}}.
+\end{equation}
 
 \printbibliography
 \end{document}

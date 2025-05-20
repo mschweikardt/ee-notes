@@ -5,14 +5,13 @@
 
 
 \def \title  {Feedback Stability}
-\def \date   {May 16, 2025}
+\def \date   {May 17, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/feedback-stability.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/feedback-stability}
 
 \usepackage[scale=5]{draftwatermark}
 
-\usepackage{pgfplots}
 \usetikzlibrary{pgfplots.groupplots}
 
 \begin{document}
@@ -43,7 +42,6 @@
     \node[circle,draw=black,fill=black,scale=0.5] () at (5.5,0) {};
 
     \draw[-{Latex[round]},thick] (5.5,0) -- (5.5,-2.3) -- (4.5,-2.3);
-
   \end{tikzpicture}
   \caption{Feedback system}
   \label{fig:fs}
@@ -246,7 +244,10 @@ $$
 y_{\mathrm{B}} = y_{\mathrm{A}} - 3 \mathrm{dB}
 $$
 and extract the matching $x_{\mathrm{B}} = f_{\mathrm{3dB}}$ 
-(\SI{100}{\hertz} in this example).
+(\SI{100}{\hertz} in this example%
+\footnote{In most cases, the phase is \SI{-45}{\degree} at
+$f_{\mathrm{3dB}}$.}
+).
 Based on that, the \textit{gain-bandwidth product}
 \begin{equation}
 \mathrm{GBP} = A_0 \cdot f_{\mathrm{3dB}}
@@ -280,6 +281,7 @@ $$
 \mathrm{PM} = 180° + y_{\mathrm{D}}
 $$
 is calculated (\SI{39}{\degree} in this example).
+The phase margin is a measure for the stability of the system.
 
 The crossover of the phase with \SI{-180}{\degree} results in the 
 point $\mathrm{E}$.
