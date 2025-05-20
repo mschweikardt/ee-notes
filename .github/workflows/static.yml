@@ -26,17 +26,15 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/xu-cheng/texlive-full:latest
     needs: cleanup
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install dependecies
-        run: |
-          sudo apt-get update
-          sudo apt-get install texlive-full 
-      - name: Build figures
+      - name: Build docs
         run: |
           ./build.sh
       - name: Archive production artifacts
