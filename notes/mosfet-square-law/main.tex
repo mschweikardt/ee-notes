@@ -17,9 +17,11 @@
 
 \include{./../../tikzlib/figs/square-law-output-clm-a.tex}
 
+\include{./../../tikzlib/figs/mosfet-equivalent-circuit-b.tex}
+
 
 \def \title  {MOSFET Square Law}
-\def \date   {May 9, 2025}
+\def \date   {May 20, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/mosfet-square-law.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/mosfet-square-law}
@@ -305,6 +307,18 @@ $g_{\mathrm{DS}}$.
   \caption{Output characteristic including \gls{clm}}
   \label{fig:squarelaw-output-clm}
 \end{figure}
+
+\section{Small-Signal Model}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \MosfetEqCircB
+  \end{circuitikz} 
+  \caption{Small-signal model}
+  \label{fig:squarelaw-small-signal}
+\end{figure}
+
 
 \printbibliography
 
