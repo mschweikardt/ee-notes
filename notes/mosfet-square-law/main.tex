@@ -49,6 +49,9 @@ specific oxide capacitance $C_{\mathrm{ox}}$
 \begin{equation}
 K' = \mu_0 \cdot C_{\mathrm{ox}}.
 \end{equation}
+We may also add 'N' or 'P' as subscript to these variables to indicate whether 
+it is an n-channel \gls{mosfet} or an n-channel \gls{mosfet}.
+
 The square law is inaccurate for state of the art semiconductor devices, 
 but it is still a good starting point to understand the behavior of 
 a transistor quantitatively.
@@ -95,7 +98,8 @@ Mode                 & $V_{\mathrm{GS}}$      & $V_{\mathrm{DS}}$               
 \label{tab:regions}
 \end{table}
 
-These regions are called \textit{off}, \textit{ohmic} (a.k.a. \textit{triode}) 
+These regions are called \textit{off} (a.k.a. \textit{cutoff}), 
+\textit{ohmic} (a.k.a. \textit{triode}) 
 and \textit{saturation} (a.k.a. \textit{active}).
 As an alternative, the \textit{mode of operation} can be illustrated in the
 $V_{\mathrm{GS}}$-$V_{\mathrm{DS}}$ plane 
@@ -116,7 +120,7 @@ Fig.~\ref{fig:squarelawregionplot} is abbreviated as overdrive voltage%
 \footnote{Some analog designers use the overdrive voltage voltage as knob 
 (\SI{150}{\milli\volt}-\SI{400}{\milli\volt}).}
 \begin{equation}\label{eq:vov}
-  V_{\mathrm{OV}} = V_{\mathrm{GS}}-V_{\mathrm{TH}}.
+  V_{\mathrm{OV}} := V_{\mathrm{GS}}-V_{\mathrm{TH}}.
 \end{equation}
 
 \section{IV-Equations}
@@ -141,11 +145,15 @@ With the definition made in \eqref{eq:vov} we can simplify
 \begin{equation}\label{eq:id-saturation-vov}
 I_{\mathrm{D}} = \frac{1}{2} \ K' \ \frac{W}{L} V_{\mathrm{OV}}^2.
 \end{equation}
-We may also set
-\begin{equation}\label{eq:beta}
-\beta = K' \ \frac{W}{L}
+We may also substitute the \textit{shape}
+\begin{equation}\label{eq:shape}
+S = \ \frac{W}{L}
 \end{equation}
-for simplification.
+and \textit{scaled transconductance parameter}
+\begin{equation}\label{eq:beta}
+\beta = K' \ \frac{W}{L} = K' \ S
+\end{equation}
+in the equations above for simplification.
 
 \section{Transfer Characteristic}
 
