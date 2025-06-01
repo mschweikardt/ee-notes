@@ -21,7 +21,7 @@
 
 
 \def \title  {MOSFET Square Law}
-\def \date   {May 20, 2025}
+\def \date   {June 1, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/mosfet-square-law.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/mosfet-square-law}
@@ -91,7 +91,7 @@ Tab.~\ref{tab:regions} explains these regions.
 \begin{tabular}{cccc}
 \toprule
 Mode                 & $V_{\mathrm{GS}}$      & $V_{\mathrm{DS}}$                     & $I_{\mathrm{D}}$         \\ \midrule
-\textit{off}         & $<V_{\mathrm{TH}}$     & all                                   & 0                        \\ 
+\textit{off}         & $<V_{\mathrm{TH}}$     & all                                   & $=0$                     \\ 
 \textit{ohmic}       & $\geq V_{\mathrm{TH}}$ & $< V_{\mathrm{GS}}-V_{\mathrm{TH}}$   & \eqref{eq:id-ohmic}      \\ 
 \textit{saturation}  & $\geq V_{\mathrm{TH}}$ & $\geq V_{\mathrm{GS}}-V_{\mathrm{TH}}$& \eqref{eq:id-saturation} \\ \toprule
 \end{tabular}
@@ -290,11 +290,12 @@ One major parasitic effect is \gls{clm}.
 \medskip
 
 We may describe this effect by multiplying the function of the ideal drain
-current $I_{\mathrm{D}}$ with the term 
+current $I_{\mathrm{D}}$ in saturation with the term 
 \begin{equation}
  \left(1 + \lambda \cdot V_{\mathrm{DS}}\right).
 \end{equation}
-$\lambda$ is a technology parameter and decreases for bigger lengths $L$.
+$\lambda$ (unit \si{\per\volt}) is a technology parameter and decreases for 
+bigger lengths $L$.
 The additional term converges to one (no effect) as we increase the
 length.
 
@@ -304,8 +305,9 @@ Fig.~\ref{fig:squarelaw-output-clm} shows the output characteristic
 including \gls{clm}.
 The drain current $I_{\mathrm{D}}$ is not constant in \textit{saturation},
 we see a linear increase.
-We refer to the slope in \textit{saturation} as Drain-Source conductance
-$g_{\mathrm{DS}}$.
+We refer to the slope in \textit{saturation} as 
+\textit{Drain-Source conductance} $g_{\mathrm{DS}}$ or 
+\textit{output conductance} $g_{\mathrm{O}}$.
 
 \begin{figure}[H]
   \centering
