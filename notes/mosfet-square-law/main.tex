@@ -15,9 +15,9 @@
 
 \include{./../../tikzlib/figs/square-law-gm-a.tex}
 
-\include{./../../tikzlib/figs/square-law-output-clm-a.tex}
+\include{./../../tikzlib/figs/square-law-output-clm-b.tex}
 
-\include{./../../tikzlib/figs/mosfet-equivalent-circuit-b.tex}
+\include{./../../tikzlib/figs/mosfet-equivalent-circuit-d.tex}
 
 
 \def \title  {MOSFET Square Law}
@@ -140,7 +140,7 @@ while it is
 when it is in \textit{saturation} mode.
 From \eqref{eq:id-saturation} we can see that $I_{\mathrm{D}}$ does 
 not depend on $V_{\mathrm{DS}}$ in \textit{saturation} mode.
-With the definition made in \eqref{eq:vov} we can simplify 
+With the definition made in \eqref{eq:vov}, we can simplify 
 \eqref{eq:id-saturation} to
 \begin{equation}\label{eq:id-saturation-vov}
 I_{\mathrm{D}} = \frac{1}{2} \ K' \ \frac{W}{L} V_{\mathrm{OV}}^2.
@@ -203,7 +203,6 @@ linear ($\sim V_{\mathrm{GS}}$) in the \textit{ohmic} region.
   \label{fig:squarelawtransf}
 \end{figure}
 
-
 \section{Output Characteristic}
 
 The \textit{output characteristic} explains the relation between the drain 
@@ -254,7 +253,7 @@ The boundary between \textit{ohmic} and \textit{saturation}
                   \stackrel{\eqref{eq:vov}}{=} V_{\mathrm{GS}} - V_{\mathrm{TH}}.
 \end{equation}
 
-\section{Transconductance}
+\section{Transconductance}\label{sec:gm}
 
 The \textit{transconductance} $g_{\mathrm{m}}$ of the transistor is the 
 derivative of the drain current $I_{\mathrm{D}}$ wrt. to 
@@ -281,7 +280,7 @@ g_{\mathrm{m}} = \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{GS}}}
                = \sqrt{2 K' \frac{W}{L} I_{\mathrm{D}}}
 \end{equation}
 
-\section{Channel Length Modulation}
+\section{Channel Length Modulation}\label{sec:clm}
 
 The ideal behavior of a \gls{mosfet} as explained above is affected by
 several parasitic effects.
@@ -290,12 +289,20 @@ One major parasitic effect is \gls{clm}.
 \medskip
 
 We may describe this effect by multiplying the function of the ideal drain
-current $I_{\mathrm{D}}$ in saturation with the term 
+current $I_{\mathrm{D}}$ in saturation \eqref{eq:id-saturation} with the term 
+$ \left(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\right)$.
+Then, we get
 \begin{equation}
- \left(1 + \lambda \cdot V_{\mathrm{DS}}\right).
+ I_{\mathrm{D}} 
+ = \underbrace{\frac{1}{2} \ K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{TH}})^2}_{I_{\mathrm{D,sat}}} \ 
+  \big(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\big)
+ = I_{\mathrm{D,sat}} \big(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\big).
 \end{equation}
 $\lambda$ (unit \si{\per\volt}) is a technology parameter and decreases for 
-bigger lengths $L$.
+bigger lengths $L$, i.e.
+\begin{equation}
+\lambda \sim \frac{1}{L}.
+\end{equation}
 The additional term converges to one (no effect) as we increase the
 length.
 
@@ -308,11 +315,16 @@ we see a linear increase.
 We refer to the slope in \textit{saturation} as 
 \textit{Drain-Source conductance} $g_{\mathrm{DS}}$ or 
 \textit{output conductance} $g_{\mathrm{O}}$.
+It is
+\begin{equation}\label{eq:gds}
+g_{\mathrm{DS}} = \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{DS}}} 
+                = I_{\mathrm{D,sat}} \cdot \lambda.
+\end{equation}
 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawOutputClmA
+    \SquareLawOutputClmB
   \end{tikzpicture} 
   \caption{Output characteristic including \gls{clm}}
   \label{fig:squarelaw-output-clm}
@@ -320,15 +332,24 @@ We refer to the slope in \textit{saturation} as
 
 \section{Small-Signal Model}
 
+With the definition made in the sections \ref{sec:gm} and \ref{sec:clm},
+we can create a \textit{small-signal model} 
+(Fig. \ref{fig:squarelaw-small-signal}).
+
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \MosfetEqCircB
+    \MosfetEqCircD
   \end{circuitikz} 
   \caption{Small-signal model}
   \label{fig:squarelaw-small-signal}
 \end{figure}
-
+The drain current in the small signal model is
+\begin{equation}\label{eq:id-ss}
+\underline{I}_{\mathrm{D}} =  
+g_{\mathrm{m}} \ \underline{V}_{\mathrm{GS}} 
++ g_{\mathrm{DS}} \ \underline{V}_{\mathrm{DS}}.
+\end{equation}
 
 \printbibliography
 
