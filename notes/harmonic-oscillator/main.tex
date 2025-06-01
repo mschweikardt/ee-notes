@@ -5,7 +5,7 @@
 \input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
 
 \def \title  {Harmonic Oscillator}
-\def \date   {May 18, 2025}
+\def \date   {June 2, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/harmonic-oscillator.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/harmonic-oscillator}
@@ -18,6 +18,7 @@
 \begin{document}
 
 \notetitle
+
 
 \section{Introduction}
 
@@ -59,7 +60,7 @@ $t_{\mathrm{s}}$      & Settling time                            \\ \toprule
 \label{tab:variables}
 \end{table}
 
-
+Lets define the abbreviations
 \begin{center}
 \begin{tabular}{p{4cm}p{2cm}p{4cm}}
   \begin{equation}
@@ -68,12 +69,14 @@ $t_{\mathrm{s}}$      & Settling time                            \\ \toprule
   &
   &
   \begin{equation}
-    Q =\frac{1}{2\zeta}
+    Q =\frac{1}{2\zeta}.
   \end{equation}
 \end{tabular}
 \end{center}
 
-\section{Steady-state}
+\newpage
+
+\section{Steady-State}
 
 When we transfer \eqref{eq:dgl} in the frequency domain, we get
 
@@ -94,7 +97,7 @@ We can see easily that
   \end{equation}
   &
   &
-  \begin{equation}
+  \begin{equation}\label{eq:argf0}
     \arg{\underline{F}(j\omega_0)} = -\SI{90}{\degree}.
   \end{equation}
 \end{tabular}
@@ -297,7 +300,7 @@ and
 It is obvious that  $\omega_{\mathrm{m}} \rightarrow \omega_{\mathrm{0}}$
 for $Q \rightarrow \infty$ and therefore 
 $\left|\underline{F}(j\omega_{\mathrm{m}})\right| \rightarrow  Q$
-for$Q \rightarrow \infty$.
+for $Q \rightarrow \infty$.
 The locus $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
 is shown in Fig.~\ref{fig:plot-fs} (dashed line).
 We refer to $\omega_{\mathrm{m}}$ when $Q\geq\nicefrac{1}{\sqrt{2}}$%
@@ -353,13 +356,15 @@ $\infty$                 & 0                         & 1                        
 \label{tab:char-fs}
 \end{table}
 
-
+The phase of $\underline{F}(j\omega)$ is
 \begin{equation}
 \arg\left(\underline{F}(j\omega)\right)= 
   -\atan\left(\frac{\frac{\omega}{Q \omega_0}}
-                   {1-\left(\frac{\omega}{\omega_0}\right)^2}\right)
+                   {1-\left(\frac{\omega}{\omega_0}\right)^2}\right).
 \end{equation}
-
+A plot of the phase for different $Q$ is provided in Fig. \ref{fig:plot-fs-arg}.
+All curves cross the point already discovered in
+\eqref{eq:argf0}.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -498,11 +503,14 @@ $\infty$                 & 0                         & 1                        
   \label{fig:plot-fs-arg}
 \end{figure}
 
+The group delay is
+
 \begin{equation}
 \tau_{\mathrm{g}} = -\frac{\mathrm{d} \arg\left(\underline{F}(j\omega)\right)}{\mathrm{d}\omega}
-                  = \frac{Q}{\omega_0} \frac{1+\left(\frac{\omega}{\omega_0}\right)^2}{Q^2 + \left(1-2Q^2\right) \left(\frac{\omega}{\omega_0}\right)^2 + Q^2 \left(\frac{\omega}{\omega_0}\right)^4}
+                  = \frac{Q}{\omega_0} \frac{1+\left(\frac{\omega}{\omega_0}\right)^2}{Q^2 + \left(1-2Q^2\right) \left(\frac{\omega}{\omega_0}\right)^2 + Q^2 \left(\frac{\omega}{\omega_0}\right)^4}.
 \end{equation}
 
+\section{Poles}
 
 Depending on $Q$, we can define four different cases. 
 They are depicted in Tab.~\ref{tab:pz}.
@@ -618,27 +626,28 @@ They are depicted in Tab.~\ref{tab:pz}.
 
 \section{Step Response}
 
-\cite{golnaraghi-acs-10}
-
+Next, we will calculate the step response, i.e. $y(t)$ for the input signal
 \begin{equation}
 x(t) =
 \begin{cases}
 0 & \mathrm{when} \ t < 0    \\
 1 & \mathrm{when} \ t \geq 0 \\
-\end{cases} 
+\end{cases}.
 \end{equation}
 
+First, we need to introduce the abbreviations
 \begin{equation}
  T_0 = \frac{2\pi}{\omega_0}
 \end{equation}
-
+and
 \begin{equation}\label{eq:td}
  T_{\mathrm{d}} = \frac{2\pi}{\omega_{\mathrm{d}}} 
                 = \frac{2\pi}{\omega_0 \sqrt{1-\zeta^2}}
                 = \frac{T_0}{\sqrt{1-\zeta^2}} 
-                = \frac{T_0}{\sqrt{1-\frac{1}{4 Q^2}}}
+                = \frac{T_0}{\sqrt{1-\frac{1}{4 Q^2}}}.
 \end{equation}
 
+Using \cite{golnaraghi-acs-10}, we can derive 
 \begin{equation}
 y(t)=
 \begin{cases}
@@ -653,7 +662,8 @@ with
 \zeta = \cos(\phi).
 \end{equation}
 
-
+The output signal $y(t)$ is shown in Fig. \ref{fig:step-response}
+for different $Q$.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=2.5]
@@ -720,11 +730,13 @@ with
 
 \begin{itemize}
   \item $y(t) \rightarrow 1$ for $t \rightarrow \infty$ when $Q < \infty$.
-  \item $y(t) > 1$ only for $Q > 0.5$. 
+  \item $y(t) > 1$ and oscillates only for $Q > 0.5$. 
   \item The period in the \textit{underdamped} case is higher than in the 
     \textit{undamped} case (conf. \eqref{eq:td}).
 \end{itemize}
 
+The functions $1 \pm \exp\left\{-\alpha t\right\}$ are an envelope
+for $y(t)$ in the \textit{underdamped} case (Fig. \ref{fig:step-response-env}).
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=2.5]
@@ -786,6 +798,8 @@ with
   \label{fig:step-response-env}
 \end{figure}
 
+Fig. \ref{fig:step-response-ud} shows the step response for
+different $Q>0.5$ (\textit{Underdamped}).
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=2.5]
@@ -871,13 +885,29 @@ with
   \label{fig:step-response-ud}
 \end{figure}
 
+\subsection{Overshoot}
+
+The waveform $y(t)$ has a maximum at 
 \begin{equation}
 t_{\mathrm{m}} = T_0 \frac{Q}{\sqrt{4Q^2-1}}
 \end{equation}
+for $Q > \nicefrac{1}{2}$ with
 \begin{equation}
-y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}
+y(t_{\mathrm{m}}) =y_{\mathrm{m}} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}.
 \end{equation}
-
+With that, we can calculate the overshoot
+\begin{equation}
+\mathrm{OS} =  \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}.
+\end{equation}
+The higher the quality $Q$, the higher the overshoot.
+In the \textit{undamped} case, the overshoot is \SI{100}{\percent}.
+Conversely, we can directly calculate the quality 
+\begin{equation}
+Q = \left|\frac{\sqrt{\ln\left(\mathrm{OS}\right)^2+\pi^2}}{2\ln\left(\mathrm{OS}\right)}\right|
+\end{equation}
+based on the given overshoot.
+Fig. \ref{fig:os1} and \ref{fig:os2} show the overshoot as 
+a function of the quality $Q$.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -891,7 +921,7 @@ y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\rig
                 , xtick={0.5,1,...,10}
                 , ymode=log
                 , width=15cm
-                , height=8cm
+                , height=6cm
                 ]
         \addplot [  draw=black
                   , domain=0.501:10
@@ -902,8 +932,8 @@ y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\rig
                   ({x},{e^(-pi/sqrt(4*x^2-1))});
     \end{axis}              
   \end{tikzpicture}
-  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q$ (only underdamped case)}
-  \label{fig:os}
+  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q\in\left(0.5,10\right]$}
+  \label{fig:os1}
 \end{figure}
 
 \begin{figure}[H]
@@ -919,7 +949,7 @@ y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\rig
                 , xtick={0.5,0.55,...,1}
                 , ymode=log
                 , width=15cm
-                , height=8cm
+                , height=6cm
                 ]
         \addplot [  draw=black
                   , domain=0.501:1
@@ -930,108 +960,231 @@ y_{\mathrm{m}} = 1 + \mathrm{OS} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\rig
                   ({x},{e^(-pi/sqrt(4*x^2-1))});
     \end{axis}              
   \end{tikzpicture}
-  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q$ (only underdamped case)}
-  \label{fig:os}
+  \caption{Overshoot $\mathrm{OS}$ vs. quality $Q\in\left(0.5,1\right]$}
+  \label{fig:os2}
 \end{figure}
 
 
+\begin{table}[H]
+\centering
+\caption{Overshoot $\mathrm{OS}$}
+\begin{tabular}{ccc}
+\toprule
+$Q$                      & $\zeta$                   & $\mathrm{OS}$ in \si{\percent}  \\ \midrule
+$\nicefrac{1}{\sqrt{3}}$ & $\nicefrac{\sqrt{3}}{2}$  & 0.43                            \\ \midrule
+0.581                    & 0.861                     & 0.5                             \\ \midrule
+0.605                    & 0.826                     & 1                               \\ \midrule
+0.641                    & 0.78                      & 2                               \\ \midrule
+0.657                    & 0.761                     & 2.5                             \\ \midrule
+0.671                    & 0.745                     & 3                               \\ \midrule
+0.699                    & 0.715                     & 4                               \\ \midrule
+$\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & 4.32                            \\ \midrule
+0.725                    & 0.69                      & 5                               \\ \midrule
+0.786                    & 0.636                     & 7.5                             \\ \midrule
+0.845                    & 0.592                     & 10                              \\ \midrule
+0.85                     & 0.588                     & 10.18                           \\ \midrule
+1                        & 0.5                       & 16.3                            \\ \midrule
+1.097                    & 0.456                     & 20                              \\ \midrule
+1.239                    & 0.404                     & 25                              \\ \midrule
+1.397                    & 0.358                     & 30                              \\ \midrule
+$\sqrt{2}$               & 0.354                     & 30.5                            \\ \midrule
+1.786                    & 0.28                      & 40                              \\ \midrule
+2                        & 0.25                      & 44.43                           \\ \midrule
+2.32                     & 0.216                     & 50                              \\ \midrule
+3.115                    & 0.161                     & 60                              \\ \midrule
+4.432                    & 0.113                     & 70                              \\ \midrule
+5                        & 0.1                       & 72.92                           \\ \midrule
+5.483                    & 0.091                     & 75                              \\ \toprule
+\end{tabular}
+\label{tab:os}
+\end{table}
+
+
+\subsection{Delay- and Rise Time}
+Two relevant metrics of the step response is the 
+\textit{delay time} $t_{\mathrm{d}}$
+and the \textit{rising time} $t_{\mathrm{r}}$.
+The delay time is the time it takes for the output signal 
+$y(t)$ to get from 0 to \SI{50}{\percent} (Fig.~\ref{fig:td-def}).
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[scale=4]
-    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
-      (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=4]
+      \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+        (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
 
-    \node[anchor=south] at  (1,-0.05) {$t$}; 
-    \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
+      \node[anchor=south] at  (1,-0.05) {$t$}; 
+      \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
 
-    \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
-    \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
-    \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
-    \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+      \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+      \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+      \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+      \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
 
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{1});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0.5});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
-      ({0},{\x});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{1});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0.5});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+        ({0},{\x});
 
-    \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
-      ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+      \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
+        ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
 
-    \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
-      (0,0.5) -- (0.225,0.5) node[above,midway] {$t_{\mathrm{d}}$};
+      \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
+        (0,0.5) -- (0.225,0.5) node[above,midway] {$t_{\mathrm{d}}$};
+    \end{tikzpicture}
+    \caption{Definition of the delay time $t_{\mathrm{d}}$}
+    \label{fig:td-def}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=4]
+      \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
+        (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
 
-  \end{tikzpicture}
-  \caption{Definition of the delay time $t_{\mathrm{d}}$}
-  \label{fig:td-def}
+      \node[anchor=south] at  (1,-0.05) {$t$}; 
+      \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
+
+      \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
+      \draw (-0.05,0.1) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.1};
+      \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
+      \draw (-0.05,0.9) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.9};
+      \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
+      \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{1});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0.5});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0.1});     
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
+        ({\x},{0.9});   
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+        ({0},{\x});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+        ({0.08},{\x});
+      \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
+        ({0.42},{\x});
+
+      \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
+        ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+
+      \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
+        (0.08,0.92) -- (0.42,0.92) node[above,midway,fill=white,inner sep=1pt] {$t_{\mathrm{r}}$};
+    \end{tikzpicture}
+    \caption{Definition of the rising time $t_{\mathrm{r}}$}
+    \label{fig:tr-def}
+  \end{subfigure}
+  \caption{Definition of the delay time $t_{\mathrm{d}}$ and the rising time $t_{\mathrm{r}}$}
+  \label{fig:td-tr-def}
 \end{figure}
+The rising time $t_{\mathrm{r}}$ is the time it takes for the output signal 
+$y(t)$ to get from \SI{10}{\percent} to \SI{90}{\percent} (Fig.~\ref{fig:tr-def}).
+We may also use \SI{20}{\percent}-\SI{80}{\percent} or
+\SI{30}{\percent}-\SI{70}{\percent} as relevant ranges for definition of
+the rising time.
+
+\medskip
+
+The delay- and rising time for different $Q$ is shown in 
+Fig. \ref{fig:tdtr}.
+Tab. \ref{tab:tdtr} details some relevant values.
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[scale=4]
-    \draw[{Latex[round,scale=1.0,round]}-{Latex[round,scale=1.0,round]}] 
-      (-0.05,1.1) -- (-0.05,-0.05) -- (1,-0.05);
+  \begin{tikzpicture}
+    \begin{axis}[ xlabel=$Q$ 
+                , xmin=0.1
+                , xmax=10
+                , ymin=0.1
+                , ymax=5
+                , ylabel=$\nicefrac{t}{T_{0}}$
+                , grid=both
+                , width=16cm
+                , height=8cm
+                , ymode=log
+                , xmode=log
+                ]
 
-    \node[anchor=south] at  (1,-0.05) {$t$}; 
-    \node[anchor=west]  at  (-0.05,1.1) {$y(t)$}; 
+    \addplot[ semithick
+            ]
+            table
+            [ x=Q
+            , y=td
+            , col sep=comma
+            ] {delay-rising.csv};    
+    \node[fill=white,inner sep=0.5pt,anchor=east] (td) 
+      at (0.15,0.3) {$\nicefrac{t_{\mathrm{d}}}{T_{0}}$};
+    \draw[thin,gray] (td.north) -- (axis cs:0.1567,0.7122);
 
-    \draw (-0.05,0.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0};
-    \draw (-0.05,0.1) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.1};
-    \draw (-0.05,0.5) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.5};
-    \draw (-0.05,0.9) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {0.9};
-    \draw (-0.05,1.0) --++ (-0.025,0) node[anchor=east, inner sep=1pt] {1};
-    \draw (0.0,-0.05) --++ (0,-0.025) node[anchor=north, inner sep=1pt] {0};
+    \addplot[ semithick
+            ]
+            table
+            [ x=Q
+            , y=tr1090
+            , col sep=comma
+            ] {delay-rising.csv}; 
+    \node[fill=white,inner sep=0.5pt,anchor=west] (tr1090) 
+      at (0.25,3.5) {$\nicefrac{t_{\mathrm{r}}}{T_{0}}$(\SI{10}{\percent}-\SI{90}{\percent})};
+    \draw[thin,gray] (tr1090.west) -- (axis cs:0.2013,1.6653);
 
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{1});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0.5});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0.1});     
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:0.9, samples=2] 
-      ({\x},{0.9});   
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
-      ({0},{\x});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
-      ({0.08},{\x});
-    \draw[densely dotted,gray] plot[smooth,domain=-0.05:1.0, samples=2] 
-      ({0.42},{\x});
+    \addplot[ semithick
+            ]
+            table
+            [ x=Q
+            , y=tr2080
+            , col sep=comma
+            ] {delay-rising.csv}; 
+    \node[fill=white,inner sep=0.5pt,anchor=west] (tr2080) 
+      at (0.5,2) {$\nicefrac{t_{\mathrm{r}}}{T_{0}}$(\SI{20}{\percent}-\SI{80}{\percent})};
+    \draw[thin,gray] (tr2080.west) -- (axis cs:0.3495,0.5511);
 
-    \draw[semithick] plot[smooth,domain=0:0.9, samples=101] 
-      ({\x},{1-e^(-0.7*2*pi*\x)*sin(360*sqrt(1-0.7^2)*\x+acos(0.7))/sin(acos(0.7))});
+    \addplot[ semithick
+            ]
+            table
+            [ x=Q
+            , y=tr3070
+            , col sep=comma
+            ] {delay-rising.csv}; 
+    \node[fill=white,inner sep=0.5pt] (tr3070) 
+      at (0.28,0.13) {$\nicefrac{t_{\mathrm{r}}}{T_{0}}$(\SI{30}{\percent}-\SI{70}{\percent})};
+    \draw[thin,gray] (tr3070.east) -- (axis cs:0.6054,0.1735);
 
-    \draw[{Latex[round,scale=0.9,round]}-{Latex[round,scale=0.9,round]}] 
-      (0.08,0.92) -- (0.42,0.92) node[above,midway,fill=white,inner sep=1pt] {$t_{\mathrm{r}}$};
+    \end{axis}              
   \end{tikzpicture}
-  \caption{Definition of the rising time $t_{\mathrm{r}}$}
-  \label{fig:tr-def}
+  \caption{Delay time $t_{\mathrm{d}}$ and the rising time $t_{\mathrm{r}}$ vs. $Q$}
+  \label{tab:tdtr}
 \end{figure}
 
 \begin{table}[H]
 \centering
 \caption{Delay time $t_{\mathrm{d}}$ and rising time $t_{\mathrm{r}}$}
-\begin{tabular}{ccccc}
+\begin{tabular}{cccccc}
 \toprule
-$Q$                      & $\zeta$                   & $\nicefrac{t_{\mathrm{d}}}{T_0}$ & $\nicefrac{t_{\mathrm{r}}}{T_0}$ (\SI{10}{\percent}-\SI{90}{\percent}) & $\nicefrac{t_{\mathrm{r}}}{T_0}$ (\SI{20}{\percent}-\SI{80}{\percent}) \\ \midrule
-0.1                      & 5                         & -                                & -                                                                      & -                                                                      \\
-0.25                     & 2                         & -                                & -                                                                      & -                                                                      \\ 
-0.5                      & 1                         & -                                & -                                                                      & -                                                                      \\ 
-$\nicefrac{1}{\sqrt{3}}$ & $\nicefrac{\sqrt{3}}{2}$  & -                                & -                                                                      & -                                                                      \\ 
-$\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & -                                & -                                                                      & -                                                                      \\ 
-0.85                     & 0.588                     & -                                & -                                                                      & -                                                                      \\ 
-1                        & 0.5                       & -                                & -                                                                      & -                                                                      \\ 
-$\sqrt{2}$               & 0.354                     & -                                & -                                                                      & -                                                                      \\ 
-2                        & 0.25                      & -                                & -                                                                      & -                                                                      \\ 
-5                        & 0.1                       & -                                & -                                                                      & -                                                                      \\ \toprule
+$Q$                      & $\zeta$                   & $\nicefrac{t_{\mathrm{d}}}{T_0}$ & $\nicefrac{t_{\mathrm{r}}}{T_0}$ (\SI{10}{\percent}-\SI{90}{\percent}) & $\nicefrac{t_{\mathrm{r}}}{T_0}$ (\SI{20}{\percent}-\SI{80}{\percent}) & $\nicefrac{t_{\mathrm{r}}}{T_0}$ (\SI{30}{\percent}-\SI{70}{\percent}) \\ \midrule
+0.1                      & 5                         & 1.108                            & 3.461                                                                  & 2.184                                                                  & 1.335                                                                  \\
+0.25                     & 2                         & 0.456                            & 1.31                                                                   & 0.824                                                                  & 0.503                                                                  \\ 
+0.5                      & 1                         & 0.267                            & 0.535                                                                  & 0.345                                                                  & 0.214                                                                  \\ 
+$\nicefrac{1}{\sqrt{3}}$ & $\nicefrac{\sqrt{3}}{2}$  & 0.248                            & 0.435                                                                  & 0.29                                                                   & 0.182                                                                  \\ 
+$\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & 0.228                            & 0.342                                                                  & 0.237                                                                  & 0.151                                                                  \\ 
+0.85                     & 0.588                     & 0.215                            & 0.291                                                                  & 0.205                                                                  & 0.132                                                                  \\ 
+1                        & 0.5                       & 0.206                            & 0.261                                                                  & 0.185                                                                  & 0.12                                                                   \\ 
+$\sqrt{2}$               & 0.354                     & 0.193                            & 0.222                                                                  & 0.159                                                                  & 0.103                                                                  \\ 
+2                        & 0.25                      & 0.184                            & 0.2                                                                    & 0.143                                                                  & 0.093                                                                  \\ 
+5                        & 0.1                       & 0.173                            & 0.176                                                                  & 0.125                                                                  & 0.081                                                                  \\ \toprule
 \end{tabular}
 \label{tab:char-td-tr}
 \end{table}
 
+\subsection{Settling Time}
 
 \begin{figure}[H]
   \centering
@@ -1102,6 +1255,7 @@ $\sqrt{2}$               & 0.354                     & -                        
   \label{fig:settling-crit-damped}
 \end{figure}
 
+
 \section{Examples}\label{sec:examples}
 
 \subsection{Butterworth}\label{subsec:examples:butterworth}
@@ -1155,8 +1309,10 @@ and
 Q_{\mathrm{S}} = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}.
 \end{equation}
 
+The quality is the ratio between the reactance of L or C and the resistance, 
+i.e.
 \begin{equation}
-Q = \frac{X}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}
+Q = \frac{X}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
 \end{equation}
 
 \subsection{Parallel RLC}
