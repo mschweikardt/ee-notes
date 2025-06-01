@@ -3,9 +3,10 @@
 \include{./../../preamble.tex}
 \include{./../../tikzlib/preamble.tex}
 
+\input{./../../tikzlib/figs/feedback-system-a.tex}
 
-\def \title  {Feedback Stability}
-\def \date   {May 17, 2025}
+\def \title  {Stability of Feedback Systems}
+\def \date   {June 1, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/feedback-stability.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/feedback-stability}
@@ -18,56 +19,56 @@
 
 \notetitle
 
+An idealized feedback configuration is shown in Fig. \ref{fig:fs},
+with the input signal is $\underline{X}(s)$ and the output signal
+$\underline{Y}(s)$.
+It consists of the main building block
+\begin{equation}
+\underline{A}(s) = \frac{\underline{Y}(s)}{\underline{Z}(s)}
+\end{equation}
+and the feedback network
+\begin{equation}
+\underline{\beta}(s) = \frac{\underline{V}(s)}{\underline{Y}(s)}.
+\end{equation}
+The main building block is in most cases an amplifier or an LDO 
+and the feedback network is passive.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
-    \node[circle,draw=black,scale=0.6] (sum) at (1.5,0) {};
-    \node[anchor=east] at (0,0) {\underline{X}(s)};
-    \draw[-{Latex[round]},thick] (0,0) -- (sum.west);
-    \node[anchor=south east, font=\footnotesize] at (sum.west) {+};
-
-    \draw[thick] (3,0.7) -- (4.5,0) -- (3,-0.7) -- cycle;
-    \node[] at (3.5,0) {\underline{A}(s)};
-    \draw[-{Latex[round]},thick] (sum.east) -- (3,0);
-    \node[anchor=south,inner sep=2pt] at (2.25,0) {$\underline{Z}(s)$};
-
-    \draw[thick] (4.5,-1.6) -- (3,-2.3) -- (4.5,-3) -- cycle;
-    \node[] at (4,-2.3) {$\underline{\beta}(s)$};
-    \draw[-{Latex[round]},thick] (3,-2.3) -- (1.5,-2.3) -- (sum.south);
-        \node[anchor=south,inner sep=2pt] at (2.25,-2.3) {$\underline{V}(s)$};
-    \node[anchor=north west, font=\footnotesize] at (sum.south) {-};
-
-    \draw[-{Latex[round]},thick] (4.5,0) -- (6.5,0);
-    \node[anchor=west] at (6.5,0) {\underline{Y}(s)};
-    \node[circle,draw=black,fill=black,scale=0.5] () at (5.5,0) {};
-
-    \draw[-{Latex[round]},thick] (5.5,0) -- (5.5,-2.3) -- (4.5,-2.3);
+    \FeedbackSystemA 
   \end{tikzpicture}
   \caption{Feedback system}
   \label{fig:fs}
 \end{figure}
 
+The \textit{loop gain} of the system is 
 \begin{equation}
-\underline{A}(s) = \frac{\underline{Y}(s)}{\underline{Z}(s)}
+\underline{L}(s) = \frac{\underline{V}(s)}{\underline{Z}(s)} 
+                 = \underline{A}(s) \cdot \underline{\beta}(s).
 \end{equation}
 
-\begin{equation}
-\underline{\beta}(s) = \frac{\underline{V}(s)}{\underline{Y}(s)}
-\end{equation}
-
-\begin{equation}
-\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s)
-\end{equation}
-
+The \textit{closed-loop gain} is
 \begin{equation}\label{eq:fs}
-\underline{F}(s) = \frac{\underline{Y}(s)}{\underline{X}(s)} 
+\underline{T}(s) = \frac{\underline{Y}(s)}{\underline{X}(s)} 
                  = \frac{\underline{A}(s)}{1+\underline{L}(s)}
-                 = \frac{\underline{A}(s)}{1+\underline{A}(s) \cdot \underline{\beta}(s)}
+                 = \frac{\underline{A}(s)}{1+\underline{A}(s) \cdot \underline{\beta}(s)}.
 \end{equation}
 
-$\underline{F}(s)$ is stable only if 
-$\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s) \neq -1$.
+$\underline{T}(s)$ is stable only if its denominator is not zero, i.e. 
+\begin{equation}
+\underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s) \neq -1.
+\end{equation}
 
+In real electronic systems, the feedback causes loading at the input and output 
+of the amplifier.
+As a consequence, the model shown above cannot be applied%
+\footnote{The input impedance of the amplifier is in a lot of cases very high
+and the output impedance very low, so therefore this model can be applied.}.
+
+\medskip
+
+All utilized variables in this document are summarized in 
+Tab. \ref{tab:variables}.
 
 \begin{table}[H]
 \centering
@@ -80,8 +81,8 @@ $\underline{Y}(s)$      & Output signal                   \\
 $\underline{A}(s)$      & (open loop) transfer function   \\
 $\underline{\beta}(s)$  & Feedback transfer function      \\
 $\underline{L}(s)$      & Loop gain                       \\
-$\underline{F}(s)$      & (closed loop) transfer function \\
-$\underline{Z}(s)$      & Input signal of amplififer      \\
+$\underline{T}(s)$      & (closed loop) transfer function \\
+$\underline{Z}(s)$      & Input signal of amplifier       \\
 $\underline{V}(s)$      & Output signal of feedback       \\
 $f_{\mathrm{3dB}}$      & Bandwidth                       \\
 $A_{\mathrm{0}}$        & DC gain                         \\
@@ -92,6 +93,10 @@ $\mathrm{GM}$           & Gain margin                     \\ \toprule
 \end{tabular}
 \label{tab:variables}
 \end{table}
+
+The loop gain $\underline{L}(s)$ of an exemplary system is shown in 
+Fig. \ref{fig:ls}.
+The magnitude is shown at the top and and phase at the bottom.
 
 \begin{figure}[H]
   \centering
@@ -119,7 +124,7 @@ $\mathrm{GM}$           & Gain margin                     \\ \toprule
       , samples=200
       ]
 
-  \nextgroupplot[ ymin=-80
+  \nextgroupplot[ ymin=-60
                 , ymax=93
                 , ytick={-80,-60,...,80}
                 , ylabel= $\left|\underline{L}(j 2 \pi f)\right|$ in \si{\decibel}
@@ -220,8 +225,7 @@ $\mathrm{GM}$           & Gain margin                     \\ \toprule
   \label{fig:ls}
 \end{figure}
 
-Fig.~\ref{fig:ls} shows the magnitude (top) and phase (bottom) of the 
-loop gain $\underline{L}(j 2 \pi f)$.
+
 In this illustration, the phase is \SI{0}{\degree} for $f \rightarrow 0$.
 In other literature, the phase is set to \SI{180}{\degree} for 
 $f \rightarrow 0$%
