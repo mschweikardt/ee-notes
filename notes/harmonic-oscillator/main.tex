@@ -19,7 +19,6 @@
 
 \notetitle
 
-
 \section{Introduction}
 
 The differential equation of a harmonic oscillator is given by
@@ -35,7 +34,7 @@ in Tab.~\ref{tab:variables}.
 \caption{Variables}
 \begin{tabular}{cl}
 \toprule
-Variable              & Description                              \\ \midrule
+\textbf{Variable}     & \textbf{Description}                     \\ \midrule
 $x(t)$                & Input Signal (time domain)               \\ 
 $y(t)$                & Output Signal (time domain)              \\ 
 $\underline{X}(s)$    & Input Signal (frequency domain)          \\ 
@@ -800,6 +799,7 @@ for $y(t)$ in the \textit{underdamped} case (Fig. \ref{fig:step-response-env}).
 
 Fig. \ref{fig:step-response-ud} shows the step response for
 different $Q>0.5$ (\textit{Underdamped}).
+We see a significant overshoot, that increases for bigger $Q$.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=2.5]
@@ -895,6 +895,7 @@ for $Q > \nicefrac{1}{2}$ with
 \begin{equation}
 y(t_{\mathrm{m}}) =y_{\mathrm{m}} = 1 + \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}.
 \end{equation}
+The locus $(t_{\mathrm{m}},y_{\mathrm{m}})$ is shown in Fig. \ref{fig:step-response-ud}.
 With that, we can calculate the overshoot
 \begin{equation}
 \mathrm{OS} =  \exp\left\{-\frac{\pi}{\sqrt{4Q^2-1}}\right\}.
@@ -906,8 +907,8 @@ Conversely, we can directly calculate the quality
 Q = \left|\frac{\sqrt{\ln\left(\mathrm{OS}\right)^2+\pi^2}}{2\ln\left(\mathrm{OS}\right)}\right|
 \end{equation}
 based on the given overshoot.
-Fig. \ref{fig:os1} and \ref{fig:os2} show the overshoot as 
-a function of the quality $Q$.
+The overshoot is shown in Fig. \ref{fig:os1} ($Q\in\left(0.5,10\right]$) 
+and \ref{fig:os2} ($Q\in\left(0.5,1\right]$) .
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -963,8 +964,7 @@ a function of the quality $Q$.
   \caption{Overshoot $\mathrm{OS}$ vs. quality $Q\in\left(0.5,1\right]$}
   \label{fig:os2}
 \end{figure}
-
-
+Tab. \ref{tab:os} summarizes some notable $\mathrm{OS}$ values.
 \begin{table}[H]
 \centering
 \caption{Overshoot $\mathrm{OS}$}
@@ -998,7 +998,6 @@ $\sqrt{2}$               & 0.354                     & 30.5                     
 \end{tabular}
 \label{tab:os}
 \end{table}
-
 
 \subsection{Delay- and Rise Time}
 Two relevant metrics of the step response is the 
@@ -1096,7 +1095,7 @@ the rising time.
 
 The delay- and rising time for different $Q$ is shown in 
 Fig. \ref{fig:tdtr}.
-Tab. \ref{tab:tdtr} details some relevant values.
+Tab. \ref{tab:char-td-tr} details some relevant values.
 
 \begin{figure}[H]
   \centering
@@ -1104,12 +1103,12 @@ Tab. \ref{tab:tdtr} details some relevant values.
     \begin{axis}[ xlabel=$Q$ 
                 , xmin=0.1
                 , xmax=10
-                , ymin=0.1
-                , ymax=5
+                , ymin=0.01
+                , ymax=10
                 , ylabel=$\nicefrac{t}{T_{0}}$
                 , grid=both
                 , width=16cm
-                , height=8cm
+                , height=12cm
                 , ymode=log
                 , xmode=log
                 ]
@@ -1161,7 +1160,7 @@ Tab. \ref{tab:tdtr} details some relevant values.
     \end{axis}              
   \end{tikzpicture}
   \caption{Delay time $t_{\mathrm{d}}$ and the rising time $t_{\mathrm{r}}$ vs. $Q$}
-  \label{tab:tdtr}
+  \label{fig:tdtr}
 \end{figure}
 
 \begin{table}[H]
@@ -1179,12 +1178,21 @@ $\nicefrac{1}{\sqrt{2}}$ & $\nicefrac{1}{\sqrt{2}}$  & 0.228                    
 1                        & 0.5                       & 0.206                            & 0.261                                                                  & 0.185                                                                  & 0.12                                                                   \\ 
 $\sqrt{2}$               & 0.354                     & 0.193                            & 0.222                                                                  & 0.159                                                                  & 0.103                                                                  \\ 
 2                        & 0.25                      & 0.184                            & 0.2                                                                    & 0.143                                                                  & 0.093                                                                  \\ 
-5                        & 0.1                       & 0.173                            & 0.176                                                                  & 0.125                                                                  & 0.081                                                                  \\ \toprule
+5                        & 0.1                       & 0.173                            & 0.176                                                                  & 0.125                                                                  & 0.081                                                                  \\ 
+$\infty$                 & 0                         & $\nicefrac{1}{6}$                & 0.162                                                                  & 0.116                                                                  & 0.075                                                                  \\ \toprule
 \end{tabular}
 \label{tab:char-td-tr}
 \end{table}
 
-\subsection{Settling Time}
+\subsection{Settling~Time}
+
+The settling time $t_{\mathrm{s}}$ is the time it takes for a signal
+to remain within an error band of $2\epsilon$ (Fig. \ref{fig:ts-def}).
+For $Q\leq0.5$ (\textit{overdamped} and \textit{critically damped}) 
+this is easy, because $y \leq 1$ in this case.
+When $Q > 0.5$  (\textit{underdamped}), then be see over- and undershooting. 
+Then, we might use the envelope (Fig. \ref{fig:step-response-env})
+as settling time reference.
 
 \begin{figure}[H]
   \centering
@@ -1221,7 +1229,7 @@ $\sqrt{2}$               & 0.354                     & 0.193                    
     \draw[-{Latex[round,scale=0.65,round]}]  (1.35,1.08) -- (1.35,1.02);
     \draw[-{Latex[round,scale=0.65,round]}]  (1.35,0.94) -- (1.35,0.98);
     \draw[]  (1.35,1.02) -- (1.35,0.98);
-    \node[anchor=west] at (1.35,1) {$\epsilon$};
+    \node[anchor=west] at (1.35,1) {$2\epsilon$};
 
   \end{tikzpicture}
   \caption{Definition of the settling time $t_{\mathrm{s}}$}
@@ -1236,7 +1244,7 @@ $\sqrt{2}$               & 0.354                     & 0.193                    
                 , xmax=1
                 , ymin=0
                 , ymax=1.5
-                , ylabel=$\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
+                , ylabel=$\nicefrac{t_{\mathrm{S}}}{T_{\mathrm{0}}}$
                 , grid=major
                 , ytick={0,0.25,...,1.5}
                 , xmode=log
@@ -1250,7 +1258,7 @@ $\sqrt{2}$               & 0.354                     & 0.193                    
                   ({e^(-2*pi*x)*(1+2*pi*x)},{x});
     \end{axis}              
   \end{tikzpicture}
-  \caption{Relative settling time $\nicefrac{T_{\mathrm{S}}}{T_{\mathrm{0}}}$
+  \caption{Normalized settling time $\nicefrac{t_{\mathrm{S}}}{T_{\mathrm{0}}}$
     vs. deviation $\epsilon$ from final value in the critically damped case}
   \label{fig:settling-crit-damped}
 \end{figure}
@@ -1264,8 +1272,6 @@ $\sqrt{2}$               & 0.354                     & 0.193                    
 \underline{F}_{\mathrm{BW,2}} = \frac{\underline{Y}(s)}{\underline{X}(s)} 
                  = \frac{\omega_0^2}{s^2 + \sqrt{2} \omega_0 s + \omega_0^2 }
 \end{equation}
-
-
 
 \begin{equation}
 Q_{\mathrm{BW,2}}(s) = \frac{1}{\sqrt{2}}
@@ -1309,10 +1315,10 @@ and
 Q_{\mathrm{S}} = \frac{L}{R} \omega_0 = \frac{1}{R} \sqrt{\frac{L}{C}}.
 \end{equation}
 
-The quality is the ratio between the reactance of L or C and the resistance, 
+The quality is the ratio between the reactance of L or C and the resistance $R$, 
 i.e.
 \begin{equation}
-Q = \frac{X}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
+Q = \frac{\left|X\right|}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
 \end{equation}
 
 \subsection{Parallel RLC}
