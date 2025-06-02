@@ -1,0 +1,120 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Operational Transconductance Amplifier}
+\def \date   {June 2, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/ota.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/ota}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+
+    \newcommand\height{2.0}
+    \draw [] (0, \height/2)                       coordinate (vip) 
+       to [short,o-] ++ (1,0)
+       to [C,l_=$C_{\mathrm{in}}$] ++ (0,-\height) coordinate (x)
+       to [short,-o]                  (x-|vip)     coordinate (vin);
+
+    \draw (6.75, \height/2) coordinate (vop)  
+         to [short,o-] ++ (-1.25,0) coordinate (cop)      
+         to [short,-] ++ (-1.25,0) coordinate (rop)  
+         to [short,*-] ++ (-2.25,0)
+         to [ american controlled current source
+            , l=$G_{\mathrm{m}} \cdot \underline{V}_{\mathrm{I}}$
+            , -*
+            ] ++ (0,-\height) coordinate (gnd)
+         to [short,-*] (gnd-|cop) coordinate (con)  
+         to [short,-*] (gnd-|rop) coordinate (ron)         
+         to [short,-o] (gnd-|vop) coordinate (von);
+
+    \draw (rop) to [R,l=$r_{\mathrm{out}}$]  (ron);
+    \draw (cop) to [C,l=$C_{\mathrm{out}}$]  (con);
+    \node[ground] at (gnd) {};
+
+    \draw (vop) to [open,o-] ++ (1,0) coordinate (x)
+                to [short,-] ++ (0.5,0) coordinate (clp)
+                to [C,l=$C_{\mathrm{L}}$]  (clp|-ron)
+                to [short,-] ++ (-0.5,0) coordinate (y);
+
+    \draw[densely dotted] (x) --++ (-0.85,0);
+    \draw[densely dotted] (y) --++ (-0.85,0);
+
+    \path [voltarrow] (vip) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{I}}$} (vin);
+    \path [voltarrow] (vop) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{O}}$} (von);
+
+    \node[anchor=east] at (vip) {INP};
+    \node[anchor=east] at (vin) {INN};
+    \node[anchor=south] at (vop) {O};  
+  \end{circuitikz}
+  \caption{First-order model of an \gls{ota}, adapted from \cite{johnsmartin-aicd-12}}
+  \label{fig:badgap-core}
+\end{figure}
+
+\section{Definition}
+
+\cite[p. 261]{allen-cmosancirdes-12} says that an \gls{ota} has a high output 
+resistance (unbuffered) in contrast to low output resistance amplifiers 
+(voltage operational amplifier, buffered).
+
+\medskip
+
+\cite[section 24.3]{baker-cmoscircdesnsim-10} says that an \gls{ota} is an amplifier 
+where all nodes are low impedance except the input and output nodes.
+An \gls{ota} without buffer can only drive capacitive loads.
+Any resistive load will reduce the gain significantly.
+
+\medskip
+
+\cite[section 6.4]{johnsmartin-aicd-12} says and \gls{ota}
+\begin{itemize}
+  \item designed to drive only capacitive loads
+  \item With feedback, they can also drive some resistive load.
+  \item not necessary to use a voltage buffer to obtain a low output impedance for the opamp
+  \item only a single high-impedance node at the output
+  \item admittance seen at all other nodes is relatively low -> speed is maximized
+  \item reduced voltage signals at all nodes other than the output node; however, the current signals in the various transistors can be quite large
+  \item compensation is usually achieved by the load capacitance
+  \item load capacitance gets larger, the opamp usually becomes more stable but also slower.
+\end{itemize}
+
+\medskip
+
+\cite[055 ff.]{sansen-anadesess-06}
+\begin{itemize}
+  \item output is high impedance
+  \item voltage-current amplifier
+  \item OTA + class AB output = voltage output
+  \item voltage gain of OTA depends on load resistance
+  \item OTA's and opamps are used with feedback
+\end{itemize}
+
+\medskip
+
+\cite{huijsing-opamp-17} says that a simple class A complete general opamp
+is called \gls{ota}.
+A voltage-to-current converter is called a \gls{ofa}.
+
+\medskip
+
+\cite[subsection 10.5.4]{wicht-pmic-24} says that an \gls{ota} is easier to implement 
+than an opamp, because it does not require a power amplifier output stage.
+
+\medskip
+
+PSRR: \cite{steyaert-psrrota-90}
+
+\printbibliography
+\end{document}
