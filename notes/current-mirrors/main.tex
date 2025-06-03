@@ -1,0 +1,508 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Current Mirrors}
+\def \date   {May 21, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/current-mirrors.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/current-mirrors}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\section{Characteristics}
+
+\begin{itemize}
+  \item biasing/reference current $I_{\mathrm{R}}$
+  
+  \item number of outputs
+    \begin{itemize}
+      \item[-] single output with current $I_{\mathrm{O}}$
+      \item[-] multiple outputs with currents $I_{\mathrm{O,1}}$, $I_{\mathrm{O,2}}$, ...
+    \end{itemize}
+
+  \item topology
+    \begin{itemize}
+      \item[-] classic
+      \item[-] degenerated
+      \item[-] cascode/stacked 
+      \item[-] Wilson 
+      \item[-] wide-swing
+      \item[-] self-biased wide-swing
+    \end{itemize}
+
+  \item  biasing voltages $V_{\mathrm{B,}i}$ (dependent on topology)
+
+  \item minimal output voltage $V_{\mathrm{O,min}}$ (for a given $\epsilon$)
+
+  \item output resistance $r_{\mathrm{O}}$
+
+  \item type
+    \begin{itemize}
+      \item[-] active: currents change with time
+      \item[-] passive: currents constant over time (ramp-up of supply omitted)  
+    \end{itemize}
+
+  \item area (sum of with times length of all transistors in the current mirror)
+
+  \item mismatch (variation between $I_{\mathrm{R}}$ and $I_{\mathrm{O,}i}$)
+    \begin{itemize}
+      \item[-] systematic (evaluated for a given lower bound $V_{\mathrm{O,min}}$ and upper bound $V_{\mathrm{O,max}}$)
+      \item[-] statistical (evaluated at $V_{\mathrm{O}}=V_{\mathrm{R}}$)
+    \end{itemize}
+  \item noise
+\end{itemize}
+
+\section{Topologies}
+
+\subsection{Classic}
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.gate) to [short,*-] (mr.gate|-mr.drain) 
+                    to [short,-*] (mr.drain);
+    \draw (mr.drain) to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+    \draw (m1.drain) to [short,-o,f<=$I_{\mathrm{O}}$] (m1.drain|-in) coordinate (out);  
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m1.source);
+
+    \path [voltarrow] ($(in)+(-1,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1,0)$);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCMR};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCMA};
+
+  \end{circuitikz}
+  \caption{Classic NMOS current mirror with one output}
+  \label{fig:classic-nmos-1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+    \node[nmos]           (m2) at ( 5,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate)-- (m2.gate);
+
+    \draw (mr.gate) to [short,*-] (mr.gate|-mr.drain) 
+                    to [short,-*] (mr.drain);
+    \draw (mr.drain) to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+    \draw (m1.drain) to [short,-o,f<=$I_{\mathrm{O,1}}$] (m1.drain|-in) coordinate (out1);  
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) coordinate (x) 
+                      to [short,-] (m1.source);
+    \draw (x) to [short,*-] (m2.source|-x) -- (m2.source);
+
+    \draw (m2.drain) to [short,-o,f<=$I_{\mathrm{O,2}}$] (m2.drain|-in) coordinate (out2);
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m1.source);
+    \path [voltarrow] (m2.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m2.source);
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCMR};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCMA};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m2.source)!0.775!(m2.drain)$) {MNCMB};
+  \end{circuitikz}
+  \caption{Classic NMOS current mirror with two outputs}
+  \label{fig:classic-nmos-2}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[pmos,xscale=-1] (mr) at (-2,0) {};
+    \node[pmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.gate) to [short,*-] (mr.gate|-mr.drain) 
+                    to [short,-*] (mr.drain);
+    \draw (mr.drain) to [short,-o,f=$I_{\mathrm{R}}$] ++ (0,-1.25) coordinate (in); 
+    \draw (m1.drain) to [short,-o,f_=$I_{\mathrm{O}}$] (m1.drain|-in) coordinate (out);  
+    \draw (mr.source) to [short,-] ++ (0,0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \node[vdd] at (gnd) {};
+
+    \path [voltarrow] (mr.gate) edge[bend left=-30] 
+      node[midway,above right,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend right=-30] 
+      node[midway,above left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m1.source);
+
+    \path [voltarrow] ($(in)+(-1,0)$) edge[bend right=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1,0)$);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend left=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MPCMR};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MPCMA};
+
+  \end{circuitikz}
+  \caption{Classic PMOS current mirror with one output}
+  \label{fig:classic-pmos-1}
+\end{figure}
+
+\subsection{Degenerated}
+
+\subsection{Cascode/Stacked}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.gate) to [short,*-] (mr.gate|-mr.drain) 
+                    to [short,-*] (mr.drain);
+
+    \draw (mr.drain) to   [short,-] ++ (0,0.5)
+                     node [nmos,anchor=source,xscale=-1] (mx) {}; 
+
+    \draw (mx.gate) to [short,*-] (mx.gate|-mx.drain) 
+                    to [short,-*] (mx.drain);
+
+    \draw (mx.drain) to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \draw (m1.drain) to [short,-] (m1.drain|-mx.source)
+                     node [nmos,anchor=source] (m2) {}; 
+    \draw (mx.gate) -- (m2.gate);
+
+    \draw (m2.drain) to [short,-o,f<=$I_{\mathrm{O}}$] (m2.drain|-in) coordinate (out);  
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] ($(in)+(-1,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1,0)$);
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (m1.source);
+    \path [voltarrow] (mx.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,2R}}$} (mx.source);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCM1R};
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mx.source)!0.775!(mx.drain)$) {MNCM2R};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCM1A};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m2.source)!0.775!(m2.drain)$) {MNCM2A};         
+
+  \end{circuitikz}
+  \caption{Cascode NMOS current mirror with one output}
+  \label{fig:casc-nmos-1}
+\end{figure}
+
+\subsection{Wilson}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (m1.gate) to [short,*-] (m1.gate|-m1.drain) 
+                    to [short,-*] (m1.drain);
+
+    \draw (mr.drain) to   [short,-] ++ (0,0.25)
+                     node [nmos,anchor=source,xscale=-1] (mx) {}; 
+
+    \draw (mx.gate) to [short,*-] (mx.gate|-mx.drain) 
+                    to [short,-*] (mx.drain);
+
+    \draw (mx.drain) to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \draw (m1.drain) to [short,-] (m1.drain|-mx.source)
+                     node [nmos,anchor=source] (m2) {}; 
+    \draw (mx.gate) -- (m2.gate);
+
+    \draw (m2.drain) to [short,-o,f<=$I_{\mathrm{O}}$] (m2.drain|-in) coordinate (out);  
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] ($(in)+(-1,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1,0)$);
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m1.source);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCM1A};
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mx.source)!0.775!(mx.drain)$) {MNCM2R};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCM1R};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m2.source)!0.775!(m2.drain)$) {MNCM2A};         
+
+  \end{circuitikz}
+  \caption{Wilson NMOS current mirror with one output}
+  \label{fig:classic-nmos-1}
+\end{figure}
+
+\subsection{Wide-Swing}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.drain) to   [short,-] ++ (0,0.5)
+                     node [nmos,anchor=source,xscale=-1] (mx) {}; 
+
+    \draw (mx.drain) to [short,-] ++ (0,0.1) coordinate (fb1)
+                     to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+
+    \coordinate (fb2) at ($(mr.gate)!0.4!(m1.gate)$);
+
+    \draw (fb2) to [short,*-] (fb2|-fb1)
+                to [short,-*] (fb1);
+
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \draw (m1.drain) to [short,-] (m1.drain|-mx.source)
+                     node [nmos,anchor=source] (m2) {}; 
+    \draw (m2.gate) -- (mx.gate)
+          to [short,-o] ++ (-2,0) 
+          node[anchor=east] {B};
+
+    \draw (m2.drain) to [short,-o,f<=$I_{\mathrm{O}}$] (m2.drain|-in) coordinate (out);  
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] ($(in)+(-1.5,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1.5,0)$);
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (m1.source);
+    \path [voltarrow] (mx.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,2R}}$} (mx.source);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCM1R};
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mx.source)!0.775!(mx.drain)$) {MNC1A};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCM1A};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m2.source)!0.775!(m2.drain)$) {MNC1B};         
+
+  \end{circuitikz}
+  \caption{Wide-Swing NMOS current mirror with one output}
+  \label{fig:ws-nmos-1}
+\end{figure}
+
+\subsection{Self-Biased Wide-Swing}
+
+\section{Testbench}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2,0) {};
+    \node[nmos]           (m1) at ( 2,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.gate) to [short,*-] (mr.gate|-mr.drain) 
+                    to [short,-*] (mr.drain);
+    \draw (mr.drain) to [short,-o] ++ (0,0.75) coordinate (in)
+                     to [I,i<=$I_{\mathrm{R}}$] ++ (0,2.0) coordinate (vdd);
+
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source)  coordinate (x) 
+                      to [short,-] (m1.source);
+
+    \draw (m1.drain) to [short,-o,f<=$I_{\mathrm{O}}$] (m1.drain|-in) coordinate (out)
+                     to [short,-]  ++ (0,0.5)
+                     to [short,-]  ++ (1.5,0) coordinate (vop)
+                     to [V,v=$V_{\mathrm{O}}$]  (vop|-x)
+                     to [short,-*] (x);
+
+    \node[vss] at (gnd) {};
+    \node[vdd] at (vdd) {};
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS}}$} (m1.source);
+
+    \path [voltarrow] ($(in)+(-0.5,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-0.5,0)$);
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MR};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {M1};
+
+  \end{circuitikz}
+  \caption{Current mirror testbench}
+  \label{fig:testbench}
+\end{figure}
+
+\begin{equation}
+r_{\mathrm{O}} = \left(\frac{\mathrm{d}I_{\mathrm{O}}}{\mathrm{d}V_{\mathrm{O}}}\bigg|_{V_{\mathrm{O}}=V_{\mathrm{R}}}\right)^{-1}
+\end{equation}
+
+
+\begin{equation}
+V_{\mathrm{O,min}} : I_{\mathrm{O}}\left(V_{\mathrm{O,min}}\right) = \epsilon \cdot I_{\mathrm{O}}\left(V_{\mathrm{R}}\right),
+\end{equation}
+with $\epsilon \in (0,1)$.
+
+
+\printbibliography
+
+\end{document}
