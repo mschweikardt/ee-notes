@@ -1,0 +1,132 @@
+\begin{tikzpicture}
+  \begin{axis}[ xlabel=$\nicefrac{\omega}{\omega_0}$
+              , xmin=0
+              , xmax=2
+              , ymin=-180
+              , ymax=0
+              , ylabel=$\arg\left(\underline{F}(j\omega)\right)$ in \si{\degree}
+              , grid=major
+              , ytick={0,-45,-90,...,-180}
+              , height=8cm
+              , width=15cm
+              ]
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q01
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=east,inner sep=0.5pt] 
+    (q01) at (axis cs:0.5,-95) {$Q=0.1$};
+  \draw[thin,gray] (q01.east) -- (0.552,-82.82);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q025
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=east,inner sep=0.5pt] 
+    (q025) at (axis cs:0.5,-105) {$Q=0.25$};
+  \draw[thin,gray] (q025.east) -- (0.592,-74.66);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q05
+          , col sep=comma
+          ] {phase.csv};
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q025
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=east,inner sep=0.5pt] 
+    (q05) at (axis cs:0.5,-115) {$Q=0.5$};
+  \draw[thin,gray] (q05.east) -- (0.66,-66.85);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q1oversqrt3
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=east,inner sep=0.5pt] 
+    (q1oversqrt3) at (axis cs:0.5,-125) {$Q=\nicefrac{1}{\sqrt{3}}$};
+  \draw[thin,gray] (q1oversqrt3.east) -- (0.708,-67.87);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q1oversqrt2
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=east,inner sep=0.5pt] 
+    (q1oversqrt2) at (axis cs:0.5,-135) {$Q=\nicefrac{1}{\sqrt{2}}$};
+  \draw[thin,gray] (q1oversqrt2.east) -- (0.792,-71.59);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q085
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=west,inner sep=0.5pt] 
+    (q085) at (axis cs:1,-55) {$Q=0.85$};
+  \draw[thin,gray] (q085.west) -- (0.832,-72.55);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q1
+          , col sep=comma
+          ] {phase.csv};   
+  \node[font=\small,anchor=west,inner sep=0.5pt] 
+    (q1) at (axis cs:1,-45) {$Q=1$};
+  \draw[thin,gray] (q1.west) -- (0.832,-69.70);
+          
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=qsqrt2
+          , col sep=comma
+          ] {phase.csv};   
+  \node[font=\small,anchor=west,inner sep=0.5pt] 
+    (qsqrt2) at (axis cs:1,-35) {$Q=\sqrt{2}$};
+  \draw[thin,gray] (qsqrt2.west) -- (0.832,-62.38);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q2
+          , col sep=comma
+          ] {phase.csv};
+  \node[font=\small,anchor=west,inner sep=0.5pt] 
+    (q2) at (axis cs:1,-25) {$Q=2$};
+  \draw[thin,gray] (q2.west) -- (0.832,-53.50);
+
+  \addplot[ semithick
+          ]
+          table
+          [ x=w
+          , y=q5
+          , col sep=comma
+          ] {phase.csv};     
+  \node[font=\small,anchor=west,inner sep=0.5pt] 
+    (q5) at (axis cs:1,-15) {$Q=5$};
+  \draw[thin,gray] (q5.west) -- (0.832,-28.40);
+
+  \end{axis}
+\end{tikzpicture}

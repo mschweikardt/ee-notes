@@ -1,0 +1,166 @@
+\begin{tikzpicture}
+  \begin{axis}[ xlabel=$\nicefrac{\omega}{\omega_0}$
+              , xmin=0
+              , xmax=2
+              , ymin=0
+              , ymax=5.15
+              , ylabel=$\left|\underline{F}(j\omega)\right|$
+              , grid=major
+              , ytick={0,1,...,5}
+              , height=12cm
+              , width=15cm
+              ]
+
+    \addplot [  draw=black
+              , domain=0:0.95
+              , samples=101
+              ]
+              {1/sqrt((1-x^2)^2)};
+
+    \addplot [  draw=black
+              , domain=1.03:2
+              , samples=101
+              ]
+              {1/sqrt((1-x^2)^2)};
+
+    \addplot [  draw=black
+              , domain=0.71:5.5
+              , samples=501
+              , smooth
+              , densely dashed
+              , semithick
+              ]
+              ({sqrt(1-1/2/x^2)},{2*x^2/sqrt(4*x^2-1)});
+
+    \addplot [  draw=black
+              , domain=0.5:5.5
+              , samples=501
+              , smooth
+              , dash dot
+              , semithick
+              ]
+              ({sqrt(1-1/4/x^2)},{4*x^2/sqrt(16*x^2-3)});
+
+    %Q=0.1
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/0.1^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt] (q01) 
+    at (axis cs:0.1,0.1) {$Q=0.1$};
+  \draw[thin,gray] (q01.east) -- (axis cs:0.3,0.319);
+
+    %Q=0.25
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/0.25^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q025) 
+    at ($(q01.north west) + (0,0.05)$) {$Q=0.25$};
+  \draw[thin,gray] (q025.east) -- (axis cs:0.35,0.605);
+
+    %Q=0.5
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/0.5^2)};
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=west] (q05) 
+    at (axis cs:1.5,1.8) {$Q=0.5$};
+  \draw[thin,gray] (q05.west) -- (axis cs:1.3,0.371);
+
+    %Q=1/sqrt(2)
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2*2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q0707) 
+    at ($(q05.north west) + (0,0.25)$) {$Q=\nicefrac{1}{\sqrt{2}}$};
+  \draw[thin,gray] (q0707.west) -- (axis cs:1.21,0.564);
+
+    %Q=0.85
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/0.85^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q085) 
+    at ($(q0707.north west) + (0,0.25)$) {$Q=0.85$};
+  \draw[thin,gray] (q085.west) -- (axis cs:1.15,0.719);
+
+     %Q=1
+    \addplot [  draw=black
+              , domain=0:2.5
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/1^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q1) 
+    at ($(q085.north west) + (0,0.25)$) {$Q=1$};
+  \draw[thin,gray] (q1.west) -- (axis cs:1.05,0.948);
+
+     %Q=sqrt(2)
+    \addplot [  draw=black
+              , domain=0:2.5
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q141) 
+    at ($(q1.north west) + (0,0.25)$) {$Q=\sqrt{2}$};
+  \draw[thin,gray] (q141.west) -- (axis cs:1.05,1.334);
+
+     %Q=2
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/2^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q2) 
+    at ($(q141.north west) + (0,0.25)$) {$Q=2$};
+  \draw[thin,gray] (q2.west) -- (axis cs:1.05,1.869);
+
+    %Q=5
+    \addplot [  draw=black
+              , domain=0:2
+              , samples=501
+              , smooth
+              ]
+              {1/sqrt((1-x^2)^2+x^2/5^2)};
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (q5) 
+    at ($(q2.north west) + (0,0.25)$) {$Q=5$};
+  \draw[thin,gray] (q5.west) -- (axis cs:1.15,2.524);
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=south west] (qinfty) 
+    at ($(q5.north west) + (0,0.4)$) {$Q \rightarrow \infty$};
+  \draw[thin,gray] (qinfty.west) -- (axis cs:1.12,3.93);
+  \draw[thin,gray] (qinfty.west) -- (axis cs:0.85,3.6);
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=east] (wm) 
+    at (axis cs: 0.57,2.7) 
+    {$(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$};
+  \draw[thin,gray] (wm.east) -- (axis cs:0.954,2.5);
+
+  \node[font=\small,fill=white,inner sep=0.5pt,anchor=east] (wr) 
+    at (axis cs: 0.57,2.25) 
+    {$(\omega_{\mathrm{d}}, \left|\underline{F}(j\omega_{\mathrm{d}})\right|)$};
+  \draw[thin,gray] (wr.east) -- (axis cs:0.9,1.25);
+  \end{axis}
+\end{tikzpicture}
