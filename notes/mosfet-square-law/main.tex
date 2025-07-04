@@ -21,7 +21,7 @@
 
 
 \def \title  {MOSFET Square Law}
-\def \date   {June 1, 2025}
+\def \date   {July 4, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/mosfet-square-law.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/mosfet-square-law}
@@ -38,7 +38,7 @@ The \textit{square law} is the most simple \gls{mosfet} model.
 It has only two model parameters,
 \textit{threshold voltage} $V_{\mathrm{TH}}$ (unit \si{\volt})%
 \footnote{Some abbreviate the threshold voltage with 
-the variable $V_{\mathrm{T}}$ \cite{allen-cmosancirdes-12}.}
+the variable $V_{\mathrm{T}}$ \cite{allen-cmosancirdes-12,gray-anadesic-09}.}
 and 
 \textit{transconductance parameter}~$K'$ 
 (pronounced "k prime", unit \si{\ampere\per\volt\squared}).
@@ -116,12 +116,19 @@ Each mode of operations spans an area in the in this plot.
 \end{figure}
 
 The diagonal boundary  (a.k.a. \textit{pinch-off} point) in
-Fig.~\ref{fig:squarelawregionplot} is abbreviated as overdrive voltage%
-\footnote{Some analog designers use the overdrive voltage voltage as knob 
-(\SI{150}{\milli\volt}-\SI{400}{\milli\volt}).}
+Fig.~\ref{fig:squarelawregionplot} is abbreviated as overdrive voltage
 \begin{equation}\label{eq:vov}
   V_{\mathrm{OV}} := V_{\mathrm{GS}}-V_{\mathrm{TH}}.
 \end{equation}
+Some analog designers use the overdrive voltage as knob 
+(\SI{150}{\milli\volt}-\SI{400}{\milli\volt}) for sizing of their transistors.
+Different authors may use different terms for the same value,
+e.g., $V_{\mathrm{DS,sat}}$ in \cite{baker-cmoscircdesnsim-10}, 
+$V_{\mathrm{DS}}(\mathrm{sat})$ in \cite{allen-cmosancirdes-12},
+$V_{\mathrm{ON}}$ in \cite{allen-cmosancirdes-12},
+$V_{\mathrm{EFF}}$/$V_{\mathrm{eff}}$ in 
+\cite{binkley-tradeoffoptanalogcmos-08,johnsmartin-aicd-12} and
+$V_{\mathrm{GT}}$ in \cite{huijsing-opamp-17}.
 
 \section{IV-Equations}
 
@@ -277,6 +284,7 @@ In the \textit{saturation} region, the
 g_{\mathrm{m}} = \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{GS}}} 
                = K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{TH}}) 
                = \frac{2 I_{\mathrm{D}}}{V_{\mathrm{GS}}-V_{\mathrm{TH}}}  
+               = \frac{2 I_{\mathrm{D}}}{V_{\mathrm{OV}}}
                = \sqrt{2 K' \frac{W}{L} I_{\mathrm{D}}}
 \end{equation}
 
