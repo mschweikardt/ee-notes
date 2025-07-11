@@ -3,15 +3,18 @@
 \input{./../../preamble.tex}
 \input{./../../tikzlib/preamble.tex}
 \input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
+\input{./../../tikzlib/figs/rlc-parallel-schematic-a.tex}
 
 \def \title  {Harmonic Oscillator}
-\def \date   {June 2, 2025}
+\def \date   {July 11, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/harmonic-oscillator.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/harmonic-oscillator}
 
 %\usetikzlibrary{external}
 %\tikzexternalize
+
+\usetikzlibrary{decorations.markings}
 
 \usepackage[scale=5]{draftwatermark}
 
@@ -35,10 +38,10 @@ in Tab.~\ref{tab:variables}.
 \begin{tabular}{cl}
 \toprule
 \textbf{Variable}     & \textbf{Description}                     \\ \midrule
-$x(t)$                & Input Signal (time domain)               \\ 
-$y(t)$                & Output Signal (time domain)              \\ 
-$\underline{X}(s)$    & Input Signal (frequency domain)          \\ 
-$\underline{Y}(s)$    & Output Signal (frequency domain)         \\
+$x(t)$                & Input signal, excitation (time domain)   \\ 
+$y(t)$                & Output signal (time domain)              \\ 
+$\underline{X}(s)$    & Input signal (frequency domain)          \\ 
+$\underline{Y}(s)$    & Output signal (frequency domain)         \\
 $\underline{F}(s)$    & Steady-state response (frequency domain) \\
 $\omega_0$            & Undamped (angular) frequency             \\
 $\omega_{\mathrm{m}}$ & Peak (angular) frequency                 \\
@@ -84,7 +87,7 @@ When we transfer \eqref{eq:dgl} in the frequency domain, we get
                  = \frac{\omega_0^2}{s^2 + 2 \zeta \omega_0 s + \omega_0^2 }
                  = \frac{\omega_0^2}{s^2 + 2 \alpha s + \omega_0^2 }
                  = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q} s + \omega_0^2 }
-                 = \frac{1}{\left(\frac{s}{\omega_0}\right)^2 + \frac{s}{Q\omega_0} s + 1 }
+                 = \frac{1}{\left(\frac{s}{\omega_0}\right)^2 + \frac{s}{Q\omega_0} + 1}
 .
 \end{equation}
 
@@ -111,7 +114,7 @@ Fig. \ref{fig:plot-fs} for different $Q$.
     $\left|\underline{F}(j\omega)\right|$ vs. normalized 
     frequency $\nicefrac{\omega}{\omega_0}$ for different qualities $Q$ and loci 
     of $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
-    and $(\omega_{\mathrm{r}}, \left|\underline{F}(j\omega_{\mathrm{r}})\right|)$}
+    and $(\omega_{\mathrm{d}}, \left|\underline{F}(j\omega_{\mathrm{d}})\right|)$}
   \label{fig:plot-fs}
 \end{figure}
 
@@ -137,6 +140,10 @@ $\left|\underline{F}(j\omega_{\mathrm{m}})\right| \rightarrow  Q$
 for $Q \rightarrow \infty$.
 The locus $(\omega_{\mathrm{m}}, \left|\underline{F}(j\omega_{\mathrm{m}})\right|)$
 is shown in Fig.~\ref{fig:plot-fs} (dashed line).
+When we utilize a sinusoidal input signal $x(t)=\sin\left(\omega_{\mathrm{in}}t\right)$ 
+and sweep its frequency $\omega_{\mathrm{in}}$ from zero to infinity,
+we will see a maximum of the amplitude of $y(t)$ when 
+$\omega_{\mathrm{in}} \stackrel{!}{=} \omega_{\mathrm{m}}$.
 We refer to $\omega_{\mathrm{m}}$ when $Q\geq\nicefrac{1}{\sqrt{2}}$%
 \footnote{The case $Q = \nicefrac{1}{\sqrt{2}}$  results
 in a Butterworth filter response 
@@ -158,13 +165,38 @@ we transform \eqref{eq:poles} to
 p_{1,2} = - \alpha \pm j \omega_{\mathrm{d}},
 \end{equation}
 with the damped oscillating frequency 
-\begin{equation}\label{eq:poles}
+\begin{equation}\label{eq:wd}
 \omega_{\mathrm{d}} = \omega_0 \sqrt{1-\zeta^2} = \omega_0 \sqrt{1-\frac{1}{4 Q^2}}
 \end{equation}
 and
 \begin{equation}
 \left|\underline{F}(j\omega_{\mathrm{d}})\right| = \frac{4 Q^2}{\sqrt{16 Q^2 -3}}.
 \end{equation}
+When we set the input signal $x(t)=0$ and an initial value for $y(t)$, 
+e.g., $y(t)=1$, the system starts to oscillate ($Q>0.5$)
+with a frequency of $\omega_{\mathrm{d}}$.
+The locus 
+$(\omega_{\mathrm{d}}, \left|\underline{F}(j\omega_{\mathrm{d}})\right|)$
+is added to Fig. \ref{fig:plot-fs}.
+
+
+
+The phase of $\underline{F}(j\omega)$ is
+\begin{equation}
+\arg\left(\underline{F}(j\omega)\right)= 
+  -\atan\left(\frac{\frac{\omega}{Q \omega_0}}
+                   {1-\left(\frac{\omega}{\omega_0}\right)^2}\right).
+\end{equation}
+A plot of the phase for different $Q$ is provided in Fig. \ref{fig:plot-fs-arg}.
+All curves cross the point already discovered in
+\eqref{eq:argf0}.
+\begin{figure}[H]
+  \centering
+  \input{./tikz/steady-state-phase-a.tex}
+  \caption{Phase of steady-state solution $\arg\left(\underline{F}(j\omega)\right)$}
+  \label{fig:plot-fs-arg}
+\end{figure}
+
 
 Tab.~\ref{tab:char-fs} summarizes some interesting values of
 $\underline{F}(j\omega)$.
@@ -190,21 +222,6 @@ $\infty$                 & 0                         & 1                        
 \label{tab:char-fs}
 \end{table}
 
-The phase of $\underline{F}(j\omega)$ is
-\begin{equation}
-\arg\left(\underline{F}(j\omega)\right)= 
-  -\atan\left(\frac{\frac{\omega}{Q \omega_0}}
-                   {1-\left(\frac{\omega}{\omega_0}\right)^2}\right).
-\end{equation}
-A plot of the phase for different $Q$ is provided in Fig. \ref{fig:plot-fs-arg}.
-All curves cross the point already discovered in
-\eqref{eq:argf0}.
-\begin{figure}[H]
-  \centering
-  \input{./tikz/steady-state-phase-a.tex}
-  \caption{Phase of steady-state solution $\arg\left(\underline{F}(j\omega)\right)$}
-  \label{fig:plot-fs-arg}
-\end{figure}
 
 The group delay is
 
@@ -213,10 +230,13 @@ The group delay is
                   = \frac{Q}{\omega_0} \frac{1+\left(\frac{\omega}{\omega_0}\right)^2}{Q^2 + \left(1-2Q^2\right) \left(\frac{\omega}{\omega_0}\right)^2 + Q^2 \left(\frac{\omega}{\omega_0}\right)^4}.
 \end{equation}
 
+
 \section{Poles}
 
 Depending on $Q$, we can define four different cases. 
 They are depicted in Tab.~\ref{tab:pz}.
+The corresponding pole-zero plots are depicted in 
+Fig. \ref{fig:squarelawtransf}.
 
 \begin{table}[H]
   \centering
@@ -239,15 +259,20 @@ They are depicted in Tab.~\ref{tab:pz}.
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
     \begin{tikzpicture}[scale=1.0]
-      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \useasboundingbox (-2.85,-2.6) rectangle (2.85,2.6);
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=21] 
+        ({2*sin(\x)},{2*cos(\x)});
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.75,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
       \node[anchor=west] at (0,2.5) {Im};
+      \node[anchor=west] at (0, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0,-2) {$-j \omega_0$};
 
-      \node[cross out,draw=black,thick] at (-2, 0) {};
-      \node[cross out,draw=black,thick] at (-1, 0) {};
-      \node[anchor=south] at (-2, 0.1) {$p_2$};
-      \node[anchor=south] at (-1, 0.1) {$p_1$};
+      \node[cross out,draw=black,thick] at (-2.5, 0) {};
+      \node[cross out,draw=black,thick] at (-1.45, 0) {};
+      \node[anchor=south] at (-2.5, 0.1) {$p_2$};
+      \node[anchor=south] at (-1.45, 0.1) {$p_1$};
     \end{tikzpicture}
     \caption{Overdamped}
     \label{fig:pz:overdamped}
@@ -256,9 +281,10 @@ They are depicted in Tab.~\ref{tab:pz}.
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
     \begin{tikzpicture}[scale=1.0]
-      \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
+      \useasboundingbox (-2.85,-2.6) rectangle (2.85,2.6);
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=21] 
         ({2*sin(\x)},{2*cos(\x)});
-      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.75,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
       \node[anchor=west] at (0,2.5) {Im};
@@ -275,10 +301,11 @@ They are depicted in Tab.~\ref{tab:pz}.
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
     \begin{tikzpicture}[scale=1.0]
-      \draw[densely dotted] plot[smooth,domain=180:360, samples=501] 
+      \useasboundingbox (-2.85,-2.6) rectangle (2.85,2.6);
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=21] 
         ({2*sin(\x)},{2*cos(\x)});
 
-      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.75,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
       \node[anchor=west] at (0,2.5) {Im};
@@ -306,7 +333,8 @@ They are depicted in Tab.~\ref{tab:pz}.
   \begin{subfigure}[b]{0.475\textwidth}
     \centering
     \begin{tikzpicture}[scale=1.0]
-      \draw[-{Latex[round,scale=1.2,round]}] (-2.5,0) -- (1,0);
+      \useasboundingbox (-2.85,-2.6) rectangle (2.85,2.6);
+      \draw[-{Latex[round,scale=1.2,round]}] (-2.75,0) -- (1,0);
       \node[anchor=west] at (1,0) {Re};
       \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
       \node[anchor=west] at (0,2.5) {Im};
@@ -325,6 +353,117 @@ They are depicted in Tab.~\ref{tab:pz}.
   \caption{Pole-zero plot}
   \label{fig:squarelawtransf}
 \end{figure}
+
+The loci of both poles $p_{1,2}$ are shown in Fig.~\ref{fig:loci-poles}.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.0]
+      \useasboundingbox (-3.6,-2.6) rectangle (3.6,2.6);
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=21] 
+        ({2*sin(\x)},{2*cos(\x)});
+      \draw[-{Latex[round,scale=1.2,round]}] (-3.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
+
+      \node[anchor=west] at (0, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0,-2) {$-j \omega_0$};
+
+      \draw[thick] plot[smooth,domain=270:360, samples=21] 
+        ({2*sin(\x)},{2*cos(\x)}); 
+      \draw[thick] (0,0) -- (-2,0);
+
+      \node[ anchor=south west
+           , font=\small
+           , inner sep=1pt
+           ] (q0) at (0.3,0.3) {$Q=0$};
+      \draw[thin,gray] (q0.south west) -- (0,0);
+
+      \node[ anchor=north east
+           , font=\small
+           , inner sep=1pt
+           ] (q05) at (-2.3,-0.3) {$Q=0.5$};
+      \draw[thin,gray] (q05.north east) -- (-2,0);
+
+      \node[ anchor=south east
+           , font=\small
+           , inner sep=1pt
+           ] (qinfty) at (-0.5,2.1) {$Q=\infty$};
+      \draw[thin,gray] (qinfty.east) -- (0,2);
+
+      \begin{scope}[every node/.style={draw,fill,single arrow,
+        single arrow tip angle=30,
+        single arrow head extend=1.5pt,
+        single arrow head indent=1pt,
+        inner sep=0pt}] 
+      \node[rotate=180] at (-1,0) {};
+      \node[rotate=45] at (-1.414,1.414) {};
+    \end{scope}
+
+    \end{tikzpicture}
+    \caption{$p_{1}$}
+    \label{fig:locipz:p1}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.0]
+      \useasboundingbox (-3.6,-2.6) rectangle (3.6,2.6);
+      \draw[densely dotted] plot[smooth,domain=180:360, samples=21] 
+        ({2*sin(\x)},{2*cos(\x)});
+      \draw[-{Latex[round,scale=1.2,round]}] (-3.5,0) -- (1,0);
+      \node[anchor=west] at (1,0) {Re};
+      \draw[-{Latex[round,scale=1.2,round]}] (0,-2.5) -- (0,2.5);
+      \node[anchor=west] at (0,2.5) {Im};
+      \node[anchor=west] at (0, 2) {$ j \omega_0$};
+      \node[anchor=west] at (0,-2) {$-j \omega_0$};
+
+      \draw[thick] plot[smooth,domain=180:270, samples=21] 
+        ({2*sin(\x)},{2*cos(\x)}); 
+      \draw[thick] (-3.25,0) -- (-2,0);
+
+      \node[ anchor=north
+           , font=\small
+           , inner sep=1pt
+           ] (q0) at (-3.1,-0.5) {$Q=0$};
+      \draw[thin,gray] (q0.north) -- (-3.25,0);
+
+      \node[ anchor=south west
+           , font=\small
+           , inner sep=1pt
+           ] (q05) at (-1.7,0.3) {$Q=0.5$};
+      \draw[thin,gray] (q05.south west) -- (-2,0);
+
+      \node[ anchor=north east
+           , font=\small
+           , inner sep=1pt
+           ] (qinfty) at (-0.5,-2.1) {$Q=\infty$};
+      \draw[thin,gray] (qinfty.east) -- (0,-2);
+
+      \begin{scope}[every node/.style={draw,fill,single arrow,
+        single arrow tip angle=30,
+        single arrow head extend=1.5pt,
+        single arrow head indent=1pt,
+        inner sep=0pt}] 
+      \node[rotate=0] at (-2.625,0) {};
+      \node[rotate=-45] at (-1.414,-1.414) {};
+    \end{scope}
+    \end{tikzpicture}
+    \caption{$p_{2}$}
+    \label{fig:locipz:p2}
+  \end{subfigure}
+  \caption{Loci of $p_{1}$ and $p_{2}$}
+  \label{fig:loci-poles}
+\end{figure}
+
+
+It is important to notice that $\omega_0$ is the geometric mean of both poles, i.e.
+\begin{equation}
+\omega_0 = \sqrt{p_{1} \cdot p_{2}}.
+\end{equation}
 
 
 \section{Step Response}
@@ -941,7 +1080,6 @@ as settling time reference.
 \end{figure}
 
 
-
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -972,30 +1110,8 @@ as settling time reference.
 We cannot apply the values provided here one by one for op amps, because slewing
 is is not considered \cite{chuang-settlingop-82}.
 
-
 \section{Examples}\label{sec:examples}
 
-\subsection{Butterworth}\label{subsec:examples:butterworth}
-
-\begin{equation}
-\underline{F}_{\mathrm{BW,2}} = \frac{\underline{Y}(s)}{\underline{X}(s)} 
-                 = \frac{\omega_0^2}{s^2 + \sqrt{2} \omega_0 s + \omega_0^2 }
-\end{equation}
-
-\begin{equation}
-Q_{\mathrm{BW,2}}(s) = \frac{1}{\sqrt{2}}
-\end{equation}
-
-\begin{equation}
-\left|\underline{F}_{\mathrm{BW,2}}\right|
-                 = \frac{1}{\sqrt{1+\left(\frac{\omega}{\omega_0}\right)^4}}
-\end{equation}
-
-\subsection{Bessel}
-tbd
-\begin{equation}
-Q_{\mathrm{BS,2}}(s) = \frac{1}{\sqrt{3}}
-\end{equation}
 \subsection{Series RLC}
 
 \begin{figure}[H]
@@ -1031,6 +1147,16 @@ Q = \frac{\left|X\right|}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
 \end{equation}
 
 \subsection{Parallel RLC}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \RlcParallelSchematicA
+  \end{circuitikz}
+  \caption{Schematic of parallel RLC resonator}
+  \label{fig:parallel-res}
+\end{figure}
+
 \begin{equation}
 \underline{F}(s) = \frac{\underline{I}_{\mathrm{O}}(s)}{\underline{I}_{\mathrm{I}}(s)} 
                  = \frac{\frac{1}{sL}}{\frac{1}{R}+sC+\frac{1}{sL}}
@@ -1041,6 +1167,31 @@ Q = \frac{\left|X\right|}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
 \begin{equation}
 Q_{\mathrm{P}} = R \sqrt{\frac{C}{L}}.
 \end{equation}
+
+%\subsection{Mass-spring-damper model}
+
+\subsection{Butterworth}\label{subsec:examples:butterworth}
+
+\begin{equation}
+\underline{F}_{\mathrm{BW,2}} = \frac{\underline{Y}(s)}{\underline{X}(s)} 
+                 = \frac{\omega_0^2}{s^2 + \sqrt{2} \omega_0 s + \omega_0^2 }
+\end{equation}
+
+\begin{equation}
+Q_{\mathrm{BW,2}}(s) = \frac{1}{\sqrt{2}}
+\end{equation}
+
+\begin{equation}
+\left|\underline{F}_{\mathrm{BW,2}}\right|
+                 = \frac{1}{\sqrt{1+\left(\frac{\omega}{\omega_0}\right)^4}}
+\end{equation}
+
+\subsection{Bessel}
+tbd
+\begin{equation}
+Q_{\mathrm{BS,2}}(s) = \frac{1}{\sqrt{3}}
+\end{equation}
+
 
 \printbibliography
 \end{document}
