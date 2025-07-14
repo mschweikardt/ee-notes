@@ -8,7 +8,7 @@
 
 
 \def \title  {Stability of Feedback Systems}
-\def \date   {June 1, 2025}
+\def \date   {July 14, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/feedback-stability.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/feedback-stability}
@@ -19,7 +19,7 @@
 
 \notetitle
 
-An idealized feedback configuration is shown in Fig. \ref{fig:fs},
+An idealized feedback configuration is shown in Fig.~\ref{fig:fs},
 with the input signal is $\underline{X}(s)$ and the output signal
 $\underline{Y}(s)$.
 It consists of the main building block
@@ -41,7 +41,7 @@ and the feedback network is passive.
   \label{fig:fs}
 \end{figure}
 
-The \textit{loop gain} of the system is 
+The \textit{loop~gain} of the system is 
 \begin{equation}
 \underline{L}(s) = \frac{\underline{V}(s)}{\underline{Z}(s)} 
                  = \underline{A}(s) \cdot \underline{\beta}(s).
@@ -68,7 +68,7 @@ and the output impedance very low, so therefore this model can be applied.}.
 \medskip
 
 All utilized variables in this document are summarized in 
-Tab. \ref{tab:variables}.
+Tab.~\ref{tab:variables}.
 
 \begin{table}[H]
 \centering
@@ -95,7 +95,7 @@ $\mathrm{GM}$           & Gain margin                     \\ \toprule
 \end{table}
 
 The loop gain $\underline{L}(s)$ of an exemplary system is shown in 
-Fig. \ref{fig:ls}.
+Fig.~\ref{fig:ls}.
 The magnitude is shown at the top and and phase at the bottom.
 
 \begin{figure}[H]
@@ -111,8 +111,7 @@ The magnitude is shown at the top and and phase at the bottom.
 In this illustration, the phase is \SI{0}{\degree} for $f \rightarrow 0$.
 In other literature, the phase is set to \SI{180}{\degree} for 
 $f \rightarrow 0$%
-\footnote{$\underline{L}(s) = -\underline{A}(s) \cdot \underline{\beta}(s)$}
-.
+\footnote{$\underline{L}(s) = -\underline{A}(s) \cdot \underline{\beta}(s)$}.
 Several points ($\mathrm{A}$ - $\mathrm{F}$) are annotated in the plot, each 
 point has a $x$ value (corresponding to a frequency) and a $y$ value 
 (corresponding either to the magnitude in dB or phase in \si{\degree}.
@@ -121,7 +120,7 @@ point has a $x$ value (corresponding to a frequency) and a $y$ value
 
 By evaluating the magnitude at $f \rightarrow 0$ (point $\mathrm{A}$), the
 DC gain (corresponding to $y_{\mathrm{A}}$) is extracted.
-We refer to the DC gain as $A_0$ (80 dB in this example).
+We refer to the DC gain as $A_0$ (\SI{80}{\decibel} in this example).
 Next, the \SI{3}{\decibel} bandwidth $f_{\mathrm{3dB}}$ 
 (a.k.a. cutoff frequency, corner frequency, or break frequency) of the
 plot is evaluated. 
@@ -130,10 +129,9 @@ $$
 y_{\mathrm{B}} = y_{\mathrm{A}} - 3 \mathrm{dB}
 $$
 and extract the matching $x_{\mathrm{B}} = f_{\mathrm{3dB}}$ 
-(\SI{100}{\hertz} in this example%
-\footnote{In most cases, the phase is \SI{-45}{\degree} at
-$f_{\mathrm{3dB}}$.}
-).
+(\SI{100}{\hertz} in this example).
+In most cases, the phase is \SI{-45}{\degree} at
+$f_{\mathrm{3dB}}$ and corresponds to the dominant pole in the system.
 Based on that, the \textit{gain-bandwidth product}
 \begin{equation}
 \mathrm{GBP} = A_0 \cdot f_{\mathrm{3dB}}
@@ -149,10 +147,9 @@ The x coordinate $x_{\mathrm{C}}$ of this point is the
 \textit{unity-gain bandwidth}
 $\mathrm{UGBW}$%
 \footnote{a.k.a. UGB, UGF}
-(\SI{620}{\mega\hertz} in this example%
-\footnote{It is important to notice that $\mathrm{GBP}$ is not necessarily
-equal to the $\mathrm{UGBW}$.}
-).
+(\SI{620}{\mega\hertz} in this example)
+It is important to notice that $\mathrm{GBP}$ is not necessarily
+equal to the $\mathrm{UGBW}$.
 Both, $\mathrm{GBP}$ and $\mathrm{UGBW}$ are a measure for the "speed" of
 the system.
 
@@ -161,13 +158,15 @@ the system.
 Next, we obtain the point $\mathrm{D}$ in the phase plot by setting 
 $x_{\mathrm{D}} = x_{\mathrm{C}}$, i.e. evaluate the phase at the 
 $\mathrm{UGBW}$.
-With this point, the \textit{phase margin}
+With this point, the \textit{phase~margin}
 
 $$
-\mathrm{PM} = 180° + y_{\mathrm{D}}
+\mathrm{PM} = \SI{180}{\degree} + y_{\mathrm{D}}
 $$
 is calculated (\SI{39}{\degree} in this example).
 The phase margin is a measure for the stability of the system.
+Depending on the application, the phase margin should be bigger than a 
+given threshold (min. \SI{45}{\degree}).
 
 The crossover of the phase with \SI{-180}{\degree} results in the 
 point $\mathrm{E}$.
