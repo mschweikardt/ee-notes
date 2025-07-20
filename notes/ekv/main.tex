@@ -6,7 +6,7 @@
 
 
 \def \title  {EKV MOSFET Model}
-\def \date   {May 15, 2025}
+\def \date   {July 20, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/ekv.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/ekv}
@@ -19,8 +19,8 @@
 
 EKV%
 \footnote{Named by their inventors Enz, Krummenacher and Vittoz}
-is an analytical \gls{mosfet} model \cite{enz-ekv-90}.
-The drain current of the transistor is
+is an analytical \gls{mosfet} model \cite{enz-ekv-90,enz-ekvstory-08}.
+The drain current of the transistor is given by
 \begin{equation}
 I_{\mathrm{D}} = I_{\mathrm{S}} \left(\mathrm{IC}_{\mathrm{F}}-\mathrm{IC}_{\mathrm{R}}\right),
 \end{equation}
@@ -95,7 +95,7 @@ Fig. \ref{fig:plot} plots \eqref{eq:ic}, \eqref{eq:ic-quad} and
 \end{figure}
 
 Neither $\mathrm{IC}_{\mathrm{quad}}$ or $\mathrm{IC}_{\mathrm{exp}}$
-are sufficient to approximate the behavior of $\mathrm{IC}$
+are sufficient to approximate the behavior of the $\mathrm{IC}$
 close to $V_{\mathrm{GS}}=V_{\mathrm{TH}}$.
 
 \bigskip
@@ -107,10 +107,10 @@ their corresponding inversion level and curvature.
 \caption{EKV regions}
 \begin{tabular}{ccccc}
 \toprule
-Identifier           & Name                   & $\mathrm{IC}$  & Curvature     & Current             \\ \midrule
-SI                   & strong inversion       & $\geq 10$      & quadratic     & drift               \\ 
-MI                   & moderate inversion     & $0.1$-$10$     & ?             & drift and diffusion \\ 
-WI                   & weak inversion         & $\leq 0.1$     & exponential   & diffusion           \\ \toprule
+Identifier & Name               & $\mathrm{IC}$  & Curvature    & Current             \\ \midrule
+S.I.       & strong inversion   & $\geq 10$      & quadratic    & drift               \\ 
+M.I.       & moderate inversion & $0.1$-$10$     & -            & drift and diffusion \\ 
+W.I.       & weak inversion     & $\leq 0.1$     & exponential  & diffusion           \\ \toprule
 \end{tabular}
 \label{tab:ekv-regions}
 \end{table}
@@ -119,9 +119,9 @@ WI                   & weak inversion         & $\leq 0.1$     & exponential   &
 
 The drain current in \textit{strong inversion} is
 \begin{equation}\label{eq:id-si}
-  I_{\mathrm{D,SI}} = I_{\mathrm{S}} \cdot \mathrm{IC}_{\mathrm{quad}}
-                    = 2 n V_{\mathrm{T}}^2 K' \frac{W}{L} \cdot \left(\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right)^2
-                    \stackrel{n=1}{=} \frac{1}{2} K' \frac{W}{L} \left(V_{\mathrm{GS}}-V_{\mathrm{TH}}\right)^2
+  I_{\mathrm{D,S.I.}} = I_{\mathrm{S}} \cdot \mathrm{IC}_{\mathrm{quad}}
+                      = 2 n V_{\mathrm{T}}^2 K' \frac{W}{L} \cdot \left(\frac{V_{\mathrm{GS}}-V_{\mathrm{TH}}}{2 n V_{\mathrm{T}}}\right)^2
+                        \stackrel{n=1}{=} \frac{1}{2} K' \frac{W}{L} \left(V_{\mathrm{GS}}-V_{\mathrm{TH}}\right)^2
 \end{equation}
 and matches the square law in the saturation region 
 \cite{mosfet-square-law}.
