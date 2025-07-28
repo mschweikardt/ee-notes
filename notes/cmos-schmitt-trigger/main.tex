@@ -1,0 +1,173 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {CMOS Schmitt-Trigger}
+\def \date   {May 30, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/cmos-schmitt-trigger.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/cmos-schmitt-trigger}
+
+\input{./../../tikzlib/figs/cmos-schmitt-trigger-schematic-a.tex}
+\input{./../../tikzlib/figs/cmos-schmitt-trigger-transfer-char-a.tex}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\cite{wang-schmitttrigger-91,filanovsky-schmitttrigger-94,melek-schmitttrigger-17}
+
+Fig. \ref{fig:schmitt-trigger} shows the schematic of a CMOS Schmitt-Trigger
+and Fig. \ref{fig:vtc} the Voltage Transfer Characteristic (VTC).
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \CmosSchmittTriggerSchematicA
+  \end{circuitikz}
+  \caption{Schematic of the Schmitt-Trigger}
+  \label{fig:schmitt-trigger}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \CmosSchmittTriggerTransferCharA
+  \end{tikzpicture}
+  \caption{Voltage Transfer Characteristic of the Schmitt-Trigger}
+  \label{fig:vtc}
+\end{figure}
+
+We have to investigate the NMOS Branch
+(\texttt{NM0}, \texttt{NM1} and \texttt{NM2}) for deriving $V_{\mathrm{I,p}}$
+and the PMOS Branch (\texttt{PM0}, \texttt{PM1} and \texttt{PM2})
+for deriving $V_{\mathrm{I,n}}$.
+We will observe the point where the transistor \texttt{NM1} is starting to
+conduct, i.e.
+\begin{equation}\label{eq:cond-sw-vip}
+ V_{\mathrm{GS1N}} = V_{\mathrm{TN1}}
+\end{equation}
+or
+\begin{equation}
+  V_{\mathrm{X}} = V_{\mathrm{I,p}} - V_{\mathrm{TN1}}.
+\end{equation}
+The modes of the transistors for \eqref{eq:cond-sw-vip} are shown in 
+Tab.~\ref{tab:mode-nmos-branch}.
+\begin{table}[H]
+  \centering
+  \caption{Mode of the transistors in the NMOS-Branch at the
+           switching threshold $V_{\mathrm{I,p}}$}
+  \begin{tabular}{|c|c|c|c|}
+                                                                                                                                                             \hline
+    Device       & $V_{\mathrm{GS}}$                                   & $V_{\mathrm{DS}}$                                     & Mode                     \\ \hline \hline
+    \texttt{NM0} & $V_{\mathrm{I,p}}$                                  & $V_{\mathrm{I,p}} - V_{\mathrm{TN1}}$                 & ohmic \footnotemark      \\ \hline
+    \texttt{NM1} & $V_{\mathrm{TN1}}$                                  & $V_{\mathrm{DD}}-V_{\mathrm{I,p}}+V_{\mathrm{TN1}}$   & off \footnotemark        \\ \hline   
+    \texttt{NM2} & $V_{\mathrm{DD}}-V_{\mathrm{I,p}}+V_{\mathrm{TN1}}$ & $V_{\mathrm{DD}} - V_{\mathrm{I,p}}+V_{\mathrm{TN1}}$ & saturation \footnotemark \\ \hline   
+  \end{tabular}
+  \label{tab:mode-nmos-branch}
+\end{table}
+\footnotetext[1]{
+  $V_{\mathrm{GS0}}=V_{\mathrm{I,p}}>V_{\mathrm{TN0}}$, 
+  $V_{\mathrm{GS0}}-V_{\mathrm{TN0}}=V_{\mathrm{I,p}}-V_{\mathrm{TN0}}>
+   V_{\mathrm{DS,0}}=V_{\mathrm{I,p}} - V_{\mathrm{TN1}}$ , because
+  $V_{\mathrm{TN0}}<V_{\mathrm{TN1}}$
+ }
+\footnotetext[2]{
+  $V_{\mathrm{GS1N}}=V_{\mathrm{I,p}}-V_{\mathrm{X}}=V_{\mathrm{TN1}} \leq V_{\mathrm{TN1}}$
+ }
+\footnotetext[3]{
+  $V_{\mathrm{GS2N}}=V_{\mathrm{DD}} - V_{\mathrm{I,p}}+V_{\mathrm{TN1}}>
+   V_{\mathrm{TN2}}$,
+   $V_{\mathrm{GS2N}}-V_{\mathrm{TN2}}=
+    V_{\mathrm{DD}}-V_{\mathrm{I,p}}+V_{\mathrm{TN1}}-V_{\mathrm{TN2}}<
+    V_{\mathrm{DS2NN}}=V_{\mathrm{DD}} - V_{\mathrm{I,p}}+V_{\mathrm{TN1}}$
+ }
+By applying KCL at node \texttt{X} we get
+\begin{equation}\label{eq:kcl-x}
+ \underbrace{I_{\mathrm{D1}}}_{=0} + I_{\mathrm{D2}} = I_{\mathrm{D0}}.
+\end{equation}
+From the transistor equations and Tab.~\ref{tab:mode-nmos-branch} we get
+\begin{align}\label{eq:id0}
+ I_{\mathrm{D0}} 
+ & = \mu_0 C_{\mathrm{Ox}} \frac{w_{\mathrm{N0}}}{l_{\mathrm{N0}}}
+     \left[\left(V_{\mathrm{GS0}}-V_{\mathrm{TN0}}\right)V_{\mathrm{DS0}}
+           -\frac{1}{2}V_{\mathrm{DS0}}^2\right] \nonumber \\
+ & = \mu_0 C_{\mathrm{Ox}} \frac{w_{\mathrm{N0}}}{l_{\mathrm{N0}}}
+     \left[\left(V_{\mathrm{I,p}}-V_{\mathrm{TN0}}\right)\left(V_{\mathrm{I,p}}
+           - V_{\mathrm{TN1}}\right)-\frac{1}{2}\left(V_{\mathrm{I,p}} 
+           - V_{\mathrm{TN1}}\right)^2\right]
+\end{align}
+and
+\begin{align}\label{eq:id2}
+ I_{\mathrm{D2}} 
+  & = \frac{1}{2} \mu_0 C_{\mathrm{Ox}} \frac{w_{\mathrm{N2}}}{l_{\mathrm{N2}}}
+      \left(V_{\mathrm{GS2N}}-V_{\mathrm{TN2}}\right)^2 \nonumber \\
+  & = \frac{1}{2} \mu_0 C_{\mathrm{Ox}} \frac{w_{\mathrm{N2}}}{l_{\mathrm{N2}}}
+      \left(V_{\mathrm{DD}} - V_{\mathrm{I,p}}
+            +V_{\mathrm{TN1}}-V_{\mathrm{TN2}}\right)^2
+\end{align}
+
+Using \eqref{eq:kcl-x}, \eqref{eq:id0}, \eqref{eq:id2} and
+$V_{\mathrm{TN0}} \approx V_{\mathrm{TN1}} \approx
+ V_{\mathrm{TN2}} \approx V_{\mathrm{TN}}$
+we get
+\begin{equation}\label{eq:vip}
+ V_{\mathrm{I,p}} = 
+ \frac{V_{\mathrm{DD}}+\sqrt{\frac{w_{\mathrm{N0}}}{w_{\mathrm{N3}}}}V_{\mathrm{TN}}}
+      {1+\sqrt{\frac{w_{\mathrm{N0}}}{w_{\mathrm{N3}}}}}.
+\end{equation}
+The function~\eqref{eq:vip} is shown in Fig.~\ref{fig:vip}.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[]
+    \begin{axis}[ xmin=0
+                , xmax=2.85,
+                , ymin=0.5
+                , ymax=0.975,
+                , xtick={0.5,1.0,1.5,2.0,2.5}
+                , ytick={0.6,0.7,0.8,0.9}
+                , extra x ticks={0}
+                , extra x tick labels={0}
+                , extra y ticks={0.5}
+                , extra y tick labels={0.5}
+                , inner axis line style={semithick,black}
+                , axis lines=center
+                , axis line style={-Latex[round]}
+                , every axis x label/.style={ at={(ticklabel* cs:0.985)}
+                                            , anchor=south
+                                            , inner sep=3.5pt
+                                            }
+                , every axis y label/.style={ at={(ticklabel* cs:0.975)}
+                                            , anchor=west
+                                            , inner sep=2.5pt
+                                            }
+                , clip=false
+                , major tick length=1.75pt
+                , xlabel=$\frac{w_{\mathrm{N0}}}{w_{\mathrm{N3}}}$
+                , ylabel= $\frac{V_{\mathrm{I,p}}}{V_{\mathrm{DD}}}$
+                , width=0.65\textwidth
+                , height=0.35\textwidth
+                , yticklabel style = {font=\footnotesize,xshift=0.5ex}
+                , xticklabel style = {font=\footnotesize,yshift=0.5ex}
+                , every tick/.style={black}
+                , tick align=outside
+                ]
+    \addplot[ mark=none
+        , very thick
+        , domain=0.01:2.65
+        , samples=300
+        , smooth
+        , thick] {(1+sqrt{\x}*0.2)/(1+sqrt{\x})};   
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Threshold $V_{\mathrm{I,p}}$ for
+           $V_{\mathrm{TN}}=0.2 \cdot V_{\mathrm{DD}}$}
+  \label{fig:vip}
+\end{figure}
+
+\printbibliography
+\end{document}
