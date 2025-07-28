@@ -161,12 +161,18 @@ is provided in Fig.~\ref{fig:plot2}.
     \draw[dashed] (axis cs:0.1,0) -- (axis cs:0.1,1);
     \draw[dashed] (axis cs:10,0) -- (axis cs:10,1);
 
-     \addplot[ mark=none
-          , thick
-          , domain=0.001:100
-          , samples=2300
-          , smooth
-          , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
+   \addplot[ mark=none
+        , thick
+        , domain=0.001:0.01
+        , samples=5
+        , smooth
+        , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
+    \addplot[ mark=none
+        , thick
+        , domain=0.01:100
+        , samples=20
+        , smooth
+        , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
     \end{axis}
   \end{tikzpicture}
   \caption{Normalized efficiency 
