@@ -4,7 +4,7 @@
 \include{./../../tikzlib/preamble.tex}
 
 \def \title  {Current Mirrors}
-\def \date   {May 21, 2025}
+\def \date   {July 12, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/current-mirrors.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/current-mirrors}
@@ -52,7 +52,9 @@
 
   \item mismatch (variation between $I_{\mathrm{R}}$ and $I_{\mathrm{O,}i}$)
     \begin{itemize}
-      \item[-] systematic (evaluated for a given lower bound $V_{\mathrm{O,min}}$ and upper bound $V_{\mathrm{O,max}}$)
+      \item[-] systematic 
+        (evaluated for a given lower bound 
+          $V_{\mathrm{O,min}}$ and upper bound $V_{\mathrm{O,max}}$)
       \item[-] statistical (evaluated at $V_{\mathrm{O}}=V_{\mathrm{R}}$)
     \end{itemize}
   \item noise
@@ -61,6 +63,7 @@
 \section{Topologies}
 
 \subsection{Classic}
+
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
@@ -211,7 +214,11 @@
 
 \subsection{Degenerated}
 
+\cite[section 3.5]{johnsmartin-aicd-12}
+
 \subsection{Cascode/Stacked}
+
+\cite[section 3.6]{johnsmartin-aicd-12}
 
 \begin{figure}[H]
   \centering
@@ -259,10 +266,12 @@
     \path [voltarrow] (mx.gate) edge[bend right=-30] 
       node[midway,below right,inner sep=1pt] 
       {$V_{\mathrm{GS,2R}}$} (mx.source);
+    \path [voltarrow] (m2.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,2A}}$} (m2.source);
     \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
       node[midway,right,inner sep=1pt] 
       {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
-
 
     \node[ anchor    = east
          , inner sep = 2pt
@@ -285,6 +294,15 @@
   \caption{Cascode NMOS current mirror with one output}
   \label{fig:casc-nmos-1}
 \end{figure}
+
+\subsection{Self-Cascode}
+\cite{self-cascode}
+
+\subsection{Regulated Cascode}
+
+\cite{sackinger-rgc-90}
+\cite{coban-rrop-94}
+\cite{helfenstein-gainboostop-95}
 
 \subsection{Wilson}
 
@@ -358,6 +376,8 @@
   \label{fig:classic-nmos-1}
 \end{figure}
 
+
+
 \subsection{Wide-Swing}
 
 \begin{figure}[H]
@@ -408,6 +428,9 @@
     \path [voltarrow] (mx.gate) edge[bend right=-30] 
       node[midway,below right,inner sep=1pt] 
       {$V_{\mathrm{GS,2R}}$} (mx.source);
+    \path [voltarrow] (m2.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,2A}}$} (m2.source);
     \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
       node[midway,right,inner sep=1pt] 
       {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
@@ -436,6 +459,95 @@
 \end{figure}
 
 \subsection{Self-Biased Wide-Swing}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (origin) at (0,0);
+    \node[nmos,xscale=-1] (mr) at (-2.1,0) {};
+    \node[nmos]           (m1) at ( 2.1,0) {};
+
+    \draw (mr.gate) -- (origin) -- (m1.gate);
+
+    \draw (mr.drain) to   [short,-] ++ (0,0.5)
+                     node [nmos,anchor=source,xscale=-1] (mx) {}; 
+
+    \draw (mx.drain) to [short,-] ++ (0,0.1) coordinate (fb1)
+                     to [R,l=$R$] ++ (0,1.6) coordinate (fb4)
+                     to [short,-o,f<_=$I_{\mathrm{R}}$] ++ (0,1.25) coordinate (in); 
+
+    \coordinate (fb2) at ($(mr.gate)!0.3!(m1.gate)$);
+    \coordinate (fb3) at ($(mx.gate)!0.7!(m2.gate)$);
+
+    \draw (fb2) to [short,*-] (fb2|-fb1)
+                to [short,-*] (fb1);
+    \draw (fb3) to [short,*-] (fb3|-fb4)
+                to [short,-*] (fb4);
+
+    \draw (mr.source) to [short,-] ++ (0,-0.3) coordinate (x) 
+                      to [short,-*] (x-|origin) coordinate (gnd)
+                      to [short,-] (gnd-|m1.source) 
+                      to [short,-] (m1.source);
+
+    \draw (m1.drain) to [short,-] (m1.drain|-mx.source)
+                     node [nmos,anchor=source] (m2) {}; 
+    \draw (m2.gate) -- (mx.gate);
+    \draw (m2.drain) to [short,-] (m2.drain|-fb4)
+                     to [short,-o,f<=$I_{\mathrm{O}}$] (m2.drain|-in) coordinate (out);  
+
+    \node[vss] at (gnd) {};
+
+    \path [voltarrow] ($(in)+(-1.5,0)$) edge[bend left=-30] 
+      node[midway,left,inner sep=1pt] 
+      {$V_{\mathrm{R}}$} ($(mr.source)+(-1.5,0)$);
+
+    \path [voltarrow] (mr.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (mr.source);
+    \path [voltarrow] (m1.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,1}}$} (m1.source);
+    \path [voltarrow] (mx.gate) edge[bend right=-30] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{GS,2R}}$} (mx.source);
+    \path [voltarrow] (m2.gate) edge[bend left=-30] 
+      node[midway,below left,inner sep=1pt] 
+      {$V_{\mathrm{GS,2A}}$} (m2.source);
+    \path [voltarrow] ($(out)+(1,0)$) edge[bend right=-30] 
+      node[midway,right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} ($(m1.source)+(1,0)$);
+
+
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mr.source)!0.775!(mr.drain)$) {MNCM1R};
+    \node[ anchor    = east
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(mx.source)!0.775!(mx.drain)$) {MNC1A};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m1.source)!0.775!(m1.drain)$) {MNCM1A};
+    \node[ anchor    = west
+         , inner sep = 2pt
+         , font      = \footnotesize
+         ] () at ($(m2.source)!0.775!(m2.drain)$) {MNC1B};         
+
+  \end{circuitikz}
+  \caption{Self-Biased Wide-Swing NMOS current mirror with one output}
+  \label{fig:sb-ws-nmos-1}
+\end{figure}
+
+\subsection{High-Ratio}
+\cite{galupmontoro-serparmosfet-94}
+\cite[section 7.2.2]{erckert-aic-22}
+\cite{fiorelli-serparmosfet-04}
+\cite{arnaud-subnsota-06}
+
+\subsection{Frequency-Dependent}
+\cite{itakura-fdcm-96}
 
 \section{Testbench}
 
@@ -492,13 +604,26 @@
   \label{fig:testbench}
 \end{figure}
 
+Input resistance
 \begin{equation}
-r_{\mathrm{O}} = \left(\frac{\mathrm{d}I_{\mathrm{O}}}{\mathrm{d}V_{\mathrm{O}}}\bigg|_{V_{\mathrm{O}}=V_{\mathrm{R}}}\right)^{-1}
+R_{\mathrm{I}} = \frac{V_{\mathrm{R}}}{I_{\mathrm{R}}}.
 \end{equation}
 
-
+Input admittance
 \begin{equation}
-V_{\mathrm{O,min}} : I_{\mathrm{O}}\left(V_{\mathrm{O,min}}\right) = \epsilon \cdot I_{\mathrm{O}}\left(V_{\mathrm{R}}\right),
+\underline{Y}_{\mathrm{I}} = g_{\mathrm{I}} + j \omega C_{\mathrm{I}}
+\end{equation}
+Output admittance
+\begin{equation}
+\underline{Y}_{\mathrm{O}} = g_{\mathrm{O}} + j \omega C_{\mathrm{O}}
+\end{equation}
+evaluated at $V_{\mathrm{O}}=V_{\mathrm{R}}$.
+
+
+
+The minimal output voltage of the current mirror is
+\begin{equation}
+V_{\mathrm{O,min}} : I_{\mathrm{O}}\left(V_{\mathrm{O,min}}\right) = \epsilon \cdot I_{\mathrm{R}}\left(V_{\mathrm{R}}\right),
 \end{equation}
 with $\epsilon \in (0,1)$.
 
