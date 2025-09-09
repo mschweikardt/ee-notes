@@ -337,12 +337,26 @@ we can create a \textit{small-signal model}
   \caption{Small-signal model}
   \label{fig:squarelaw-small-signal}
 \end{figure}
+
+
 The drain current in the small signal model is
 \begin{equation}\label{eq:id-ss}
 \underline{I}_{\mathrm{D}} =  
 g_{\mathrm{m}} \ \underline{V}_{\mathrm{GS}} 
 + g_{\mathrm{DS}} \ \underline{V}_{\mathrm{DS}}.
 \end{equation}
+
+An alternative small signal model is displayed in 
+Fig.~\ref{fig:alt-squarelaw-small-signal}.
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \input{./../../tikzlib/figs/mosfet-equivalent-circuit-e.tex}
+  \end{circuitikz} 
+  \caption{Alternative small-signal model \cite[section 7.2.1]{seda-miccirc-20}}
+  \label{fig:alt-squarelaw-small-signal}
+\end{figure}
 
 \printbibliography
 
