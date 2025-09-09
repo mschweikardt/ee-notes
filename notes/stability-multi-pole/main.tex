@@ -1,0 +1,126 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Stability of Multi-Pole Systems}
+\def \date   {May 9, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/stability-multi-pole.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/stability-multi-pole}
+
+\usepackage[scale=5]{draftwatermark}
+\begin{document}
+
+\notetitle
+
+\section{Introduction}
+
+
+\section{Two Poles}
+
+\begin{figure}[h]
+  \centering
+  \begin{circuitikz}[scale=0.95]
+    \input{./../../tikzlib/figs/stability-2p-schematic-a.tex}
+  \end{circuitikz}
+  \caption{Small signal model of a two pole amplifier}
+  \label{fig:plot}
+\end{figure}
+
+
+\begin{equation}
+  \underline{A}(s) = \frac{A_0}{\left(1-\frac{s}{p_1}\right)\left(1-\frac{s}{p_2}\right)}
+\end{equation}
+
+\begin{equation}
+  p_1 = -\frac{1}{R_1 \ C_1}
+\end{equation}
+
+\begin{equation}
+  p_2 = -\frac{1}{R_2 \ C_2}
+\end{equation}
+
+\begin{equation}
+  A_0 = g_{\mathrm{m1}} g_{\mathrm{m2}} R_1 R_2
+\end{equation}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \draw[-{Latex[round,scale=1.2]}] (-3,0) -- (3,0);
+    \node[anchor=west] at (3,0) {Re};
+    \draw[-{Latex[round,scale=1.2]}] (0,-3) -- (0,3);
+    \node[anchor=west] at (0,3) {Im};
+    \node[cross out,draw=black,thick] at (-1,0) {};
+    \node[cross out,draw=black,thick] at (-2,0) {};
+    \node[anchor=south] at (-1,0.2) {$p_1$};
+    \node[anchor=south] at (-2,0.2) {$p_2$};
+  \end{tikzpicture}
+  \caption{Pole-zero plot of $\underline{A}(s)$ of the two pole amplifier}
+  \label{fig:pw-as-2p}
+\end{figure}
+
+
+\begin{equation}
+  \underline{F}(s) = \frac{\frac{A_0}{1+\beta A_0}}{1 -s \frac{p_1+p_2}{p_1 p_2 (1+\beta A_0)} + s^2 \frac{1}{p_1 p_2 (1+\beta A_0)}}
+\end{equation}
+
+\begin{equation}
+  \omega_0^2 = p_1 p_2 (1+\beta A_0) \approx p_1 p_2 \beta A_0
+\end{equation}
+
+\begin{equation}
+  Q \omega_0 = -\frac{p_1 p_2 (1+\beta A_0)}{p_1+p_2}
+\end{equation}
+
+\begin{equation}
+  Q  = -\frac{\sqrt{p_1 p_2 (1+\beta A_0)}}{p_1+p_2} \approx -\frac{\sqrt{p_1 p_2 \beta A_0}}{p_1+p_2}
+\end{equation}
+
+\begin{equation}
+  Q  = -\frac{\sqrt{\frac{p_2}{p_1} (1+\beta A_0)}}{1+\frac{p_2}{p_1}} \approx -\frac{\sqrt{\frac{p_2}{p_1} \beta A_0}}{1+\frac{p_2}{p_1}}
+\end{equation}
+
+
+\section{Two Poles and One Zero}
+
+\begin{figure}[h]
+  \centering
+  \begin{circuitikz}[scale=0.95]
+    \input{./../../tikzlib/figs/stability-2p1z-schematic-a.tex}
+  \end{circuitikz}
+  \caption{Small signal model of a two pole and one zero amplifier}
+  \label{fig:plot}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{circuitikz}[scale=0.95]
+    \input{./../../tikzlib/figs/stability-2p1z-schematic-b.tex}
+  \end{circuitikz}
+  \caption{Small signal model of a two pole and one zero amplifier}
+  \label{fig:plot}
+\end{figure}
+
+
+\begin{equation}
+  A(s) = A_0 \frac{\left(1-\frac{s}{z_0}\right)}{\left(1-\frac{s}{p_0}\right)\left(1-\frac{s}{p_1}\right)}
+\end{equation}
+
+\section{Three Poles}
+
+\begin{equation}
+  A(s) = \frac{A_0}{\left(1-\frac{s}{p_0}\right)\left(1-\frac{s}{p_1}\right)\left(1-\frac{s}{p_2}\right)}
+\end{equation}
+
+\printbibliography
+
+\appendix
+\section{Tables}
+
+\subsection{Two Poles}
+\subsection{Two Poles and One Zero}
+\subsection{Three Poles}
+\end{document}

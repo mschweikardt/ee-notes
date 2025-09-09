@@ -1,0 +1,109 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Bandgap References}
+\def \date   {May 29, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/bandgap.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/bandgap}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\cite{razavi-bandgap-16}
+\cite{razavi-bandgap-21}
+
+\cite{rinmora-volref-02}
+\cite{kok-cmosvoltref-13}
+
+\cite{ma-bandgap-14}
+\cite{huang-bandgap-21}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \input{./../../tikzlib/figs/bandgap-cmos-schematic-a.tex}
+  \end{circuitikz}
+  \caption{Bandgap Core}
+  \label{fig:badgap-core}
+\end{figure}
+
+The V-I characteristic of an PNP transistor is approximated with
+\begin{equation}
+ I_E \approx I_{\mathrm{S}} \cdot e^{\frac{V_\mathrm{EB}}{V_\mathrm{T}}},
+\end{equation}
+with the \textit{emitter~current} $I_E$,
+the \textit{reverse~saturation~current} $I_{\mathrm{S}}$, the
+\textit{Emitter-Base Voltage} $V_\mathrm{EB}$ an the \textit{thermal~voltage}
+\begin{equation}\label{eq:vt}
+V_\mathrm{T}=\frac{kT}{e},
+\end{equation}
+with the \textit{absolute~temperature} $T$ in K,
+the \textit{Boltzmann~constant}~$k=\SI{1.38e-23}{\joule\per\kelvin}$
+and \textit{electron~charge}~$e=\SI{1.602e-19}{\coulomb}$.
+For the configuration in Fig.~\ref{fig:badgap-core}, this results in the
+following equations
+\footnote{The emitter area of the right PNP has the size N of the left PNP.}:
+\begin{equation}\label{eq:i1}
+ I_1 = N \cdot I_{\mathrm{S}} \cdot e^{\frac{V_\mathrm{EB1}}{V_\mathrm{T}}}
+\end{equation}
+\begin{equation}\label{eq:i2}
+ I_2 = I_{\mathrm{S}} \cdot e^{\frac{V_\mathrm{EB2}}{V_\mathrm{T}}}
+\end{equation}
+The PMOS current mirrors forces the two currents to be identical, i.e.
+\begin{equation}\label{eq:curr}
+ I_1 \stackrel{!}{=} I_2.
+\end{equation}
+Using \eqref{eq:i1}, \eqref{eq:i2} and \eqref{eq:curr} one can calculate
+\begin{equation}
+V_\mathrm{EB2}-V_\mathrm{EB1} = V_\mathrm{T} \cdot \ln(N).
+\end{equation}
+
+We assume that the opamp is ideal, thus the input differential voltage
+$V_{\mathrm{D}}$  is equal to zero.
+As a consequence
+\begin{equation}
+V_{\mathrm{R1}} = V_\mathrm{EB2}-V_\mathrm{EB1}.
+\end{equation}
+and
+\begin{equation}\label{eq:i1-calc}
+I_1 = \frac{V_{\mathrm{R1}}}{R_1} = \frac{V_\mathrm{T} \cdot \ln(N)}{R_1}.
+\end{equation}
+The output voltage of the bandgap $V_{\mathrm{BG}}$ is
+\begin{equation}\label{eq:vbg1}
+V_{\mathrm{BG}} = V_{\mathrm{EB1}} + I_1 \left(R_1+R_2\right).
+\end{equation}
+Inserting \eqref{eq:i1-calc}, \eqref{eq:vt} and \eqref{eq:vbg1} results in
+\begin{equation}\label{eq:vbg1}
+V_{\mathrm{BG}} = V_{\mathrm{EB1}} + 
+                \frac{kT}{e} \cdot \ln(N) \cdot \left(1+\frac{R_2}{R_1}\right).
+\end{equation}
+By deriving \eqref{eq:vbg1} to the temperature results in
+\footnote{The ratio $\nicefrac{R_2}{R_1}$ is temperature-independent.}
+\begin{equation}
+\frac{\mathrm{d}V_{\mathrm{BG}}}{\mathrm{d}T}
+= \frac{\mathrm{d}V_{\mathrm{EB1}}}{\mathrm{d}T}
++ \frac{k}{e} \cdot \ln(N) \cdot \left(1+\frac{R_2}{R_1}\right).
+\end{equation}
+
+The derivate of the bandgap voltage at a derided temperature $T_0$
+must be zero, i.e.
+\begin{equation}
+\frac{\mathrm{d}V_{\mathrm{BG}}}{\mathrm{d}T}\bigg|_{T=T_0} = 0.
+\end{equation}
+
+As a result, the equation 
+\begin{equation}
+R_2 + R_1\left(1+\frac{e}{k \ln(N)} \cdot \frac{\mathrm{d}V_{\mathrm{EB1}}}{\mathrm{d}T}\bigg|_{T=T_0}\right) = 0.
+\end{equation}
+must be fulfilled.
+
+\printbibliography
+\end{document}

@@ -2,7 +2,6 @@
 
 \include{./../../preamble.tex}
 \include{./../../tikzlib/preamble.tex}
-\include{./../../tikzlib/figs/nmos-4t-testbench-a.tex}
 
 \def \title  {BSIM-4}
 \def \date   {May 18, 2025}
@@ -33,7 +32,7 @@ additional gate resistance to the model which is not present in the origin model
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \NmosFourtTestbenchA
+    \input{./../../tikzlib/figs/nmos-4t-testbench-a.tex}
   \end{circuitikz}
   \caption{Definition of $V_{\mathrm{GS}}$, $V_{\mathrm{DS}}$, $V_{\mathrm{SB}}$ and $I_{\mathrm{D}}$}
   \label{fig:testbench}
@@ -49,7 +48,7 @@ An excerpt of a some operating points is shown in Tab. \ref{tab:oppoints}.
 \begin{table}[H]
 \centering
 \caption{Some BSIM-4 operating points in Ngspice}
-\begin{tabular}{ccl}
+\begin{tabular}{cccl}
 \toprule
 \textbf{Identifier}  & \textbf{Variable}      & \textbf{Description}                                   \\ \midrule
 \texttt{vth}         & $V_{\mathrm{TH}}$      & Threshold voltage                                      \\ 

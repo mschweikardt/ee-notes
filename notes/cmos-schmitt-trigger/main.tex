@@ -10,9 +10,6 @@
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/cmos-schmitt-trigger.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/cmos-schmitt-trigger}
 
-\input{./../../tikzlib/figs/cmos-schmitt-trigger-schematic-a.tex}
-\input{./../../tikzlib/figs/cmos-schmitt-trigger-transfer-char-a.tex}
-
 \usepackage[scale=5]{draftwatermark}
 
 \begin{document}
@@ -27,7 +24,7 @@ and Fig. \ref{fig:vtc} the Voltage Transfer Characteristic (VTC).
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \CmosSchmittTriggerSchematicA
+    \input{./../../tikzlib/figs/cmos-schmitt-trigger-schematic-a.tex}
   \end{circuitikz}
   \caption{Schematic of the Schmitt-Trigger}
   \label{fig:schmitt-trigger}
@@ -36,7 +33,7 @@ and Fig. \ref{fig:vtc} the Voltage Transfer Characteristic (VTC).
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
-    \CmosSchmittTriggerTransferCharA
+    \input{./../../tikzlib/figs/cmos-schmitt-trigger-transfer-char-a.tex}
   \end{tikzpicture}
   \caption{Voltage Transfer Characteristic of the Schmitt-Trigger}
   \label{fig:vtc}

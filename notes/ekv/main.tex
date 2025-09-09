@@ -2,7 +2,6 @@
 
 \include{./../../preamble.tex}
 \include{./../../tikzlib/preamble.tex}
-\include{./../../tikzlib/figs/ekv-ic-vs-vgseff.tex}
 
 
 \def \title  {EKV MOSFET Model}
@@ -85,7 +84,7 @@ Fig. \ref{fig:plot} plots \eqref{eq:ic}, \eqref{eq:ic-quad} and
 \begin{figure}[ht]
   \centering
   \begin{tikzpicture}
-    \EkvIcVsVgseff
+    \input{./../../tikzlib/figs/ekv-ic-vs-vgseff.tex}
   \end{tikzpicture}
   \caption{$\mathrm{IC}$, $\mathrm{IC}_{\mathrm{exp}}$ and 
     $\mathrm{IC}_{\mathrm{quad}}$ as a function of 
@@ -162,17 +161,17 @@ is provided in Fig.~\ref{fig:plot2}.
     \draw[dashed] (axis cs:10,0) -- (axis cs:10,1);
 
    \addplot[ mark=none
-        , thick
-        , domain=0.001:0.01
-        , samples=5
-        , smooth
-        , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
+           , thick
+           , domain=0.001:0.01
+           , samples=5
+           , smooth
+           , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
     \addplot[ mark=none
-        , thick
-        , domain=0.01:100
-        , samples=20
-        , smooth
-        , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
+            , thick
+            , domain=0.01:100
+            , samples=20
+            , smooth
+            , thick] {(1-exp(-sqrt(x)))/sqrt(x)}; 
     \end{axis}
   \end{tikzpicture}
   \caption{Normalized efficiency 

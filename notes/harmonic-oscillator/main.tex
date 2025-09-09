@@ -2,8 +2,6 @@
 
 \input{./../../preamble.tex}
 \input{./../../tikzlib/preamble.tex}
-\input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
-\input{./../../tikzlib/figs/rlc-parallel-schematic-a.tex}
 
 \def \title  {Harmonic Oscillator}
 \def \date   {July 11, 2025}
@@ -1247,7 +1245,7 @@ is is not considered \cite{chuang-settlingop-82}.
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \RlcSeriesSchematicA
+    \input{./../../tikzlib/figs/rlc-series-schematic-a.tex}
   \end{circuitikz}
   \caption{Schematic of series RLC resonator}
   \label{fig:series-res}
@@ -1281,7 +1279,7 @@ Q = \frac{\left|X\right|}{R} = \frac{1}{\omega_0 R C} = \frac{\omega_0 L}{R}.
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \RlcParallelSchematicA
+    \input{./../../tikzlib/figs/rlc-parallel-schematic-a.tex}
   \end{circuitikz}
   \caption{Schematic of parallel RLC resonator}
   \label{fig:parallel-res}

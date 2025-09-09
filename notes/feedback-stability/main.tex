@@ -3,10 +3,6 @@
 \include{./../../preamble.tex}
 \include{./../../tikzlib/preamble.tex}
 
-\input{./../../tikzlib/figs/feedback-system-a.tex}
-\input{./../../tikzlib/figs/bode-plot-a.tex}
-
-
 \def \title  {Stability of Feedback Systems}
 \def \date   {July 14, 2025}
 
@@ -35,7 +31,7 @@ and the feedback network is passive.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
-    \FeedbackSystemA 
+    \input{./../../tikzlib/figs/feedback-system-a.tex}
   \end{tikzpicture}
   \caption{Feedback system}
   \label{fig:fs}
@@ -101,7 +97,7 @@ The magnitude is shown at the top and and phase at the bottom.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
-    \BodePlotA
+    \input{./../../tikzlib/figs/bode-plot-a.tex}
   \end{tikzpicture}
   \caption{Loop gain $\underline{L}(j 2 \pi f)$}
   \label{fig:ls}

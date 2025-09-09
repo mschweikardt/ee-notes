@@ -2,22 +2,6 @@
 
 \include{./../../preamble.tex}
 \include{./../../tikzlib/preamble.tex}
-\include{./../../tikzlib/figs/nmos-3t-testbench-a.tex}
-
-\include{./../../tikzlib/figs/square-law-regions-a.tex}
-
-\include{./../../tikzlib/figs/square-law-regions-sweep-vgs-a.tex}
-\include{./../../tikzlib/figs/square-law-transfer-vds-a.tex}
-\include{./../../tikzlib/figs/square-law-transfer-vds-b.tex}
-
-\include{./../../tikzlib/figs/square-law-regions-sweep-vds-a.tex}
-\include{./../../tikzlib/figs/square-law-output-a.tex}
-
-\include{./../../tikzlib/figs/square-law-gm-a.tex}
-
-\include{./../../tikzlib/figs/square-law-output-clm-b.tex}
-
-\include{./../../tikzlib/figs/mosfet-equivalent-circuit-d.tex}
 
 
 \def \title  {MOSFET Square Law}
@@ -69,7 +53,7 @@ Fig.~\ref{fig:squarelawschematic}.
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \NmosThreetTestbenchA
+    \input{./../../tikzlib/figs/nmos-3t-testbench-a.tex}
   \end{circuitikz}
   \caption{Definition of $V_{\mathrm{GS}}$, $V_{\mathrm{DS}}$ and $I_{\mathrm{D}}$}
   \label{fig:squarelawschematic}
@@ -109,7 +93,7 @@ Each mode of operations spans an area in the in this plot.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawRegionsA
+    \input{./../../tikzlib/figs/square-law-regions-a.tex}
   \end{tikzpicture}
   \caption{Regions in the $V_{\mathrm{GS}}$-$V_{\mathrm{DS}}$ plane}
   \label{fig:squarelawregionplot}
@@ -179,7 +163,7 @@ or only two regions ($V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{TH}}$).
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawRegionsSweepVgsA
+    \input{./../../tikzlib/figs/square-law-regions-sweep-vgs-a.tex}
   \end{tikzpicture}
   \caption{Locus of transfer characteristic in the $V_{\mathrm{GS}}$-$V_{\mathrm{DS}}$ plane}
   \label{fig:squarelawregionplottransf}
@@ -195,7 +179,7 @@ linear ($\sim V_{\mathrm{GS}}$) in the \textit{ohmic} region.
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
       \begin{tikzpicture}[scale=1.2]
-        \SquareLawTransferVdsA
+        \input{./../../tikzlib/figs/square-law-transfer-vds-a.tex}
       \end{tikzpicture}
       \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,1}} < V_{\mathrm{TH}}$}
   \end{subfigure}%
@@ -203,7 +187,7 @@ linear ($\sim V_{\mathrm{GS}}$) in the \textit{ohmic} region.
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
       \begin{tikzpicture}[scale=1.2]
-        \SquareLawTransferVdsB
+        \input{./../../tikzlib/figs/square-law-transfer-vds-b.tex}
       \end{tikzpicture}
       \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{TH}}$}
   \end{subfigure}
@@ -229,7 +213,7 @@ $V_{\mathrm{GS,3}}$ are greater.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawRegionsSweepVdsA
+    \input{./../../tikzlib/figs/square-law-regions-sweep-vds-a.tex}
   \end{tikzpicture}
   \caption{Locus of output characteristic in the $V_{\mathrm{GS}}$-$V_{\mathrm{DS}}$ plane}
   \label{fig:squarelawregionplotout}
@@ -248,7 +232,7 @@ gets constant and is in \textit{saturation}.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawOutputA
+    \input{./../../tikzlib/figs/square-law-output-a.tex}
   \end{tikzpicture}
   \caption{Output characteristic $I_{\mathrm{D}} = f(V_{\mathrm{DS}})$}
   \label{fig:squarelawout}
@@ -271,7 +255,7 @@ $V_{\mathrm{GS}}$, evaluated at a given $V_{\mathrm{GS}}$.
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawGmA
+    \input{./../../tikzlib/figs/square-law-gm-a.tex}
   \end{tikzpicture} 
   \caption{Transconductance $g_{\mathrm{m}}$}
   \label{fig:squarelaw-gm}
@@ -333,7 +317,7 @@ g_{\mathrm{DS}} = \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{DS}}}
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1.2]
-    \SquareLawOutputClmB
+    \input{./../../tikzlib/figs/square-law-output-clm-b.tex}
   \end{tikzpicture} 
   \caption{Output characteristic including \gls{clm}}
   \label{fig:squarelaw-output-clm}
@@ -348,7 +332,7 @@ we can create a \textit{small-signal model}
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
-    \MosfetEqCircD
+    \input{./../../tikzlib/figs/mosfet-equivalent-circuit-d.tex}
   \end{circuitikz} 
   \caption{Small-signal model}
   \label{fig:squarelaw-small-signal}
