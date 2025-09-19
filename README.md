@@ -4,4 +4,3 @@
 * [EKV MOSFET Model](https://mschweikardt.github.io/ee-notes/ekv.pdf)
 * [Capacity Table](https://mschweikardt.github.io/ee-notes/captab.pdf)
 * [Harmonic Oscillator](https://mschweikardt.github.io/ee-notes/harmonic-oscillator.pdf)
-* [Pole-Zero Doublet](https://mschweikardt.github.io/ee-notes/pole-zero-doublet.pdf)
