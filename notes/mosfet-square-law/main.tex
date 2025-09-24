@@ -5,7 +5,7 @@
 
 
 \def \title  {MOSFET Square Law}
-\def \date   {July 4, 2025}
+\def \date   {September 24, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/mosfet-square-law.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/mosfet-square-law}
@@ -20,21 +20,18 @@
 
 The \textit{square law} is the most simple \gls{mosfet} model.
 It has only two model parameters,
-\textit{threshold voltage} $V_{\mathrm{TH}}$ (unit \si{\volt})%
-\footnote{Some abbreviate the threshold voltage with 
-the variable $V_{\mathrm{T}}$ \cite{allen-cmosancirdes-12,gray-anadesic-09}.}
-and 
-\textit{transconductance parameter}~$K'$ 
-(pronounced "k prime", unit \si{\ampere\per\volt\squared}).
+\textit{threshold~voltage} $V_{\mathrm{T}}$ (unit \si{\volt})%
+and \textit{transconductance parameter}~$K'$ 
+(pronounced "k prime", unit~\si{\ampere\per\volt\squared}).
 $K'$ is the product of the mobility of carriers in the channel $\mu_0$ 
-(unit \si{\meter\squared\per\volt\per\second}) and the 
+(unit~\si{\meter\squared\per\volt\per\second}) and the 
 specific oxide capacitance $C_{\mathrm{ox}}$ 
-(unit \si{\farad\per\meter\squared}) \cite{allen-cmosancirdes-12}, i.e.,
+(unit~\si{\farad\per\meter\squared}) \cite{allen-cmosancirdes-12}, i.e.,
 \begin{equation}
 K' = \mu_0 \cdot C_{\mathrm{ox}}.
 \end{equation}
 We may also add 'N' or 'P' as subscript to these variables to indicate whether 
-it is an n-channel \gls{mosfet} or an n-channel \gls{mosfet}.
+it is an n-channel \gls{mosfet} (NMOS) or an n-channel \gls{mosfet} (PMOS).
 
 The square law is inaccurate for state of the art semiconductor devices, 
 but it is still a good starting point to understand the behavior of 
@@ -52,12 +49,29 @@ Fig.~\ref{fig:squarelawschematic}.
 
 \begin{figure}[H]
   \centering
-  \begin{circuitikz}
-    \input{./../../tikzlib/figs/nmos-3t-testbench-a.tex}
-  \end{circuitikz}
+    \begin{subfigure}[b]{0.475\textwidth}
+        \centering
+        \begin{circuitikz}[scale=1.2]
+          \input{./../../tikzlib/figs/nmos-3t-testbench-a.tex}
+        \end{circuitikz}
+        \caption{NMOS}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.475\textwidth}
+        \centering
+        \begin{circuitikz}[scale=1.2]
+          \input{./../../tikzlib/figs/pmos-3t-testbench-a.tex}
+        \end{circuitikz}
+        \caption{PMOS}
+    \end{subfigure}
   \caption{Definition of $V_{\mathrm{GS}}$, $V_{\mathrm{DS}}$ and $I_{\mathrm{D}}$}
   \label{fig:squarelawschematic}
 \end{figure}
+
+The voltages $V_{\mathrm{GS}}$ and $V_{\mathrm{DS}}$, the drain current
+$I_{\mathrm{D}}$ and the model parameters $V_{\mathrm{T}}$ and $K'$
+are $\geq 0$ for NMOS devices and $\leq 0$ for PMOS devices.
+In the following, we will consider only NMOS devices.
 
 
 \section{Regions}
@@ -66,18 +80,18 @@ The drain current $I_{\mathrm{D}}$ of the \gls{mosfet} is described as a
 piecewise function.
 These "pieces" (a.k.a. operating regions) depend on the applied voltages 
 $V_{\mathrm{DS}}$, $V_{\mathrm{GS}}$ and the model parameter 
-$V_{\mathrm{TH}}$.
+$V_{\mathrm{T}}$.
 Tab.~\ref{tab:regions} explains these regions. 
 
 \begin{table}[H]
 \centering
-\caption{\gls{mosfet} operating regions}
+\caption{\gls{mosfet} (NMOS) operating regions}
 \begin{tabular}{cccc}
 \toprule
-Mode                 & $V_{\mathrm{GS}}$      & $V_{\mathrm{DS}}$                     & $I_{\mathrm{D}}$         \\ \midrule
-\textit{off}         & $<V_{\mathrm{TH}}$     & all                                   & $=0$                     \\ 
-\textit{ohmic}       & $\geq V_{\mathrm{TH}}$ & $< V_{\mathrm{GS}}-V_{\mathrm{TH}}$   & \eqref{eq:id-ohmic}      \\ 
-\textit{saturation}  & $\geq V_{\mathrm{TH}}$ & $\geq V_{\mathrm{GS}}-V_{\mathrm{TH}}$& \eqref{eq:id-saturation} \\ \toprule
+Mode                 & $V_{\mathrm{GS}}$     & $V_{\mathrm{DS}}$                    & $I_{\mathrm{D}}$         \\ \midrule
+\textit{off}         & $<V_{\mathrm{T}}$     & all                                  & $=0$                     \\ 
+\textit{ohmic}       & $\geq V_{\mathrm{T}}$ & $< V_{\mathrm{GS}}-V_{\mathrm{T}}$   & \eqref{eq:id-ohmic}      \\ 
+\textit{saturation}  & $\geq V_{\mathrm{T}}$ & $\geq V_{\mathrm{GS}}-V_{\mathrm{T}}$& \eqref{eq:id-saturation} \\ \toprule
 \end{tabular}
 \label{tab:regions}
 \end{table}
@@ -102,7 +116,7 @@ Each mode of operations spans an area in the in this plot.
 The diagonal boundary  (a.k.a. \textit{pinch-off} point) in
 Fig.~\ref{fig:squarelawregionplot} is abbreviated as overdrive voltage
 \begin{equation}\label{eq:vov}
-  V_{\mathrm{OV}} := V_{\mathrm{GS}}-V_{\mathrm{TH}}.
+  V_{\mathrm{OV}} := V_{\mathrm{GS}}-V_{\mathrm{T}}.
 \end{equation}
 Some analog designers use the overdrive voltage as knob 
 (\SI{150}{\milli\volt}-\SI{400}{\milli\volt}) for sizing of their transistors.
@@ -122,12 +136,12 @@ is zero.
 In \textit{ohmic} mode, the drain current is
 \begin{equation}\label{eq:id-ohmic}
   I_{\mathrm{D}} =  K' \ \frac{W}{L} 
-    \left((V_{\mathrm{GS}}-V_{\mathrm{TH}})V_{\mathrm{DS}} 
+    \left((V_{\mathrm{GS}}-V_{\mathrm{T}})V_{\mathrm{DS}} 
       - \frac{1}{2} V_{\mathrm{DS}}^2\right),
 \end{equation}
 while it is 
 \begin{equation}\label{eq:id-saturation}
-  I_{\mathrm{D}} = \frac{1}{2} \ K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{TH}})^2
+  I_{\mathrm{D}} = \frac{1}{2} \ K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{T}})^2
 \end{equation}
 when it is in \textit{saturation} mode.
 From \eqref{eq:id-saturation} we can see that $I_{\mathrm{D}}$ does 
@@ -157,8 +171,8 @@ $V_{\mathrm{GS}}$-$V_{\mathrm{DS}}$ plane
 (Fig.~\ref{fig:squarelawregionplottransf}).
 Depending on the value of $V_{\mathrm{DS}}$, the 
 \textit{transfer characteristic} 
-crosses all regions ($V_{\mathrm{DS}}=V_{\mathrm{DS,1}} < V_{\mathrm{TH}}$)
-or only two regions ($V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{TH}}$).
+crosses all regions ($V_{\mathrm{DS}}=V_{\mathrm{DS,1}} < V_{\mathrm{T}}$)
+or only two regions ($V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{T}}$).
 
 \begin{figure}[H]
   \centering
@@ -181,7 +195,7 @@ linear ($\sim V_{\mathrm{GS}}$) in the \textit{ohmic} region.
       \begin{tikzpicture}[scale=1.2]
         \input{./../../tikzlib/figs/square-law-transfer-vds-a.tex}
       \end{tikzpicture}
-      \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,1}} < V_{\mathrm{TH}}$}
+      \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,1}} < V_{\mathrm{T}}$}
   \end{subfigure}%
   \hfill
   \begin{subfigure}[b]{0.475\textwidth}
@@ -189,7 +203,7 @@ linear ($\sim V_{\mathrm{GS}}$) in the \textit{ohmic} region.
       \begin{tikzpicture}[scale=1.2]
         \input{./../../tikzlib/figs/square-law-transfer-vds-b.tex}
       \end{tikzpicture}
-      \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{TH}}$}
+      \caption{$V_{\mathrm{DS}}=V_{\mathrm{DS,2}} > V_{\mathrm{T}}$}
   \end{subfigure}
   \caption{Transfer characteristic $I_{\mathrm{D}} = f(V_{\mathrm{GS}})$}
   \label{fig:squarelawtransf}
@@ -207,7 +221,7 @@ Fig.~\ref{fig:squarelawregionplotout}.
 The three vertical lines in correspond to 
 three different Gate-Source voltages.
 $V_{\mathrm{GS,1}}$ is less than the threshold voltage 
-$V_{\mathrm{TH}}$, while $V_{\mathrm{GS,2}}$ and 
+$V_{\mathrm{T}}$, while $V_{\mathrm{GS,2}}$ and 
 $V_{\mathrm{GS,3}}$ are greater.
 
 \begin{figure}[H]
@@ -221,7 +235,7 @@ $V_{\mathrm{GS,3}}$ are greater.
 
 Fig. \ref{fig:squarelawout} plots the output characteristic for the different
 Gate-Source voltages shown in Fig.~\ref{fig:squarelawregionplotout}.
-The drain current is zero for $V_{\mathrm{GS,1}}<V_{\mathrm{TH}}$.
+The drain current is zero for $V_{\mathrm{GS,1}}<V_{\mathrm{T}}$.
 The output characteristic is a piecewise function for $V_{\mathrm{GS,2}}$
 and $V_{\mathrm{GS,3}}$.
 When $V_{\mathrm{DS}}$ is low, the output characteristic has a 
@@ -242,7 +256,7 @@ The boundary between \textit{ohmic} and \textit{saturation}
 (dashed line in Fig. \ref{fig:squarelawout}) is given by 
 \begin{equation}
   V_{\mathrm{DS}} \stackrel{!}{=} V_{\mathrm{OV}} 
-                  \stackrel{\eqref{eq:vov}}{=} V_{\mathrm{GS}} - V_{\mathrm{TH}}.
+                  \stackrel{\eqref{eq:vov}}{=} V_{\mathrm{GS}} - V_{\mathrm{T}}.
 \end{equation}
 
 \section{Transconductance}\label{sec:gm}
@@ -267,8 +281,8 @@ In the \textit{saturation} region, the
 
 \begin{equation}\label{eq:gm}
 g_{\mathrm{m}} = \frac{\mathrm{d} I_{\mathrm{D}}}{\mathrm{d} V_{\mathrm{GS}}} 
-               = K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{TH}}) 
-               = \frac{2 I_{\mathrm{D}}}{V_{\mathrm{GS}}-V_{\mathrm{TH}}}  
+               = K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{T}}) 
+               = \frac{2 I_{\mathrm{D}}}{V_{\mathrm{GS}}-V_{\mathrm{T}}}  
                = \frac{2 I_{\mathrm{D}}}{V_{\mathrm{OV}}}
                = \sqrt{2 K' \frac{W}{L} I_{\mathrm{D}}}
 \end{equation}
@@ -287,7 +301,7 @@ $ \left(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\right)$.
 Then, we get
 \begin{equation}
  I_{\mathrm{D}} 
- = \underbrace{\frac{1}{2} \ K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{TH}})^2}_{I_{\mathrm{D,sat}}} \ 
+ = \underbrace{\frac{1}{2} \ K' \ \frac{W}{L} (V_{\mathrm{GS}}-V_{\mathrm{T}})^2}_{I_{\mathrm{D,sat}}} \ 
   \big(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\big)
  = I_{\mathrm{D,sat}} \big(1 + \lambda \left(V_{\mathrm{DS}}-V_{\mathrm{OV}}\right)\big).
 \end{equation}
