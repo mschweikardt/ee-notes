@@ -1,0 +1,389 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Two-Port Networks}
+\def \date   {October 17, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/two-port-networks.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/two-port-networks}
+
+\usepackage[scale=5]{draftwatermark}
+
+\newcommand\height{2}
+\newcommand\pinlen{0.75}
+\newcommand\boxwid{2.0}
+\newcommand\boxolap{0.25}
+
+\tikzset{
+  pics/fourpole/.style args={#1}{
+    code = {
+      \draw (0, \height/2) coordinate (-v1p) 
+        to [short,o-]  ++ (\pinlen,0);
+      \draw (0,-\height/2) coordinate (-v1n) 
+        to [short,o-] ++ (\pinlen,0);
+
+      \draw[semithick]
+        (\pinlen,-\height/2-\boxolap)         rectangle 
+        (\boxwid+\pinlen,\height/2+\boxolap);
+
+      \draw (\boxwid+2*\pinlen, \height/2) coordinate (-v2p) 
+        to [short,o-]  ++ (-\pinlen,0);
+      \draw (\boxwid+2*\pinlen,-\height/2) coordinate (-v2n) 
+        to [short,o-] ++ (-\pinlen,0);
+
+      \node[] at (\boxwid/2+\pinlen,0) {#1};
+    }
+  }
+}
+
+\begin{document}
+
+\notetitle
+
+\section{Introduction}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+
+    \draw (0, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$]  ++ (\pinlen,0);
+    \draw (0,-\height/2) coordinate (v1n) 
+      to [short,o-,i<=$\underline{I}_{\mathrm{1}}$] ++ (\pinlen,0);
+
+    \draw[semithick] 
+      (\pinlen,-\height/2-\boxolap)         rectangle 
+      (\boxwid+\pinlen,\height/2+\boxolap);
+
+    \draw (\boxwid+2*\pinlen, \height/2) coordinate (v2p) 
+      to [short,o-,i_=$\underline{I}_{\mathrm{2}}$]  ++ (-\pinlen,0);
+    \draw (\boxwid+2*\pinlen,-\height/2) coordinate (v2n) 
+      to [short,o-,i_<=$\underline{I}_{\mathrm{2}}$] ++ (-\pinlen,0);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Two Port}
+  \label{fig:two-port}
+\end{figure}
+
+\begin{itemize}
+  \item two-port network 
+  \item four-terminal network
+  \item quadripole
+\end{itemize}
+
+
+\section{Variants}
+
+\subsection{Impedance parameters}
+
+\begin{equation}
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{V}_{\mathrm{2}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{Z}_{\mathrm{11}} & \underline{Z}_{\mathrm{12}} \\
+\underline{Z}_{\mathrm{21}} & \underline{Z}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\underline{I}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+\end{equation}
+
+\begin{subequations}
+\begin{tabularx}{\textwidth}{Xp{1cm}X}
+\begin{equation}
+\label{eq:impedance-z11}
+\underline{Z}_{\mathrm{11}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{I}_{\mathrm{1}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:impedance-z22}
+\underline{Z}_{\mathrm{22}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
+\end{equation}
+ \\
+\begin{equation}
+\label{eq:impedance-z12}
+\underline{Z}_{\mathrm{12}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:impedance-z21}
+\underline{Z}_{\mathrm{21}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{1}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+\end{tabularx}
+\end{subequations}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0)
+      to [R,l=$\underline{Z}_{\mathrm{11}}$] ++ (1,0)
+      to [short,-] ++ (0.5,0)
+      to [ american controlled voltage source
+         , l_=$\underline{Z}_{\mathrm{12}} \cdot \underline{I}_{\mathrm{2}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-o] (x-|v1p) coordinate (v1n);
+
+    \draw (3, \height/2) coordinate (v2p) 
+      to [short,o-,i_=$\underline{I}_{\mathrm{2}}$] ++ (-0.75,0)
+      to [R,l_=$\underline{Z}_{\mathrm{22}}$] ++ (-1,0)
+      to [short,-] ++ (-0.5,0)
+      to [ american controlled voltage source
+         , l=$\underline{Z}_{\mathrm{21}} \cdot \underline{I}_{\mathrm{1}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-o] (x-|v2p) coordinate (v2n);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Impedance parameters equivalent circuit}
+  \label{fig:z-params-schematic}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0)
+      to [R,l=$\underline{Z}_{\mathrm{11}}-\underline{Z}_{\mathrm{12}}$] ++ (2,0) coordinate (mid)
+      to [R,l_=$\underline{Z}_{\mathrm{12}}$] ++ (0,-\height) coordinate (x)
+      to [short,-o] (x-|v1p) coordinate (v1n);
+
+    \draw (mid) to [R,*-,l=$\underline{Z}_{\mathrm{22}}-\underline{Z}_{\mathrm{12}}$] ++ (2,0)
+                to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
+
+    \draw (x) to [short,*-] (x-|v2p) coordinate (v2n);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+
+  \end{circuitikz}
+  \caption{Impedance parameters equivalent circuit}
+  \label{fig:z-params-schematic}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw pic (a) at (0, 1.5) {fourpole=$\left[\underline{Z}_{\mathrm{A}}\right]$};
+    \draw pic (b) at (0,-1.5) {fourpole=$\left[\underline{Z}_{\mathrm{B}}\right]$};
+
+    \draw (a-v1p) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_<=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1p);
+    \draw (b-v1n) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1n); 
+    \draw (a-v1n) to [short,o-] ++ (-0.5,0) coordinate (x)
+                  to [short, -] (x|-b-v1p)
+                  to [short,-o] (b-v1p);
+
+    \draw (a-v2p) to [short,o-] ++ (1,0)
+                  to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2p);
+    \draw (b-v2n) to [short,o-] ++ (1,0)
+                  to [short,-o,i=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2n); 
+    \draw (a-v2n) to [short,o-] ++ (0.5,0) coordinate (x)
+                  to [short, -] (x|-b-v2p)
+                  to [short,-o] (b-v2p);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);             
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{tikzpicture}
+  \caption{Series-series connection}
+  \label{fig:series-series}
+\end{figure}
+
+\subsection{Admittance parameters}
+
+
+\begin{equation}
+\begin{bmatrix}
+\underline{I}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{Y}_{\mathrm{11}} & \underline{Y}_{\mathrm{12}} \\
+\underline{Y}_{\mathrm{21}} & \underline{Y}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{V}_{\mathrm{2}} 
+\end{bmatrix}
+\end{equation}
+
+\begin{subequations}
+\begin{tabularx}{\textwidth}{Xp{1cm}X}
+\begin{equation}
+\label{eq:admittance-y11}
+\underline{Y}_{\mathrm{11}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{V}_{\mathrm{1}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:admittance-y22}
+\underline{Y}_{\mathrm{22}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
+\end{equation}
+ \\
+\begin{equation}
+\label{eq:admittance-y12}
+\underline{Y}_{\mathrm{12}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:admittance-y21}
+\underline{Y}_{\mathrm{21}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{1}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+\end{tabularx}
+\end{subequations}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3.75, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0)
+      to [short, -] ++ (0.5,0) coordinate (irt)
+      to [short,*-] ++ (2.0,0)
+      to [ american controlled current source
+         , l_=$\underline{Y}_{\mathrm{12}} \cdot \underline{I}_{\mathrm{2}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-*] (x-|irt) coordinate (irb)  
+      to [short,-o] (x-|v1p) coordinate (v1n);
+
+    \draw (irt) to [R,l_=$\underline{Y}_{\mathrm{12}}$] (irb);
+
+    \draw (3.75, \height/2) coordinate (v2p) 
+      to [short,o-,i_=$\underline{I}_{\mathrm{2}}$] ++ (-0.75,0)
+      to [short, -] ++ (-0.5,0) coordinate (iot)
+      to [short,*-] ++ (-2.0,0)
+      to [ american controlled current source
+         , l=$\underline{Y}_{\mathrm{21}} \cdot \underline{I}_{\mathrm{1}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-*] (x-|iot) coordinate (iob)  
+      to [short,-o] (x-|v2p) coordinate (v2n);
+
+   \draw (iot) to [R,l=$\underline{Y}_{\mathrm{21}}$] (iob);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Admittance parameters equivalent circuit}
+  \label{fig:y-params-schematic}
+\end{figure}
+
+
+\subsection{Hybrid parameters}
+
+\begin{equation}
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{H}_{\mathrm{11}} & \underline{H}_{\mathrm{12}} \\
+\underline{H}_{\mathrm{21}} & \underline{H}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\underline{I}_{\mathrm{1}} \\
+\underline{V}_{\mathrm{2}} 
+\end{bmatrix}
+\end{equation}
+
+
+\subsection{Inverse hybrid parameters}
+
+\begin{equation}
+\begin{bmatrix}
+\underline{I}_{\mathrm{1}} \\
+\underline{V}_{\mathrm{2}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{G}_{\mathrm{11}} & \underline{G}_{\mathrm{12}} \\
+\underline{G}_{\mathrm{21}} & \underline{G}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+\end{equation}
+
+\subsection{Transmission parameters}
+
+\begin{itemize}
+  \item ABCD parameters
+  \item chain parameters
+  \item cascade parameters
+\end{itemize}
+
+\begin{equation}
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{1}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{A}_{\mathrm{11}} & \underline{A}_{\mathrm{12}} \\
+\underline{A}_{\mathrm{21}} & \underline{A}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+ \underline{V}_{\mathrm{2}} \\
+-\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+\end{equation}
+
+\subsection{Inverse transmission parameters}
+
+
+\begin{equation}
+\begin{bmatrix}
+ \underline{V}_{\mathrm{2}} \\
+-\underline{I}_{\mathrm{2}} 
+\end{bmatrix}
+=
+\begin{bmatrix}
+\underline{B}_{\mathrm{11}} & \underline{B}_{\mathrm{12}} \\
+\underline{B}_{\mathrm{21}} & \underline{B}_{\mathrm{22}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\underline{V}_{\mathrm{1}} \\
+\underline{I}_{\mathrm{1}} 
+\end{bmatrix}
+\end{equation}
+
+\section{Interrelation}
+
+
+\section{Properties}
+
+\subsection{Reciprocal}
+\subsection{Symmetrical}
+\subsection{Lossless}
+\end{document}
