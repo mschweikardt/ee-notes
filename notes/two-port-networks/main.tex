@@ -5,7 +5,7 @@
 
 
 \def \title  {Two-Port Networks}
-\def \date   {October 17, 2025}
+\def \date   {October 18, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/two-port-networks.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/two-port-networks}
@@ -89,10 +89,12 @@
 \underline{V}_{\mathrm{2}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{Z}_{\mathrm{11}} & \underline{Z}_{\mathrm{12}} \\
 \underline{Z}_{\mathrm{21}} & \underline{Z}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{Z}\right]}
 \cdot
 \begin{bmatrix}
 \underline{I}_{\mathrm{1}} \\
@@ -108,18 +110,18 @@
 \end{equation}
 & &
 \begin{equation}
-\label{eq:impedance-z22}
-\underline{Z}_{\mathrm{22}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
-\end{equation}
- \\
-\begin{equation}
 \label{eq:impedance-z12}
 \underline{Z}_{\mathrm{12}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
 \end{equation}
-& &
+ \\
 \begin{equation}
 \label{eq:impedance-z21}
 \underline{Z}_{\mathrm{21}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{1}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:impedance-z22}
+\underline{Z}_{\mathrm{22}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
 \end{equation}
 \end{tabularx}
 \end{subequations}
@@ -166,7 +168,7 @@
     \draw (mid) to [R,*-,l=$\underline{Z}_{\mathrm{22}}-\underline{Z}_{\mathrm{12}}$] ++ (2,0)
                 to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
 
-    \draw (x) to [short,*-] (x-|v2p) coordinate (v2n);
+    \draw (x) to [short,*-o] (x-|v2p) coordinate (v2n);
 
     \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
       {$\underline{V}_{\mathrm{1}}$} (v1n);
@@ -215,17 +217,18 @@
 
 \subsection{Admittance parameters}
 
-
 \begin{equation}
 \begin{bmatrix}
 \underline{I}_{\mathrm{1}} \\
 \underline{I}_{\mathrm{2}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{Y}_{\mathrm{11}} & \underline{Y}_{\mathrm{12}} \\
 \underline{Y}_{\mathrm{21}} & \underline{Y}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{Y}\right]}
 \cdot
 \begin{bmatrix}
 \underline{V}_{\mathrm{1}} \\
@@ -241,21 +244,25 @@
 \end{equation}
 & &
 \begin{equation}
-\label{eq:admittance-y22}
-\underline{Y}_{\mathrm{22}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
-\end{equation}
- \\
-\begin{equation}
 \label{eq:admittance-y12}
 \underline{Y}_{\mathrm{12}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
 \end{equation}
-& &
+ \\
 \begin{equation}
 \label{eq:admittance-y21}
 \underline{Y}_{\mathrm{21}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{1}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
 \end{equation}
+& &
+\begin{equation}
+\label{eq:admittance-y22}
+\underline{Y}_{\mathrm{22}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
+\end{equation}
 \end{tabularx}
 \end{subequations}
+
+\begin{equation}
+\left[\underline{Y}\right] = \left[\underline{Z}\right]^{-1}
+\end{equation}
 
 \begin{figure}[H]
   \centering
@@ -293,6 +300,44 @@
   \label{fig:y-params-schematic}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw pic (a) at (0, 1.5) {fourpole=$\left[\underline{Y}_{\mathrm{A}}\right]$};
+    \draw pic (b) at (0,-1.5) {fourpole=$\left[\underline{Y}_{\mathrm{B}}\right]$};
+
+    \draw (a-v1p) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_<=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1p);
+    \draw (b-v1n) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1n); 
+    \draw (a-v1n) to [short,o-] ++ (-0.5,0) coordinate (x)
+                  to [short,-*] (x|-v1n);
+    \draw (b-v1p) to [short,o-] ++ (-1.0,0) coordinate (x)
+                  to [short,-*] (x|-v1p);
+
+    \draw (a-v2p) to [short,o-] ++ (1,0)
+                  to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2p);
+    \draw (b-v2n) to [short,o-] ++ (1,0)
+                  to [short,-o,i=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2n); 
+    \draw (a-v2n) to [short,o-] ++ (0.5,0) coordinate (x)
+                  to [short,-*] (x|-v2n);
+    \draw (b-v2p) to [short,o-] ++ (1.0,0) coordinate (x)
+                  to [short,-*] (x|-v2p);            
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);             
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{tikzpicture}
+  \caption{Parallel-parallel connection}
+  \label{fig:parallel-parallel}
+\end{figure}
+
+
 
 \subsection{Hybrid parameters}
 
@@ -302,16 +347,112 @@
 \underline{I}_{\mathrm{2}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{H}_{\mathrm{11}} & \underline{H}_{\mathrm{12}} \\
 \underline{H}_{\mathrm{21}} & \underline{H}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{H}\right]}
 \cdot
 \begin{bmatrix}
 \underline{I}_{\mathrm{1}} \\
 \underline{V}_{\mathrm{2}} 
 \end{bmatrix}
 \end{equation}
+
+\begin{subequations}
+\begin{tabularx}{\textwidth}{Xp{1cm}X}
+\begin{equation}
+\label{eq:hybrid-h11}
+\underline{H}_{\mathrm{11}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{I}_{\mathrm{1}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:hybrid-h12}
+\underline{H}_{\mathrm{12}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
+\end{equation}
+ \\
+\begin{equation}
+\label{eq:hybrid-h21}
+\underline{H}_{\mathrm{21}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{I}_{\mathrm{1}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:hybrid-h22}
+\underline{H}_{\mathrm{22}} = \frac{\underline{I}_{\mathrm{2}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{1}}=0}
+\end{equation}
+\end{tabularx}
+\end{subequations}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0)
+      to [R,l=$\underline{H}_{\mathrm{11}}$] ++ (1,0)
+      to [short,-] ++ (0.5,0)
+      to [ american controlled voltage source
+         , l_=$\underline{H}_{\mathrm{12}} \cdot \underline{V}_{\mathrm{2}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-o] (x-|v1p) coordinate (v1n);
+
+    \draw (3.75, \height/2) coordinate (v2p) 
+     to [short,o-,i_=$\underline{I}_{\mathrm{2}}$] ++ (-0.75,0)
+      to [short, -] ++ (-0.5,0) coordinate (iot)
+      to [short,*-] ++ (-2.0,0)
+      to [ american controlled current source
+         , l=$\underline{H}_{\mathrm{21}} \cdot \underline{I}_{\mathrm{1}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-*] (x-|iot) coordinate (iob)  
+      to [short,-o] (x-|v2p) coordinate (v2n);
+
+   \draw (iot) to [R,l=$\underline{H}_{\mathrm{22}}$] (iob);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Hybrid parameters equivalent circuit}
+  \label{fig:hybrid-params-schematic}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw pic (a) at (0, 1.5) {fourpole=$\left[\underline{H}_{\mathrm{A}}\right]$};
+    \draw pic (b) at (0,-1.5) {fourpole=$\left[\underline{H}_{\mathrm{B}}\right]$};
+
+    \draw (a-v1p) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_<=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1p);
+    \draw (b-v1n) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1n); 
+    \draw (a-v1n) to [short,o-] ++ (-0.5,0) coordinate (x)
+                  to [short, -] (x|-b-v1p)
+                  to [short,-o] (b-v1p);
+
+    \draw (a-v2p) to [short,o-] ++ (1,0)
+                  to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2p);
+    \draw (b-v2n) to [short,o-] ++ (1,0)
+                  to [short,-o,i=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2n); 
+    \draw (a-v2n) to [short,o-] ++ (0.5,0) coordinate (x)
+                  to [short,-*] (x|-v2n);
+    \draw (b-v2p) to [short,o-] ++ (1.0,0) coordinate (x)
+                  to [short,-*] (x|-v2p);            
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);             
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{tikzpicture}
+  \caption{Series-parallel connection}
+  \label{fig:series-parallel}
+\end{figure}
 
 
 \subsection{Inverse hybrid parameters}
@@ -322,16 +463,120 @@
 \underline{V}_{\mathrm{2}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{G}_{\mathrm{11}} & \underline{G}_{\mathrm{12}} \\
 \underline{G}_{\mathrm{21}} & \underline{G}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{G}\right]}
 \cdot
 \begin{bmatrix}
 \underline{V}_{\mathrm{1}} \\
 \underline{I}_{\mathrm{2}} 
 \end{bmatrix}
 \end{equation}
+
+
+\begin{subequations}
+\begin{tabularx}{\textwidth}{Xp{1cm}X}
+\begin{equation}
+\label{eq:inversehybrid-g11}
+\underline{G}_{\mathrm{11}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{V}_{\mathrm{1}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:inversehybrid-g12}
+\underline{G}_{\mathrm{12}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
+\end{equation}
+ \\
+\begin{equation}
+\label{eq:inversehybrid-g21}
+\underline{G}_{\mathrm{21}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{V}_{\mathrm{1}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:inversehybrid-g22}
+\underline{G}_{\mathrm{22}} = \frac{\underline{V}_{\mathrm{2}}}{\underline{I}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{1}}=0}
+\end{equation}
+\end{tabularx}
+\end{subequations}
+
+
+\begin{equation}
+\left[\underline{G}\right] = \left[\underline{H}\right]^{-1}
+\end{equation}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3.75, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0)
+      to [short, -] ++ (0.5,0) coordinate (irt)
+      to [short,*-] ++ (2.0,0)
+      to [ american controlled current source
+         , l_=$\underline{G}_{\mathrm{12}} \cdot \underline{I}_{\mathrm{2}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-*] (x-|irt) coordinate (irb)  
+      to [short,-o] (x-|v1p) coordinate (v1n);
+
+    \draw (irt) to [R,l_=$\underline{G}_{\mathrm{11}}$] (irb);
+
+    \draw (3, \height/2) coordinate (v2p) 
+      to [short,o-,i_=$\underline{I}_{\mathrm{2}}$] ++ (-0.75,0)
+      to [R,l_=$\underline{G}_{\mathrm{22}}$] ++ (-1,0)
+      to [short,-] ++ (-0.5,0)
+      to [ american controlled voltage source
+         , l=$\underline{G}_{\mathrm{21}} \cdot \underline{V}_{\mathrm{1}}$
+         ] ++ (0,-\height) coordinate (x)
+      to [short,-o] (x-|v2p) coordinate (v2n);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Inverse hybrid parameters equivalent circuit}
+  \label{fig:invhybrid-schematic}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw pic (a) at (0, 1.5) {fourpole=$\left[\underline{G}_{\mathrm{A}}\right]$};
+    \draw pic (b) at (0,-1.5) {fourpole=$\left[\underline{G}_{\mathrm{B}}\right]$};
+
+    \draw (a-v1p) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_<=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1p);
+    \draw (b-v1n) to [short,o-] ++ (-1,0)
+                  to [short,-o,i_=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1n); 
+    \draw (a-v1n) to [short,o-] ++ (-0.5,0) coordinate (x)
+                  to [short,-*] (x|-v1n);
+    \draw (b-v1p) to [short,o-] ++ (-1.0,0) coordinate (x)
+                  to [short,-*] (x|-v1p);
+
+    \draw (a-v2p) to [short,o-] ++ (1,0)
+                  to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2p);
+    \draw (b-v2n) to [short,o-] ++ (1,0)
+                  to [short,-o,i=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2n); 
+    \draw (a-v2n) to [short,o-] ++ (0.5,0) coordinate (x)
+                  to [short, -] (x|-b-v2p)
+                  to [short,-o] (b-v2p);            
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);             
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{tikzpicture}
+  \caption{Parallel-series connection}
+  \label{fig:parallel-series}
+\end{figure}
+
 
 \subsection{Transmission parameters}
 
@@ -347,16 +592,73 @@
 \underline{I}_{\mathrm{1}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{A}_{\mathrm{11}} & \underline{A}_{\mathrm{12}} \\
 \underline{A}_{\mathrm{21}} & \underline{A}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{A}\right]}
 \cdot
 \begin{bmatrix}
  \underline{V}_{\mathrm{2}} \\
 -\underline{I}_{\mathrm{2}} 
 \end{bmatrix}
 \end{equation}
+
+\begin{subequations}
+\begin{tabularx}{\textwidth}{Xp{1cm}X}
+\begin{equation}
+\label{eq:transmission-a11}
+\underline{A}_{\mathrm{11}} = \frac{\underline{V}_{\mathrm{1}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:transmission-a12}
+\underline{A}_{\mathrm{12}} = \frac{\underline{V}_{\mathrm{1}}}{-\underline{I}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+ \\
+\begin{equation}
+\label{eq:transmission-a21}
+\underline{A}_{\mathrm{21}} = \frac{\underline{I}_{\mathrm{1}}}{\underline{V}_{\mathrm{2}}}\bigg|_{\underline{I}_{\mathrm{2}}=0}
+\end{equation}
+& &
+\begin{equation}
+\label{eq:transmission-a22}
+\underline{A}_{\mathrm{22}} = \frac{\underline{I}_{\mathrm{1}}}{-\underline{I}_{\mathrm{2}}}\bigg|_{\underline{V}_{\mathrm{2}}=0}
+\end{equation}
+\end{tabularx}
+\end{subequations}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw pic (a) at (-2,0) {fourpole=$\left[\underline{A}_{\mathrm{A}}\right]$};
+    \draw pic (b) at ( 2,0) {fourpole=$\left[\underline{A}_{\mathrm{B}}\right]$};
+
+    \draw (a-v2p) to [short,o-o] (b-v1p);
+    \draw (a-v2n) to [short,o-o] (b-v1n);
+
+    \draw (a-v1p) to [short,o-] ++ (-0.1,0)
+                  to [short,-o,i_<=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1p);
+    \draw (a-v1n) to [short,o-] ++ (-0.1,0)
+                  to [short,-o,i_=$\underline{I}_{\mathrm{1}}$] 
+                    ++ (-\pinlen,0) coordinate (v1n); 
+    \draw (b-v2p) to [short,o-] ++ (0.1,0)
+                  to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2p);
+    \draw (b-v2n) to [short,o-] ++ (0.1,0)
+                  to [short,-o,i=$\underline{I}_{\mathrm{2}}$] 
+                    ++ (\pinlen,0) coordinate (v2n); 
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);             
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{tikzpicture}
+  \caption{Cascade connection}
+  \label{fig:cascade}
+\end{figure}
 
 \subsection{Inverse transmission parameters}
 
@@ -367,15 +669,21 @@
 -\underline{I}_{\mathrm{2}} 
 \end{bmatrix}
 =
+\underbrace{
 \begin{bmatrix}
 \underline{B}_{\mathrm{11}} & \underline{B}_{\mathrm{12}} \\
 \underline{B}_{\mathrm{21}} & \underline{B}_{\mathrm{22}}
 \end{bmatrix}
+}_{\left[\underline{B}\right]}
 \cdot
 \begin{bmatrix}
 \underline{V}_{\mathrm{1}} \\
 \underline{I}_{\mathrm{1}} 
 \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\left[\underline{B}\right] = \left[\underline{A}\right]^{-1}
 \end{equation}
 
 \section{Interrelation}
@@ -386,4 +694,35 @@
 \subsection{Reciprocal}
 \subsection{Symmetrical}
 \subsection{Lossless}
+
+\section{Examples}
+
+\subsection{Series Impedance}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0) coordinate (mid1)
+      to [R,l=$\underline{Z}$] ++ (2,0)  coordinate (mid2)
+      to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
+
+
+    \draw (v1p) to [open,-] ++ (0,-\height) coordinate (v1n) 
+                to [short,o-,i<=$\underline{I}_{\mathrm{1}}$] (v1n-|mid1)
+                to [short,-] (v1n-|mid2)
+                to [short,-o,i=$\underline{I}_{\mathrm{2}}$] (v1n-|v2p) coordinate (v2n);
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Series Impedance}
+  \label{fig:series-impedance-schematic}
+\end{figure}
+
+\subsection{Shunt Admittance}
+
+
 \end{document}
