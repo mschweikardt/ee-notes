@@ -15,6 +15,8 @@
 
 \notetitle
 
+This file: focus on MOS current mirrors.
+
 \section{Characteristics}
 
 \begin{itemize}
@@ -36,7 +38,11 @@
       \item[-] self-biased wide-swing
     \end{itemize}
 
-  \item  biasing voltages $V_{\mathrm{B,}i}$ (dependent on topology)
+  \item  additional biasing (dependent on topology)
+    \begin{itemize}
+      \item[-] voltages $V_{\mathrm{BB,}i}$ 
+      \item[-] currents
+    \end{itemize}
 
   \item minimal output voltage $V_{\mathrm{O,min}}$ (for a given $\epsilon$)
 
@@ -48,7 +54,9 @@
       \item[-] passive: currents constant over time (ramp-up of supply omitted)  
     \end{itemize}
 
-  \item area (sum of with times length of all transistors in the current mirror)
+  \item bandwidth
+
+  \item area (sum of width times length of all transistors in the current mirror)
 
   \item mismatch (variation between $I_{\mathrm{R}}$ and $I_{\mathrm{O,}i}$)
     \begin{itemize}
@@ -62,15 +70,18 @@
 
 \section{Topologies}
 
-\subsection{Classic}
+\subsection{Simple}
+
+
+\cite[section 4.2.2.2]{gray-anadesic-09}
 
 \begin{figure}[H]
   \centering
   \begin{circuitikz}
     \input{./../../tikzlib/figs/cm-standard-nmos-schematic-a.tex}
   \end{circuitikz}
-  \caption{Classic NMOS current mirror with one output}
-  \label{fig:classic-nmos-1}
+  \caption{Simple NMOS current mirror with one output}
+  \label{fig:simple-nmos-1}
 \end{figure}
 
 \begin{figure}[H]
@@ -78,8 +89,8 @@
   \begin{circuitikz}
     \input{./../../tikzlib/figs/cm-standard-nmos-schematic-b.tex}
   \end{circuitikz}
-  \caption{Classic NMOS current mirror with two outputs}
-  \label{fig:classic-nmos-2}
+  \caption{Simple NMOS current mirror with two outputs}
+  \label{fig:simple-nmos-2}
 \end{figure}
 
 
@@ -88,13 +99,25 @@
   \begin{circuitikz}
     \input{./../../tikzlib/figs/cm-standard-pmos-schematic-a.tex}
   \end{circuitikz}
-  \caption{Classic PMOS current mirror with one output}
-  \label{fig:classic-pmos-1}
+  \caption{Simple PMOS current mirror with one output}
+  \label{fig:simple-pmos-1}
 \end{figure}
+
+\subsection{Beta Helper}
+
+\cite{payne-spreadsheet-91,smith-spreadsheet-91,stockstad-rropamp-02}
+
+Not used in simple MOS current mirrors to reduce the systematic gain 
+error \cite[section 4.2.3.2]{gray-anadesic-09}.
+Can increase the bandwidth of MOS and bipolar current mirrors.
+
 
 \subsection{Degenerated}
 
 \cite[section 3.5]{johnsmartin-aicd-12}
+
+Source degeneration is rarely used in MOS current mirrors
+\cite[section 4.2.4.2]{gray-anadesic-09}.
 
 \subsection{Cascode/Stacked}
 
@@ -142,6 +165,7 @@
   \label{fig:ws-nmos-1}
 \end{figure}
 
+
 \subsection{Self-Biased Wide-Swing}
 
 \begin{figure}[H]
@@ -152,6 +176,16 @@
   \caption{Self-Biased Wide-Swing NMOS current mirror with one output}
   \label{fig:sb-ws-nmos-1}
 \end{figure}
+
+\subsection{Sooch}
+
+\cite[p. 269]{gray-anadesic-09}
+\cite{sooch-casccurrmirr-85}
+
+
+\subsection{Ian}
+
+\cite{tesu-wscasccurrmirr-09}
 
 \subsection{High-Ratio}
 \cite{galupmontoro-serparmosfet-94}
@@ -195,6 +229,7 @@ The minimal output voltage of the current mirror is
 V_{\mathrm{O,min}} : I_{\mathrm{O}}\left(V_{\mathrm{O,min}}\right) = \epsilon \cdot I_{\mathrm{R}}\left(V_{\mathrm{R}}\right),
 \end{equation}
 with $\epsilon \in (0,1)$.
+
 
 
 \printbibliography
