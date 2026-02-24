@@ -13,6 +13,10 @@
 
 \usepackage{pdflscape}
 
+\usepackage{upgreek}
+
+\usepackage{bashful}
+
 % No intendation
 \setlength\parindent{0pt}
 
@@ -78,7 +82,11 @@
   {\normalfont\large\bfseries}{\thesubsection}{0.2em}{}
 
 % literature
-\usepackage[backend=biber, isbn=true, sorting=none]{biblatex}
+\usepackage[ backend=biber
+           , isbn=true
+           , sorting=none
+           , style=ieee
+           ]{biblatex}
 \addbibresource{./../../literature.bib}
 
 % definitions
@@ -96,7 +104,14 @@
 
 \def \date         {nodate}
 
-\def \pdfurl       {pdfurl}
+\def \pdfurl       {https://mschweikardt.github.io/ee-notes/%
+\bash[stdout]
+IFS=/ 
+var=($PWD)
+echo ${var[-1]}
+\END%
+.pdf
+}
 \def \srcurl       {srcurl}
 
 
