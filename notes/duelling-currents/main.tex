@@ -1,0 +1,166 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Duelling Current Sources}
+\def \date   {February 25, 2026}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/duelling-current.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/duelling-current}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \coordinate (out) at (0,0);
+
+    \draw (out) to [short,-] ++ (0,-0.5) 
+                to [short,-,i_=$I_{\mathrm{D,N}}$] ++ (0,-0.1) 
+                node[nmos, anchor=drain] (nmos) {MN};
+
+    \draw (out) to [short,-] ++ (0,0.5) 
+                to [short,-,i<=$I_{\mathrm{D,P}}$] ++ (0,0.1) 
+                node[pmos, anchor=drain] (pmos) {MP};
+
+    \draw (nmos.gate) to [short,-] ++ (-1,0)
+                      to [V,v=$V_{\mathrm{GS,N}}$] ++ (0,-1.5) coordinate (x)
+                      to [short,-*] (x-|nmos.source) coordinate (gnd)
+                      to [short,-]  (nmos.source);
+
+    \draw (pmos.gate) to [short,-] ++ (-1,0)
+                      to [V,v_=$V_{\mathrm{GS,P}}$] ++ (0,1.5) coordinate (x)
+                      to [short,-*] (x-|pmos.source) coordinate (x)
+                      to [short,-]  (pmos.source);
+
+    \node[vdd] at (x) {};
+    \node[vss] at (gnd) {}; 
+
+    \draw (gnd) to [short,-o] ++ (1.5,0) coordinate (outn);
+    \draw (out) to [short,*-o] (out-|outn) coordinate (outp);   
+
+    \path [voltarrow] (outp) edge[] 
+      node[midway,below right,inner sep=1pt] 
+      {$V_{\mathrm{O}}$} (outn);     
+  \end{circuitikz}
+  \caption{Duelling Current Sources}
+  \label{fig:duell-current}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.85]
+      \node[anchor=north] at (0,0) {0};
+      \draw[thin] (0,0) -- (0,-0.075);
+      \node[anchor=east] at (0,0.25) {0};
+      \draw[thin] (0,0.25) -- (-0.075,0.25);
+
+      \node[anchor=north] at (2.5,0) {$\nicefrac{V_{\mathrm{DD}}}{2}$};
+      \draw[thin] (2.5,0) -- (2.5,-0.075);
+      \node[anchor=north] at (5.0,0) {$V_{\mathrm{DD}}$};
+      \draw[thin] (5.0,0) -- (5.0,-0.075);
+
+      \draw[{Latex[round,scale=1.2]}-{Latex[round,scale=1.2]},thick] 
+        (0,3) -- (0,0) -- (5.55,0);
+
+      \node[anchor=south] at (5.45,0) {$V_{\mathrm{O}}$};
+      \node[anchor=east] at (0,3) {$I$};
+
+      \draw[thick] plot[smooth,domain=0:1.5] (\x, {0.25-0.576033058*\x^2+1.914049588*\x});
+      \draw[thick] plot[smooth,domain=1.5:4.8] (\x, {0.185950413*(\x-1.5)+1.825)});
+
+      \draw[thick] plot[smooth,domain=3.5:5] (\x, {0.25-0.576033058*(5-\x)^2+1.914049588*(5-\x)});
+      \draw[thick] plot[smooth,domain=0.2:3.5] (\x, {0.185950413*((5-\x)-1.5)+1.825)});
+
+      \node[anchor=south west] at (0.2,2.25) {$I_{\mathrm{D,P}}$};
+      \node[anchor=south east] at (4.8,2.25) {$I_{\mathrm{D,N}}$};
+
+      \filldraw (2.5,2.015) circle (2pt);
+    \end{tikzpicture}
+    \caption{Typical}
+    \label{fig:currplot:typ}  
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.85]
+      \node[anchor=north] at (0,0) {0};
+      \draw[thin] (0,0) -- (0,-0.075);
+      \node[anchor=east] at (0,0.25) {0};
+      \draw[thin] (0,0.25) -- (-0.075,0.25);
+
+      \node[anchor=north] at (2.5,0) {$\nicefrac{V_{\mathrm{DD}}}{2}$};
+      \draw[thin] (2.5,0) -- (2.5,-0.075);
+      \node[anchor=north] at (5.0,0) {$V_{\mathrm{DD}}$};
+      \draw[thin] (5.0,0) -- (5.0,-0.075);
+
+      \draw[{Latex[round,scale=1.2]}-{Latex[round,scale=1.2]},thick] 
+        (0,3) -- (0,0) -- (5.55,0);
+
+      \node[anchor=south] at (5.45,0) {$V_{\mathrm{O}}$};
+      \node[anchor=east] at (0,3) {$I$};
+
+      \draw[thick] plot[smooth,domain=0:1.5] (\x, {0.25-0.288016529*\x^2+0.957024794*\x});
+      \draw[thick] plot[smooth,domain=1.5:4.8] (\x, {0.092975206*(\x-1.5)+1.0375)});
+
+      \draw[thick] plot[smooth,domain=3.5:5] (\x, {0.25-0.576033058*(5-\x)^2+1.914049588*(5-\x)});
+      \draw[thick] plot[smooth,domain=0.2:3.5] (\x, {0.185950413*((5-\x)-1.5)+1.825)});
+
+      \node[anchor=south west] at (0.2,2.25) {$I_{\mathrm{D,P}}$};
+      \node[anchor=south west] at (4.25,1.23) {$I_{\mathrm{D,N}}$};
+
+      \filldraw (4.32,1.3) circle (2pt);
+    \end{tikzpicture}
+    \caption{Slow NMOS}
+    \label{fig:currplot:slownmos} 
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.85]
+      \node[anchor=north] at (0,0) {0};
+      \draw[thin] (0,0) -- (0,-0.075);
+      \node[anchor=east] at (0,0.25) {0};
+      \draw[thin] (0,0.25) -- (-0.075,0.25);
+
+      \node[anchor=north] at (2.5,0) {$\nicefrac{V_{\mathrm{DD}}}{2}$};
+      \draw[thin] (2.5,0) -- (2.5,-0.075);
+      \node[anchor=north] at (5.0,0) {$V_{\mathrm{DD}}$};
+      \draw[thin] (5.0,0) -- (5.0,-0.075);
+
+      \draw[{Latex[round,scale=1.2]}-{Latex[round,scale=1.2]},thick] 
+        (0,3) -- (0,0) -- (5.55,0);
+
+      \node[anchor=south] at (5.45,0) {$V_{\mathrm{O}}$};
+      \node[anchor=east] at (0,3) {$I$};
+
+      \draw[thick] plot[smooth,domain=0:1.5] (\x, {0.25-0.576033058*\x^2+1.914049588*\x});
+      \draw[thick] plot[smooth,domain=1.5:4.8] (\x, {0.185950413*(\x-1.5)+1.825)});
+
+      \draw[thick] plot[smooth,domain=3.5:5] (\x, {0.25-0.288016529*(5-\x)^2+0.957024794*(5-\x)});
+      \draw[thick] plot[smooth,domain=0.2:3.5] (\x, {0.092975206*((5-\x)-1.5)+1.0375)});
+
+      \node[anchor=south west] at (2.5,1) {$I_{\mathrm{D,P}}$};
+      \node[anchor=south east] at (4.8,2.25) {$I_{\mathrm{D,N}}$};
+
+      \filldraw (0.68,1.3) circle (2pt);
+    \end{tikzpicture}
+    \caption{Slow PMOS}
+    \label{fig:currplot:slowpmos}
+  \end{subfigure}
+  \caption{Plot}
+  \label{fig:currplot}
+\end{figure}
+
+\printbibliography
+
+\end{document}

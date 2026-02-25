@@ -1,0 +1,106 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Self-Cascode}
+\def \date   {July 12, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/self-cascode.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/self-cascode}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \node[nmos](m1) at (0,-1) {M1};
+    \draw (m1.drain) to [short,-] ++ (0,1)
+                     node[nmos,anchor=source](m2) {M2};
+
+    \node[anchor=west] (x) at ($(m1.drain)!0.5!(m2.source)$) {X};
+
+    \draw (m1.gate) to [short,-] ++ (-1,0) coordinate (im)
+                    to [short,-] (im|-x) coordinate (g)
+                    to [short,-] (m2.gate-|g)
+                    to [short,-] (m2.gate);
+
+    \draw (g) to [short,*-o] ++ (-1,0) coordinate (g)
+              node[anchor=east] {G};
+
+    \draw (m2.drain) to [short,-o] ++ (0,1) coordinate (d)
+                     node[anchor=west] {D};
+
+    \draw (m1.source) to [short,-o] ++ (0,-1) coordinate (s)
+                      node[anchor=west] {S};
+
+    \path [voltarrow] ($(m1.gate)+(-0.2,-0.025)$) edge[bend left=-20] 
+        node[midway,left,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{GS,1}}$} ($(m1.source)+(-0.025,-0.2)$);
+    \path [voltarrow] ($(m2.gate)+(-0.2,-0.025)$) edge[bend left=-20] 
+        node[midway,left,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{GS,2}}$} ($(m2.source)+(-0.025,-0.2)$);   
+    \path [voltarrow] ($(g)+(0,-0.25)$) edge[bend left=-35] 
+        node[midway,left,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{GS}}$} ($(s)+(-0.25,0)$);   
+
+    \path [voltarrow] ($(m1.drain)+(0.6,0)$) edge[bend left=20] 
+        node[midway,right,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{DS,1}}$} ($(m1.source)+(0.6,0)$);
+    \path [voltarrow] ($(m2.drain)+(0.6,0)$) edge[bend left=20] 
+        node[midway,right,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{DS,2}}$} ($(m2.source)+(0.6,0)$);
+
+    \path [voltarrow] ($(d)+(1.6,0)$) edge[bend left=20] 
+        node[midway,right,font=\small,inner sep=2pt] 
+        {$V_{\mathrm{DS}}$} ($(s)+(1.6,0)$);
+    \end{circuitikz} 
+  \caption{Schematic of self-cascode}
+  \label{fig:self-cascode}
+\end{figure}
+
+
+\begin{equation}
+V_{\mathrm{DS}} = V_{\mathrm{D}} - V_{\mathrm{S}} = V_{\mathrm{DS,1}} + V_{\mathrm{DS,2}} 
+\end{equation}
+\begin{equation}
+V_{\mathrm{GS,1}} = V_{\mathrm{GS}}
+\end{equation}
+\begin{equation}
+V_{\mathrm{GS,2}} = V_{\mathrm{GS}} - V_{\mathrm{DS,1}}
+\end{equation}
+\begin{equation}
+V_{\mathrm{DS,1}} = V_{\mathrm{X}} - V_{\mathrm{S}}
+\end{equation}
+\begin{equation}
+V_{\mathrm{DS,2}} = V_{\mathrm{D}} - V_{\mathrm{X}}
+\end{equation}
+\begin{equation}
+I_{\mathrm{D}} = I_{\mathrm{D,1}} = I_{\mathrm{D,2}}
+\end{equation}
+
+We utilize the square-law \cite{mosfet-square-law}
+\begin{equation}
+\beta_{1} = K' \cdot S_{1} = K'  \frac{W_{1}}{L_{1}}
+\end{equation}
+\begin{equation}
+\beta_{2} = K' \cdot S_{2} = K'  \frac{W_{2}}{L_{2}}
+\end{equation}
+without any body biasing
+\begin{equation}
+V_{\mathrm{TH}} = V_{\mathrm{TH,1}} = V_{\mathrm{TH,2}}.
+\end{equation}
+
+\cite{deoliveira-vref-17,deoliveira-vref-18}
+
+
+\printbibliography
+
+\end{document}

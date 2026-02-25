@@ -1,10 +1,12 @@
 \documentclass{article}[11pt]
 
 \include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
 \include{./../../tikzlib/preamble.tex}
 
 \def \title  {BSIM-4}
-\def \date   {May 18, 2025}
+\def \date   {October 20, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/bsim-4.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/bsim-4}
@@ -14,6 +16,12 @@
 \begin{document}
 
 \notetitle
+
+\bash[stdout]
+IFS=/ 
+var=($PWD)
+echo ${var[-1]}
+\END%
 
 BSIM-4 has hundreds of model parameters, this why they are not explained in 
 detail.
@@ -48,10 +56,10 @@ An excerpt of a some operating points is shown in Tab. \ref{tab:oppoints}.
 \begin{table}[H]
 \centering
 \caption{Some BSIM-4 operating points in Ngspice}
-\begin{tabular}{cccl}
+\begin{tabular}{ccl}
 \toprule
 \textbf{Identifier}  & \textbf{Variable}      & \textbf{Description}                                   \\ \midrule
-\texttt{vth}         & $V_{\mathrm{TH}}$      & Threshold voltage                                      \\ 
+\texttt{vth}         & $V_{\mathrm{T}}$       & Threshold voltage                                      \\ 
 \texttt{gm}          & $g_{\mathrm{m}}$       & Intrinsic transconductance                             \\ 
 \texttt{gmbs}        & $g_{\mathrm{mb}}$      & Intrinsic backgate transconductance                    \\ 
 \texttt{gds}         & $g_{\mathrm{DS}}$      & Intrinsic Drain-Source conductance                     \\ 
@@ -99,7 +107,7 @@ The intrinsic part describes the transistor itself (MOS structure),
 whereas the the extrinsic part models contact resistances, junctions and 
 overlap capacitances.
 
-Fig. \ref{fig:intr-extr} shows a model of a transistor 
+Fig.~\ref{fig:intr-extr} shows a model of a transistor 
 (terminals $D$, $G$, $S$ and $B$) with an intrinsic MOS transistor 
 (terminals $D'$, $G$, $S'$ and $B$) in the middle and various extrinsic 
 components around.
@@ -114,8 +122,8 @@ components around.
     \node[]() at (0.2,0.2) {$M_{\mathrm{i}}$};
 
     \draw (mos.drain) to [short,- ] ++ (0,0.5) coordinate (draindiode)
+                      to [short,- ] ++ (0,1.5) coordinate (c)
                       to [short,-o] ++ (0,1)   node[right] (d2) {$D'$}
-                      to [short,- ] ++ (0,1)   coordinate (c)
                       to [R,l_=$R_{\mathrm{D}}$,-o] ++ (0,2) node[right] (d) {$D$};
 
     \draw (mos.source) to [short,- ]  ++ (0,-0.5) coordinate (sourcediode)
@@ -144,7 +152,7 @@ components around.
     \draw (g) to [short,-o] ++ (-0.75,0) node[left] {$G$};
     \draw (b) to [short,-o] ++ ( 0.75,0) node[right] {$B$};
   \end{circuitikz}
-  \caption{Intrinsic and Extrinsic components of a MOS transistor}
+  \caption{Intrinsic and extrinsic components of a MOS transistor}
   \label{fig:intr-extr}
 \end{figure}
 

@@ -1,10 +1,12 @@
 \documentclass{article}[11pt]
 
 \include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
 \include{./../../tikzlib/preamble.tex}
 
 \def \title  {Stability of Feedback Systems}
-\def \date   {July 14, 2025}
+\def \date   {September 11, 2025}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/feedback-stability.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/feedback-stability}
@@ -26,8 +28,9 @@ and the feedback network
 \begin{equation}
 \underline{\beta}(s) = \frac{\underline{V}(s)}{\underline{Y}(s)}.
 \end{equation}
-The main building block is in most cases an amplifier or an \gls{ldo} 
-and the feedback network is passive.
+The main building block $\underline{A}(s)$ is in most cases an amplifier or 
+an \gls{ldo} and the feedback network is 
+passive ($|\underline{\beta}(s)|\leq1$).
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -49,7 +52,7 @@ The \textit{closed-loop gain} is
                  = \frac{\underline{A}(s)}{1+\underline{L}(s)}
                  = \frac{\underline{A}(s)}{1+\underline{A}(s) \cdot \underline{\beta}(s)}.
 \end{equation}
-
+We may also refer to $\underline{T}(s)$ as system transfer function.
 $\underline{T}(s)$ is stable only if its denominator is not zero, i.e. 
 \begin{equation}
 \underline{L}(s) = \underline{A}(s) \cdot \underline{\beta}(s) \neq -1.
@@ -57,9 +60,10 @@ $\underline{T}(s)$ is stable only if its denominator is not zero, i.e.
 
 In real electronic systems, the feedback causes loading at the input and output 
 of the amplifier.
-As a consequence, the model shown above cannot be applied%
+As a consequence, the model shown above cannot be applied directly%
 \footnote{The input impedance of the amplifier is in a lot of cases very high
-and the output impedance very low, so therefore this model can be applied.}.
+and the output impedance very low, so therefore this model can still somewhat 
+be applied.}.
 
 \medskip
 
@@ -110,7 +114,7 @@ $f \rightarrow 0$%
 \footnote{$\underline{L}(s) = -\underline{A}(s) \cdot \underline{\beta}(s)$}.
 Several points ($\mathrm{A}$ - $\mathrm{F}$) are annotated in the plot, each 
 point has a $x$ value (corresponding to a frequency) and a $y$ value 
-(corresponding either to the magnitude in dB or phase in \si{\degree}.
+(corresponding either to the magnitude in dB or phase in \si{\degree}).
 
 \medskip
 
@@ -162,7 +166,7 @@ $$
 is calculated (\SI{39}{\degree} in this example).
 The phase margin is a measure for the stability of the system.
 Depending on the application, the phase margin should be bigger than a 
-given threshold (min. \SI{45}{\degree}).
+given threshold (at least \SI{45}{\degree}, better is \SI{60}{\degree}).
 
 The crossover of the phase with \SI{-180}{\degree} results in the 
 point $\mathrm{E}$.

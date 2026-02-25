@@ -1,6 +1,8 @@
 \documentclass{article}[11pt]
 
 \include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
 \include{./../../tikzlib/preamble.tex}
 
 
@@ -724,5 +726,87 @@
 
 \subsection{Shunt Admittance}
 
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0) coordinate (mid1)
+      to [short,-] ++ (1,0)  coordinate (mid2)
+      to [short,-] ++ (1,0)  coordinate (mid3)
+      to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
+
+    \draw (v1p) to [open,-] ++ (0,-\height) coordinate (v1n) 
+                to [short,o-,i<=$\underline{I}_{\mathrm{1}}$] (v1n-|mid1)
+                to [short,-] (v1n-|mid3)
+                to [short,-o,i=$\underline{I}_{\mathrm{2}}$] (v1n-|v2p) coordinate (v2n);
+
+    \draw (mid2) to [R,l=$\underline{Y}$,*-*] (mid2|-v1n); 
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{Shunt Admittance}
+  \label{fig:shunt-admittance-schematic}
+\end{figure}
+
+
+\subsection{$\uppi$ Pad}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0) coordinate (mid1)
+      to [short,-] ++ (0.45,0) coordinate (mid2)
+      to [R,l=$\underline{Z}_{\mathrm{2}}$] ++ (2,0)  coordinate (mid3)
+      to [short,-] ++ (0.45,0) coordinate (mid4)
+      to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
+
+    \draw (v1p) to [open,-] ++ (0,-\height) coordinate (v1n) 
+                to [short,o-,i<=$\underline{I}_{\mathrm{1}}$] (v1n-|mid1)
+                to [short,-] (v1n-|mid4)
+                to [short,-o,i=$\underline{I}_{\mathrm{2}}$] (v1n-|v2p) coordinate (v2n);
+
+    \draw (mid2) to [R,l_=$\underline{Z}_{\mathrm{1}}$,*-*] (mid2|-v1n); 
+    \draw (mid3) to [R,l=$\underline{Z}_{\mathrm{3}}$,*-*] (mid3|-v1n); 
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{$\uppi$ Pad}
+  \label{fig:pi-pad-schematic}
+\end{figure}
+
+
+\subsection{T Pad}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (-3, \height/2) coordinate (v1p) 
+      to [short,o-,i=$\underline{I}_{\mathrm{1}}$] ++ (0.75,0) coordinate (mid1)
+      to [R,l=$\underline{Z}_{\mathrm{1}}$] ++ (1.75,0)  coordinate (mid2)
+      to [R,l=$\underline{Z}_{\mathrm{3}}$] ++ (1.75,0)  coordinate (mid3)
+      to [short,-o,i<=$\underline{I}_{\mathrm{2}}$] ++ (0.75,0) coordinate (v2p);
+
+    \draw (v1p) to [open,-] ++ (0,-\height) coordinate (v1n) 
+                to [short,o-,i<=$\underline{I}_{\mathrm{1}}$] (v1n-|mid1)
+                to [short,-] (v1n-|mid3)
+                to [short,-o,i=$\underline{I}_{\mathrm{2}}$] (v1n-|v2p) coordinate (v2n);
+
+    \draw (mid2) to [R,l_=$\underline{Z}_{\mathrm{2}}$,*-*] (mid2|-v1n); 
+
+    \path [voltarrow] (v1p) edge node [midway,left,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{1}}$} (v1n);
+    \path [voltarrow] (v2p) edge node [midway,right,inner sep=2pt] 
+      {$\underline{V}_{\mathrm{2}}$} (v2n);
+  \end{circuitikz}
+  \caption{T Pad}
+  \label{fig:t-pad-schematic}
+\end{figure}
 
 \end{document}

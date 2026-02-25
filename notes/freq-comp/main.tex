@@ -1,0 +1,125 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Frequency Compensation}
+\def \date   {June 1, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/freq-comp.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/freq-comp}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\cite{murmann-ee214b-16}
+
+\section{Narrowbanding}
+
+
+\begin{itemize}
+  \item a.k.a load compensation
+  \item 
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+  \begin{groupplot} [group style={ group name=my plots
+                                , group size=1 by 2
+                                , xlabels at=edge bottom
+                                , xticklabels at=edge bottom
+                                , vertical sep=2mm
+                                }
+                    , xmode=log
+                    , width=12cm
+                    , height=5cm
+                    , xlabel=$f$ in \si{\hertz}
+                    , xmin=1
+                    , xmax=1e8
+                    , ymin=0
+                    , ymax=29
+                    , tickpos=left
+                    , ytick align=outside
+                    , grid=both
+                    , grid style={line width=0.3pt}
+                    , domain=1:1e8
+                    , samples=200
+                    ]
+
+    \nextgroupplot[ ymin=-60
+                  , ymax=93
+                  , ytick={-60,-40,...,80}
+                  , ylabel= $\left|\underline{L}(j 2 \pi f)\right|$ in \si{\decibel}
+                  ]
+
+    \addplot[thick] 
+      ({\x},{80-10*log10(1+(\x/1e2)^2)
+               -10*log10(1+(\x/5e5)^2)
+               -10*log10(1+(\x/2e8)^2)});
+    \coordinate (ugbwtopa) at (axis cs:6.2e5,\pgfkeysvalueof{/pgfplots/ymax});
+    \coordinate (ugbwtopb) at (axis cs:1e5,\pgfkeysvalueof{/pgfplots/ymax});
+    \addplot[thick, red] 
+      ({\x},{80-10*log10(1+(\x/1e1)^2)
+               -10*log10(1+(\x/5e5)^2)
+               -10*log10(1+(\x/2e8)^2)});
+
+    \nextgroupplot[ ymin=-225
+                  , ymax=5
+                  , ylabel= $\arg\underline{L}(j 2 \pi f)$ in \si{\degree}
+                  , ytick={0,-45,-90,-135,-180,-225}
+                  ]
+    \addplot[thick]({\x},{-atan(x/1e2)-atan(x/5e5)-atan(x/2e8)}); 
+    \coordinate (ugbwbota) at (axis cs:6.2e5,\pgfkeysvalueof{/pgfplots/ymin});
+    \coordinate (ugbwbotb) at (axis cs:1e5,\pgfkeysvalueof{/pgfplots/ymin});
+
+    \addplot[thick,red]({\x},{-atan(x/1e1)-atan(x/5e5)-atan(x/2e8)}); 
+
+
+    \draw[ {Latex[round,scale=0.8]}-{Latex[round,scale=0.8]}]
+      (axis cs: 6.2e5,-180) -- (axis cs: 6.2e5,-141) 
+      node[midway, left, inner sep=1.5pt] () {$\mathrm{PM}_{\mathrm{a}}$};
+    \draw[ {Latex[round,scale=0.8]}-{Latex[round,scale=0.8]}]
+      (axis cs: 1e5,-180) -- (axis cs: 1e5,-102) 
+      node[midway, left, inner sep=1.5pt] () {$\mathrm{PM}_{\mathrm{b}}$};
+  \end{groupplot}
+  \draw [densely dashed] (ugbwtopa) -- (ugbwbota);
+  \draw [densely dashed] (ugbwtopb) -- (ugbwbotb);
+  \end{tikzpicture}
+  \caption{Narrowbanding}
+  \label{fig:narrowbanding}
+\end{figure}
+
+\section{Feedback Zero}
+
+
+\section{Miller Capacitance}
+
+\cite{gray-amptut-82}
+
+\section{Miller Capacitance and Resistance}
+
+\section{Ahuja}
+
+\cite{ahuja-freqcomp-83}
+
+\section{Nested Miller}
+
+\section{Ribner}
+
+\section{Feedforward}
+
+\section{Current Buffers}
+\cite{hurst-miller-04}
+
+\section{Indirect Compensation}
+\cite{baker-baddesign3}
+\cite{saxena-indircomp-06}
+\cite{saxena-slt-08}
+\printbibliography
+\end{document}

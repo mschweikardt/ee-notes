@@ -1,0 +1,137 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+
+\def \title  {Single-Ended Operational Amplifier Simulation}
+\def \date   {May 18, 2025}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/se-opamp-sim.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/se-opamp-sim}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+A (single-ended) operational amplifier is characterized by several 
+performance metrics, e.g. power consumption or phase margin. 
+This document contains my notes how to extract some of these performances 
+with \gls{spice} simulation (Ngspice \cite{ngspice-44} in this example) from 
+a given operational amplifier (opamp).
+Different designers may use different definitions, so please do not apply 
+the definitions from here blindfolded.
+
+\section{Preliminary remarks}
+
+\subsection{Symbol}
+\begin{table}[H]
+\centering
+\caption{Pin list}
+\begin{tabular}{ccccl}
+\toprule
+\textbf{Name}      & \textbf{Direction}    & \textbf{Type}    & \textbf{Quantity} & \textbf{Description}       \\ \midrule
+VDD                & inOut                 & supply           & 1                 & Positive supply voltage    \\
+VSS                & inOut                 & supply           & 1                 & Negative supply voltage    \\
+GND                & inOut                 & ground           & 0-1               & Ground                     \\
+INP                & input                 & analog           & 1                 & Non-inverting input        \\
+INN                & input                 & analog           & 1                 & Inverting input            \\
+OUT                & output                & analog           & 1                 & Output                     \\
+B                  & input                 & analog           & $\geq 0$          & Biasing                    \\
+\end{tabular}
+\label{tab:pinlist}
+\end{table}
+
+\subsection{Equivalent Circuit Diagram}
+
+
+
+
+\subsection{Examples}
+
+\subsection{White-Box/Black-Box}
+
+\subsection{Load}
+
+
+\begin{table}[H]
+\centering
+\caption{Performance parameters}
+\begin{tabular}{cclcc}
+\toprule
+\textbf{Variable}            & \textbf{Unit}             & \textbf{Description}                      & \textbf{Identifier} & \textbf{Reference} \\ \midrule
+$A_{\mathrm{D,0}}$            & \si{\decibel}            & Differential DC Loop-Gain                 & AD0                 & \ref{sec:cl:stab}  \\
+$\mathrm{PM}$                & \si{\degree}              & Phase margin                              & PM                  & \ref{sec:cl:stab}  \\
+$\mathrm{GM}$                & \si{\decibel}             & Gain margin                               & GM                  & \ref{sec:cl:stab}  \\
+$f_{\mathrm{3dB}}$           & \si{\hertz}               & Cutoff frequency                          & F3DB                & \ref{sec:cl:stab}  \\
+$\mathrm{GBP}$               & \si{\hertz}               & Gain-bandwidth product                    & GBP                 & \ref{sec:cl:stab}  \\
+$\mathrm{UGBW}$              & \si{\hertz}               & Unity-gain bandwidth                      & UGBW                & \ref{sec:cl:stab}  \\
+$A_{\mathrm{CM,0}}$          & \si{\decibel}             & Common-mode gain                          & ACM0                & -                  \\
+$\mathrm{CMR}$               & \si{\decibel}             & Common-mode rejection                     & CMR                 & -                  \\
+$\mathrm{CMRR}$              & \si{\decibel}             & Common-mode rejection ratio               & CMRR                & -                  \\
+$\mathrm{PSR}_{\mathrm{p}}$  & \si{\decibel}             & Power supply rejection wrt. to VDD        & PSRP                & -                  \\
+$\mathrm{PSRR}_{\mathrm{p}}$ & \si{\decibel}             & Power supply rejection ratio wrt. to VDD  & PSRRP               & -                  \\
+$\mathrm{PSR}_{\mathrm{n}}$  & \si{\decibel}             & Power supply rejection wrt. to VSS        & PSRN                & -                  \\
+$\mathrm{PSRR}_{\mathrm{n}}$ & \si{\decibel}             & Power supply rejection ratio wrt. to VSS  & PSRRN               & -                  \\
+$\mathrm{SR}_{\mathrm{r}}$   & \si{\volt\per\second}     & Slew rate (rising)                        & SRR                 & \ref{sec:cl:slew}  \\
+$t_{\mathrm{S,r}}$           & \si{\second}              & Settling time (rising)                    & TSR                 & \ref{sec:cl:slew}  \\
+$\mathrm{SR}_{\mathrm{f}}$   & \si{\volt\per\second}     & Slew rate (falling)                       & SRF                 & \ref{sec:cl:slew}  \\
+$t_{\mathrm{S,f}}$           & \si{\second}              & Settling time (falling)                   & TSF                 & \ref{sec:cl:slew}  \\
+$\mathrm{THD}$               & -                         & Total harmonic distortion                 & THD                 & \ref{sec:cl:sin}   \\
+$V_{\mathrm{IL}}$            & \si{\volt}                & Minimal input voltage                     & VIL                 & -                  \\
+$V_{\mathrm{IH}}$            & \si{\volt}                & Maximal input voltage                     & VIH                 & -                  \\
+$V_{\mathrm{OL}}$            & \si{\volt}                & Minimal output voltage                    & VOL                 & -                  \\
+$V_{\mathrm{OH}}$            & \si{\volt}                & Maximal output voltage                    & VOH                 & -                  \\
+$I_{\mathrm{O,min}}$         & \si{\ampere}              & Minimal output current                    & IOMIN               & -                  \\
+$I_{\mathrm{O,max}}$         & \si{\ampere}              & Maximal output current                    & IOMAX               & -                  \\
+$c_{\mathrm{i,d}}$           & \si{\farad}               & Differential input capacitance            & CID                 & -                  \\
+$r_{\mathrm{i,d}}$           & \si{\ohm}                 & Differential input resistance             & RID                 & -                  \\
+$c_{\mathrm{i,cm}}$          & \si{\farad}               & Common-mode input capacitance             & CICM                & -                  \\
+$r_{\mathrm{i,cm}}$          & \si{\ohm}                 & Common-mode input resistance              & RICM                & -                  \\
+$c_{\mathrm{o}}$             & \si{\farad}               & Output capacitance                        & CO                  & -                  \\
+$r_{\mathrm{o}}$             & \si{\ohm}                 & Output resistance                         & RO                  & -                  \\
+$V_{\mathrm{o,sys}}$         & \si{\volt}                & Systematic input offset voltage           & VOSYS               & \ref{sec:cl:offset}\\
+$V_{\mathrm{o,stat}}$        & \si{\volt}                & Statistical input offset voltage          & VOSTAT              & \ref{sec:cl:offset}\\
+$P_{\mathrm{stat}}$          & \si{\watt}                & Static power consumption                  & PSTAT               & \ref{sec:cl:cons}  \\
+$I_{\mathrm{DD}}$            & \si{\ampere}              & Positive supply current                   & IDD                 & \ref{sec:cl:cons}  \\
+$I_{\mathrm{SS}}$            & \si{\ampere}              & Negative supply current                   & ISS                 & \ref{sec:cl:cons}  \\
+$V_{\mathrm{n}}$             & \si{\volt\per\sqrt\hertz} & Input noise voltage density               & VN                  & -                  \\
+$V_{\mathrm{n}}$             & \si{\volt}                & Input noise voltage                       & VN                  & -                  \\
+\end{tabular}
+\label{tab:perf-param}
+\end{table}
+
+OF  Falling Overshoot   N/A   N/A\label{sec:cl:sim}
+OR  Rising Overshoot  N/A   N/A
+
+
+
+\section{Closed-Loop}\label{sec:cl}
+\cite{bsim480-man}
+\subsection{Small-Signal Stability}\label{sec:cl:stab}
+
+\subsection{Offset}\label{sec:cl:offset}
+
+\subsection{Step Response}\label{sec:cl:slew}
+
+\subsection{Sinusoidal}\label{sec:cl:sin}
+
+\subsection{Consumption}\label{sec:cl:cons}
+
+\section{Open-Loop}\label{sec:ol}
+
+\begin{equation}
+\mathrm{PSRR}_{\mathrm{p}} = \frac{A_{\mathrm{D,0}}}{\mathrm{PSR}_{\mathrm{p}}}
+\end{equation}
+\begin{equation}
+\mathrm{PSRR}_{\mathrm{n}} = \frac{A_{\mathrm{D,0}}}{\mathrm{PSR}_{\mathrm{n}}}
+\end{equation}
+
+\cite{binkley-tradeoff-08,toumazou-tradeoff-07}
+
+\printbibliography
+\end{document}
