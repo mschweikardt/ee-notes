@@ -44,7 +44,6 @@ clean:
 	rm -f  *.acn
 	rm -f  *.slo
 	rm -f  *.cpt
-	rm -f  *.bib
 	rm -f  *.xml
 	rm -f  *.bcf
 	rm -f  *.vrb
