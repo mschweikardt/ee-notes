@@ -5,6 +5,8 @@
 
 \include{./../../tikzlib/preamble.tex}
 
+%\setbeameroption{show notes on second screen=right}
+
 \begin{document}
 
 
@@ -49,6 +51,55 @@ Then, it fell into oblivion.}
 
 \end{frame}
 
+
+\begin{frame}[fragile]
+\frametitle{Integration}
+
+\begin{columns}
+\column{.25\textwidth}
+\begin{center}
+designer in the middle
+
+\vspace*{4mm}
+
+\begin{tikzpicture}[scale=.9]
+\input{./../../tikzlib/figs/eda-tool-integration-a.tex}
+\end{tikzpicture}
+\end{center}
+\column{.25\textwidth}
+\begin{center}
+existing frontend
+
+\vspace*{4mm}
+
+\begin{tikzpicture}[scale=.9]
+\input{./../../tikzlib/figs/eda-tool-integration-b.tex}
+\end{tikzpicture}
+\note[item]{Example for \textit{existing frontend}: simulator}
+\end{center}
+\column{.25\textwidth}
+\begin{center}
+new frontend
+
+\vspace*{4mm}
+
+\begin{tikzpicture}[scale=.9]
+\input{./../../tikzlib/figs/eda-tool-integration-c.tex}
+\end{tikzpicture}
+\end{center}
+\column{.25\textwidth}
+\begin{center}
+two frontends
+
+\vspace*{4mm}
+
+\begin{tikzpicture}[scale=.9]
+\input{./../../tikzlib/figs/eda-tool-integration-d.tex}
+\end{tikzpicture}
+\note[item]{Example for \textit{two frontends}: DRC, LVS}
+\end{center}
+\end{columns}
+\end{frame}
 
 \begin{frame}[allowframebreaks]
 \frametitle{References}
