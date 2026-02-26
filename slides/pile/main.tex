@@ -1,0 +1,58 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+
+\include{./../../preamble.tex}
+\include{./../../preamble-slides.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+\begin{document}
+
+
+\begin{frame}[fragile]
+
+Kenneth Kundert about the challanges to replace an existing SPICE 
+simulator \cite[p. 24]{kundert-lifeafterspice-11}.
+
+\vspace{0.5cm}
+
+\begin{quote}
+Designers take great pride in the knowledge that they accumulate at a
+great personal cost over the span of their career. 
+As such, they are loath to give up their simulator, regardless of how badly it 
+has treated them.
+\textbf{This is a form of Stockholm syndrome.}
+\end{quote}
+\end{frame}
+
+\begin{frame}[fragile]
+Barrie Gilbert about experience with design automation \cite[p. 39]{gilbert-dfm-02}.
+
+\vspace{0.5cm}
+
+\begin{quote}
+\textbf{The writer speaks from painful experience.
+In 1960, using an Elliott 803 vacuum-tube computer, he wrote a program for 
+The Automatic Design of Circuits.
+It really did what it claimed, for a small set of circuits.}
+It selected the best devices for a given application out a library of 36 
+germanium transistors, and given simple boundary objectives, such as
+gain, input noise, bandwidth and the like, it calculated all component values, 
+later selecting the nearest available standard values and recalculating the 
+bias point and the subsequent effect on the terminal performance.
+It then carried out a specified number (the default was 1,000) of 
+Monte-Carlo analyses and predicted board (not chip) yield for typical production
+variances and their correlation factors.
+\textbf{This labour of love was used once or twice, in a
+serious capacity, and some examples published in the professional literature.
+Then, it fell into oblivion.}
+\end{quote}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\printbibliography
+\end{frame}
+
+\end{document}
