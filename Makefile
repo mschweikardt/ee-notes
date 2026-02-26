@@ -47,3 +47,5 @@ clean:
 	rm -f  *.bib
 	rm -f  *.xml
 	rm -f  *.bcf
+	rm -f  *.vrb
+	rm -f  *.nav
