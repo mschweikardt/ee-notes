@@ -49,3 +49,4 @@ clean:
 	rm -f  *.bcf
 	rm -f  *.vrb
 	rm -f  *.nav
+	rm -f  *.snm
