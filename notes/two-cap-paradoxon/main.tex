@@ -1,0 +1,234 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Two Capacitor Paradoxon}
+\def \date   {March 2, 2026}
+
+\def \pdfurl {https://mschweikardt.github.io/ee-notes/two-cap-paradoxon.pdf}
+\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/two-cap-paradoxon}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\url{https://en.wikipedia.org/wiki/Two_capacitor_paradox}
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}[scale=1.2]
+    \draw (0,0) to [switch] ++ (1.5,0) coordinate (v2p) 
+                to [C,l_=$C_2$] ++ (0,-1.5) coordinate (v2n) 
+                node [sground] {};
+
+    \draw (0,0) to [short,i_<=$i(t)$] ++ (-0.5,0)
+                to [R,l_=$R$] ++ (-1.5,0) coordinate (v1p) 
+                to [C,l=$C_1$] ++ (0,-1.5) coordinate (v1n) 
+                node [sground] {};               
+
+  \path [voltarrow] ($(v2p)+(0.1,0)$) edge[bend left=30] 
+    node[midway,right,inner sep=1pt] 
+    {$v_{\mathrm{2}}(t)$} ($(v2n)+(0.1,0)$);
+  \path [voltarrow] ($(v1p)-(0.1,0)$) edge[bend right=30] 
+    node[midway,left,inner sep=1pt] 
+    {$v_{\mathrm{1}}(t)$} ($(v1n)-(0.1,0)$);
+  \end{circuitikz}
+  \caption{Schematic}
+\end{figure}
+
+Switch closed at $t=0$.
+
+\begin{center}
+\begin{tabular}{p{4cm}p{2cm}p{4cm}}
+  \begin{equation}
+    v_{\mathrm{1}}(t\leq0)=V_{\mathrm{0}}
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    v_{\mathrm{2}}(t\leq0)=\SI{0}{\volt}
+  \end{equation}
+\end{tabular}
+\end{center}
+
+\begin{equation}
+C_{\mathrm{P}}=\frac{C_1 C_2}{C_1+C_2}   
+\end{equation}
+
+\subsection{Charge}
+
+\begin{center}
+\begin{tabular}{p{4cm}p{2cm}p{4cm}}
+  \begin{equation}
+    v_{\mathrm{1}}(t\rightarrow \infty)=V_{\mathrm{1}}
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    v_{\mathrm{2}}(t\rightarrow \infty)=V_{\mathrm{2}}
+  \end{equation}
+\end{tabular}
+\end{center}
+
+\begin{equation}
+V_{\mathrm{1}}=V_{\mathrm{2}}=V_{\mathrm{1,2}}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+q_{\mathrm{1}}(t\leq0)+q_{\mathrm{2}}(t\leq0) & =  q_{\mathrm{1}}(t\rightarrow \infty)+q_{\mathrm{2}}(t\rightarrow \infty) \\
+C_1 \cdot V_{\mathrm{0}} +\SI{0}{\coulomb}    & =  C_1 \cdot V_{\mathrm{1}}+C_2 \cdot V_{\mathrm{2}}'                      \\
+C_1 \cdot V_{\mathrm{0}} +\SI{0}{\coulomb}    & = C_1 \cdot V_{\mathrm{1,2}}+C_2 \cdot V_{\mathrm{1,2}}                    \\
+                             V_{\mathrm{1,2}} & =  \frac{C_1}{C_1+C_2}  V_{\mathrm{0}}
+\end{split}
+\end{equation}
+
+\begin{equation}
+E_{\mathrm{C,1}}(t\leq0) = \frac{1}{2} C_1 V_{\mathrm{0}}^2
+\end{equation}
+
+\begin{equation}
+E_{\mathrm{C,1}}(t\rightarrow \infty) = \frac{1}{2} C_1 V_{\mathrm{1,2}}^2 = \frac{1}{2} \frac{C_1^3}{(C_1+C_2)^2} V_{\mathrm{0}}^2
+\end{equation}
+
+\begin{equation}
+E_{\mathrm{C,2}}(t\rightarrow \infty) = \frac{1}{2} C_2 V_{\mathrm{1,2}}^2 = \frac{1}{2} \frac{C_1^2 C_2}{(C_1+C_2)^2} V_{\mathrm{0}}^2
+\end{equation}
+
+The energy dissipated in the resistor is
+\begin{equation}
+\begin{split}
+W_{\mathrm{R}} & = E_{\mathrm{C,1}}(t\leq0) - E_{\mathrm{C,1}}(t\rightarrow \infty) - E_{\mathrm{C,2}}(t\rightarrow \infty)                                               \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 - \frac{1}{2} \frac{C_1^3}{(C_1+C_2)^2} V_{\mathrm{0}}^2 - \frac{1}{2} \frac{C_1^2 C_2}{(C_1+C_2)^2} V_{\mathrm{0}}^2 \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{(C_1+C_2)^2-C_1^2-C_1 C_2}{(C_1+C_2)^2}                                                                         \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{C_2^2+C_1 C_2}{(C_1+C_2)^2}                                                                                     \\
+               & = \frac{1}{2} V_{\mathrm{0}}^2 \frac{C_1 C_2}{C_1+C_2}                                                                                                   \\
+               & = \frac{1}{2} C_{\mathrm{P}} V_{\mathrm{0}}^2,            
+\end{split}
+\end{equation}
+and independent of the resistance value.
+
+
+\subsection{Time}
+
+\begin{center}
+\begin{tabular}{p{4cm}p{2cm}p{4cm}}
+  \begin{equation}
+    i(t<0)=\SI{0}{\ampere}
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    i(\SI{0}{\second})=\frac{V_{\mathrm{0}}}{R}
+  \end{equation}
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{p{4cm}p{2cm}p{4cm}}
+  \begin{equation}
+    i(t)= -C_1 \dv{v_1(t)}{t}
+  \end{equation}
+  &
+  &
+  \begin{equation}
+    i(t)= C_2 \dv{v_2(t)}{t}
+  \end{equation}
+\end{tabular}
+\end{center}
+
+
+\begin{equation}
+\begin{split}
+v_1(t)            & =  R \cdot i(t)                   + v_2(t)                                        \\
+\dv{v_1(t)}{t}    & =  R \cdot \dv{i(t)}{t}           + \dv{v_2(t)}{t}                                \\
+-\frac{i(t)}{C_1} & =  R \cdot \dv{i(t)}{t}           + \frac{i(t)}{C_2}                              \\
+0                 & =  R \cdot \dv{i(t)}{t}           + i(t) \left(\frac{1}{C_1}+\frac{1}{C_2}\right) \\
+0                 & =  C_{\mathrm{P}} R  \dv{i(t)}{t} + i(t) 
+\end{split}
+\end{equation}
+
+\begin{equation}
+  i(t)= \frac{V_{\mathrm{0}}}{R} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right)
+\end{equation}
+
+\begin{equation}
+  p_{\mathrm{R}}(t)= R \cdot i^2(t) = \frac{V_{\mathrm{0}}^2}{R} \exp\left(-2\frac{t}{R C_{\mathrm{P}}}\right)
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+v_{\mathrm{1}} (t) & = -\frac{1}{C_1} \int_0^{\infty} i(\tau) \mathrm{d} \tau                                                                        \\
+                   & = -\frac{1}{C_1} \left[-V_{\mathrm{0}} C_{\mathrm{P}} \exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} +c          \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left[\exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} + c                    \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +c                           \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +V_{\mathrm{0}}              \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) +V_{\mathrm{0}} \frac{C_1}{C_1+C_2}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+v_{\mathrm{2}} (t) & = v_{\mathrm{1}} (t) - R \cdot i(t)                                                                                                                                                                   \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) +V_{\mathrm{0}} \frac{C_1}{C_1+C_2} - R \cdot \frac{V_{\mathrm{0}}}{R} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) \\   
+                   & = V_{\mathrm{0}} \frac{C_1}{C_1+C_2} -V_{\mathrm{0}} \frac{C_1}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right)                                                                                 \\
+                   & = V_{\mathrm{0}} \frac{C_1}{C_1+C_2} \left(1 - \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right)\right)
+\end{split}
+\end{equation}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node [anchor=south] at (5.9,0) {$\nicefrac{t}{R C_{\mathrm{P}}}$};
+    \node [anchor=east] at (0,4.9) {$V$};
+
+    \draw[-{Latex[round,scale=1.2]},semithick] (-1,0) -- (6,0);
+    \draw[-{Latex[round,scale=1.2]},semithick] (0,0) -- (0,5);
+
+    \draw[densely dashed] (0,1.25) -- (5,1.25);
+
+    \draw[thick] (-0.75,4.25) -- (0,4.25);
+    \draw[thick] plot[smooth,domain=0:5.5] 
+      (\x, {3*exp(-\x)+1+0.25});
+
+    \draw[thick] (-0.75,0.25) -- (0,0.25);
+    \draw[thick] plot[smooth,domain=0:5.5] 
+      (\x, {-1*exp(-\x)+1+0.25});
+
+    \foreach \x in {0,...,5}
+      {\pgfmathtruncatemacro{\label}{\x}
+        \node [anchor=north] at (\x,0) {\label};
+        \draw[thin] (\x,0) -- (\x,-0.075);}
+
+    \node[anchor=west] at (0,0.25) {0};
+    \draw[thin] (0,0.25) -- (0.075,0.25);
+
+    \node[anchor=east] at (0,1.25) {$V_{\mathrm{0}}\frac{C_1}{C_1+C_2}$};
+    \draw[thin] (0,1.25) -- (-0.075,1.25);
+
+    \node[anchor=west] at (0,4.25) {$V_{\mathrm{0}}$};
+    \draw[thin] (0,4.25) -- (0.075,4.25);
+  \end{tikzpicture}
+  \caption{Waveforms}
+  \label{fig:wave}
+\end{figure}
+
+\begin{equation}
+\begin{split}
+W_{\mathrm{R}} & = \int_0^{\infty} p_{\mathrm{R}}(\tau) \mathrm{d} \tau                                                                             \\
+               & = \frac{V_{\mathrm{0}}^2}{R} \left[-\frac{R C_{\mathrm{P}}}{2} \exp\left(-2\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{\infty} \\
+               & = \frac{1}{2} C_{\mathrm{P}} V_{\mathrm{0}}^2
+\end{split}
+\end{equation}
+
+
+\printbibliography
+
+\end{document}
