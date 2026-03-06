@@ -4,3 +4,4 @@
 * [EKV MOSFET Model](https://mschweikardt.github.io/ee-notes/ekv.pdf)
 * [Capacity Table](https://mschweikardt.github.io/ee-notes/captab.pdf)
 * [Harmonic Oscillator](https://mschweikardt.github.io/ee-notes/harmonic-oscillator.pdf)
+* [Two Capacitor Paradoxon](https://mschweikardt.github.io/ee-notes/two-cap-paradoxon.pdf)

@@ -6,7 +6,7 @@
 \include{./../../tikzlib/preamble.tex}
 
 \def \title  {Two Capacitor Paradoxon}
-\def \date   {March 2, 2026}
+\def \date   {March 6, 2026}
 
 \def \pdfurl {https://mschweikardt.github.io/ee-notes/two-cap-paradoxon.pdf}
 \def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/two-cap-paradoxon}
@@ -57,10 +57,8 @@ Switch closed at $t=0$.
 \end{center}
 
 \begin{equation}
-C_{\mathrm{P}}=\frac{C_1 C_2}{C_1+C_2}   
+C_{\mathrm{P}}=\frac{C_1 C_2}{C_1+C_2}
 \end{equation}
-
-\subsection{Charge}
 
 \begin{center}
 \begin{tabular}{p{4cm}p{2cm}p{4cm}}
@@ -79,17 +77,22 @@ C_{\mathrm{P}}=\frac{C_1 C_2}{C_1+C_2}
 V_{\mathrm{1}}=V_{\mathrm{2}}=V_{\mathrm{1,2}}
 \end{equation}
 
+\section{Charge}
+
 \begin{equation}
 \begin{split}
-q_{\mathrm{1}}(t\leq0)+q_{\mathrm{2}}(t\leq0) & =  q_{\mathrm{1}}(t\rightarrow \infty)+q_{\mathrm{2}}(t\rightarrow \infty) \\
-C_1 \cdot V_{\mathrm{0}} +\SI{0}{\coulomb}    & =  C_1 \cdot V_{\mathrm{1}}+C_2 \cdot V_{\mathrm{2}}'                      \\
-C_1 \cdot V_{\mathrm{0}} +\SI{0}{\coulomb}    & = C_1 \cdot V_{\mathrm{1,2}}+C_2 \cdot V_{\mathrm{1,2}}                    \\
-                             V_{\mathrm{1,2}} & =  \frac{C_1}{C_1+C_2}  V_{\mathrm{0}}
+q_{\mathrm{1}}(t\leq0)   + q_{\mathrm{2}}(t\leq0) & = q_{\mathrm{1}}(t\rightarrow \infty)+ q_{\mathrm{2}}(t\rightarrow \infty) \\
+C_1 \cdot V_{\mathrm{0}} + \SI{0}{\coulomb}       & = C_1 \cdot V_{\mathrm{1}}           + C_2 \cdot V_{\mathrm{2}}            \\
+C_1 \cdot V_{\mathrm{0}} + \SI{0}{\coulomb}       & = C_1 \cdot V_{\mathrm{1,2}}         + C_2 \cdot V_{\mathrm{1,2}}          \\
+                             V_{\mathrm{1,2}}     & = \frac{C_1}{C_1+C_2}  V_{\mathrm{0}}
 \end{split}
 \end{equation}
 
 \begin{equation}
 E_{\mathrm{C,1}}(t\leq0) = \frac{1}{2} C_1 V_{\mathrm{0}}^2
+\end{equation}
+\begin{equation}
+E_{\mathrm{C,2}}(t\leq0) = \SI{0}{\joule}
 \end{equation}
 
 \begin{equation}
@@ -103,18 +106,18 @@ E_{\mathrm{C,2}}(t\rightarrow \infty) = \frac{1}{2} C_2 V_{\mathrm{1,2}}^2 = \fr
 The energy dissipated in the resistor is
 \begin{equation}
 \begin{split}
-W_{\mathrm{R}} & = E_{\mathrm{C,1}}(t\leq0) - E_{\mathrm{C,1}}(t\rightarrow \infty) - E_{\mathrm{C,2}}(t\rightarrow \infty)                                               \\
-               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 - \frac{1}{2} \frac{C_1^3}{(C_1+C_2)^2} V_{\mathrm{0}}^2 - \frac{1}{2} \frac{C_1^2 C_2}{(C_1+C_2)^2} V_{\mathrm{0}}^2 \\
-               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{(C_1+C_2)^2-C_1^2-C_1 C_2}{(C_1+C_2)^2}                                                                         \\
-               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{C_2^2+C_1 C_2}{(C_1+C_2)^2}                                                                                     \\
-               & = \frac{1}{2} V_{\mathrm{0}}^2 \frac{C_1 C_2}{C_1+C_2}                                                                                                   \\
+W_{\mathrm{R}} & = E_{\mathrm{C,1}}(t\leq0)         + E_{\mathrm{C,2}}(t\leq0) - E_{\mathrm{C,1}}(t\rightarrow \infty)                  - E_{\mathrm{C,2}}(t\rightarrow \infty)                      \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 + \SI{0}{\joule}           - \frac{1}{2} \frac{C_1^3}{(C_1+C_2)^2} V_{\mathrm{0}}^2 - \frac{1}{2} \frac{C_1^2 C_2}{(C_1+C_2)^2} V_{\mathrm{0}}^2 \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{(C_1+C_2)^2-C_1^2-C_1 C_2}{(C_1+C_2)^2}                                                                                                    \\
+               & = \frac{1}{2} C_1 V_{\mathrm{0}}^2 \frac{C_2^2+C_1 C_2}{(C_1+C_2)^2}                                                                                                                \\
+               & = \frac{1}{2} V_{\mathrm{0}}^2 \frac{C_1 C_2}{C_1+C_2}                                                                                                                              \\
                & = \frac{1}{2} C_{\mathrm{P}} V_{\mathrm{0}}^2,            
 \end{split}
 \end{equation}
 and independent of the resistance value.
 
 
-\subsection{Time}
+\section{Time}
 
 \begin{center}
 \begin{tabular}{p{4cm}p{2cm}p{4cm}}
@@ -162,21 +165,20 @@ v_1(t)            & =  R \cdot i(t)                   + v_2(t)                  
   p_{\mathrm{R}}(t)= R \cdot i^2(t) = \frac{V_{\mathrm{0}}^2}{R} \exp\left(-2\frac{t}{R C_{\mathrm{P}}}\right)
 \end{equation}
 
-
 \begin{equation}
 \begin{split}
-v_{\mathrm{1}} (t) & = -\frac{1}{C_1} \int_0^{\infty} i(\tau) \mathrm{d} \tau                                                                        \\
-                   & = -\frac{1}{C_1} \left[-V_{\mathrm{0}} C_{\mathrm{P}} \exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} +c          \\
-                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left[\exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} + c                    \\
-                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +c                           \\
-                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +V_{\mathrm{0}}              \\
+v_{\mathrm{1}} (t) & = -\frac{1}{C_1} \int_0^{\infty} i(\tau) \mathrm{d} \tau                                                                \\
+                   & = -\frac{1}{C_1} \left[-V_{\mathrm{0}} C_{\mathrm{P}} \exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} +c  \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left[\exp\left(-\frac{\tau}{R C_{\mathrm{P}}}\right) \right]_0^{t} + c            \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +c                   \\
+                   & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \left(\exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) -1 \right) +V_{\mathrm{0}}      \\
                    & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) +V_{\mathrm{0}} \frac{C_1}{C_1+C_2}
 \end{split}
 \end{equation}
 
 \begin{equation}
 \begin{split}
-v_{\mathrm{2}} (t) & = v_{\mathrm{1}} (t) - R \cdot i(t)                                                                                                                                                                   \\
+v_{\mathrm{2}} (t) & = v_{\mathrm{1}} (t)                                                                                                  - R \cdot i(t)                                                                  \\
                    & = V_{\mathrm{0}} \frac{C_2}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) +V_{\mathrm{0}} \frac{C_1}{C_1+C_2} - R \cdot \frac{V_{\mathrm{0}}}{R} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right) \\   
                    & = V_{\mathrm{0}} \frac{C_1}{C_1+C_2} -V_{\mathrm{0}} \frac{C_1}{C_1+C_2} \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right)                                                                                 \\
                    & = V_{\mathrm{0}} \frac{C_1}{C_1+C_2} \left(1 - \exp\left(-\frac{t}{R C_{\mathrm{P}}}\right)\right)
