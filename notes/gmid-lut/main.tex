@@ -1,0 +1,38 @@
+\documentclass{article}[11pt]
+
+\include{./../../preamble.tex}
+\include{./../../preamble-notes.tex}
+
+\include{./../../tikzlib/preamble.tex}
+
+\def \title  {Analog Design with Lookup Tables}
+
+\usepackage[scale=5]{draftwatermark}
+
+\begin{document}
+
+\notetitle
+
+\cite{silveira-gmid-96}
+
+\begin{equation}
+\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}} = \frac{1}{I_{\mathrm{D}}} \dv{I_{\mathrm{D}}}{V_{\mathrm{GS}}} = \dv{\ln\left(I_{\mathrm{D}}\right)}{V_{\mathrm{GS}}}
+\end{equation}
+
+\begin{equation}
+\frac{g_{\mathrm{m}}}{I_{\mathrm{D}}}\bigg|_{\mathrm{max}} = \frac{1}{n U_{\mathrm{T}}}= \frac{e}{n k_{\mathrm{B}} T}
+\end{equation}
+
+\cite{boser-anadessubmicro-04,boser-gmid-11}
+
+\cite{jespers-gmid-09}
+\cite{konishi-gmidota-11}
+\cite{murmann-gmidlut-16}
+\cite{jespers-gmid-17}
+\cite{aghighi-gmidlut-19}
+\cite{youssef-gmidlut-20}
+\cite{murmann-gmidlut-24}
+
+\printbibliography
+
+\end{document}

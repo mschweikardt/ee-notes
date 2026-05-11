@@ -5,12 +5,7 @@
 
 \include{./../../tikzlib/preamble.tex}
 
-
 \def \title  {MOSFET Capacitance Model}
-\def \date   {November 5, 2025}
-
-\def \pdfurl {https://mschweikardt.github.io/ee-notes/mos-cap-mod.pdf}
-\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/mos-cap-mod}
 
 \usepackage[scale=5]{draftwatermark}
 
@@ -18,6 +13,188 @@
 
 \notetitle
 
+
+\section{Preliminary Remarks}
+
+In this document we will consider only the intrinsic%
+\footnote{Not related to intrinsic semiconductor.}
+part of a transistor.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.8]
+    \input{./../../tikzlib/figs/nmos-cross-section-a.tex}
+  \end{tikzpicture}
+  \caption{Intrinsic part of a transistor \cite[sec. 6]{tsividis-mosfetmodel-11}}
+  \label{fig:intrinsic-transistor}
+\end{figure}
+The part outside the dashed box is the extrinsic part and is responsible for
+parasitic effects, e.g. overlap capacitance or drain- and source resistance.
+
+\medskip
+
+The voltages and currents of a transistor are defined as shown in
+Fig.~\ref{fig:volt-current-def}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.9]
+    \input{./../../tikzlib/figs/nmos-4t-testbench-c.tex}
+  \end{tikzpicture}
+  \caption{Definition of voltages and currents}
+  \label{fig:volt-current-def}
+\end{figure}
+
+As a reference, we will use the BSIM4 model \cite{bsim480-man}
+build into the simulator ngspice \cite{ngspice-44}.
+
+\newpage
+
+\section{Operating Point Simulation}
+
+Tab.~\ref{tab:opp-nmos} shows various operating points obtained from simulation.
+The column \textbf{Reference} denotes the corresponding key that used to
+retrieve the value from simulation or the corresponding equation.
+
+
+
+
+
+
+\begin{table}[H]
+\centering
+\caption{Biasing, sizing and operating points of \texttt{sky130\_fd\_pr\_\_nfet\_01v8} (BSIM 4.5) with ngspice 44.2}
+\begin{tabular}{ccc||cccc|cccc}
+\toprule 
+\textbf{Property}                           & \textbf{Reference} & \textbf{Unit}            & \multicolumn{4}{c|}{\textbf{Sizing A}}                                                     & \multicolumn{4}{c}{\textbf{Sizing B}}                                                   \\ \midrule 
+$L$                                         &            -       & \si{\micro\meter}        & \multicolumn{4}{c|}{\SI{0.18}{\nothing}}                                                   & \multicolumn{4}{c}{\SI{10.0}{\nothing}}                                                 \\
+$W$                                         &            -       & \si{\micro\meter}        & \multicolumn{4}{c|}{\SI{0.5}{\nothing}}                                                    & \multicolumn{4}{c}{\SI{10.0}{\nothing}}                                                 \\
+$L_{\mathrm{eff}}$                          &   \texttt{leff}    & \si{\meter}              & \multicolumn{4}{c|}{\SI{156.15}{\nano\nothing}}                                            & \multicolumn{4}{c}{\SI{9.956}{\micro\nothing}}                                          \\
+$W_{\mathrm{eff}}$                          &   \texttt{weff}    & \si{\meter}              & \multicolumn{4}{c|}{\SI{456.28}{\nano\nothing}}                                            & \multicolumn{4}{c}{\SI{9.976}{\micro\nothing}}                                          \\ \midrule 
+$V_{\mathrm{S}}$                            &            -       & \si{\volt}               & \multicolumn{4}{c|}{\SI{0.3}{\nothing}}                                                    & \multicolumn{4}{c}{\SI{0.3}{\nothing}}                                                  \\
+$V_{\mathrm{B}}$                            &            -       & \si{\volt}               & \multicolumn{4}{c|}{\SI{0.1}{\nothing}}                                                    & \multicolumn{4}{c}{\SI{0.1}{\nothing}}                                                  \\
+$V_{\mathrm{G}}$                            &            -       & \si{\volt}               & \SI{1.165}{\nothing} & \SI{1.165}{\nothing} & \SI{0.95}{\nothing}  & \SI{0.95}{\nothing}   & \SI{1.05}{\nothing}  & \SI{1.05}{\nothing}  & \SI{0.9}{\nothing}   & \SI{0.9}{\nothing}   \\
+$V_{\mathrm{D}}$                            &            -       & \si{\volt}               & \SI{1.5}{\nothing}   & \SI{0.35}{\nothing}  & \SI{1.5}{\nothing}   & \SI{0.35}{\nothing}   & \SI{1.5}{\nothing}   & \SI{0.42}{\nothing}  & \SI{1.5}{\nothing}   & \SI{0.35}{\nothing}  \\ \midrule
+$V_{\mathrm{GS}}$                           &   \eqref{eq:vgs}   & \si{\volt}               & \SI{0.865}{\nothing} & \SI{0.865}{\nothing} & \SI{0.65}{\nothing}  & \SI{0.65}{\nothing}   & \SI{0.75}{\nothing}  & \SI{0.75}{\nothing}  & \SI{0.6}{\nothing}   & \SI{0.6}{\nothing}   \\
+$V_{\mathrm{DS}}$                           &   \eqref{eq:vds}   & \si{\volt}               & \SI{1.2}{\nothing}   & \SI{0.05}{\nothing}  & \SI{1.2}{\nothing}   & \SI{0.05}{\nothing}   & \SI{1.2}{\nothing}   & \SI{0.12}{\nothing}  & \SI{1.2}{\nothing}   & \SI{0.05}{\nothing}  \\
+$V_{\mathrm{T}}$                            &   \texttt{vth}     & \si{\milli\volt}         & \SI{746.8}{\nothing} & \SI{758.1}{\nothing} & \SI{746.1}{\nothing} & \SI{757.9}{\nothing}  & \SI{576.1}{\nothing} & \SI{576.1}{\nothing} & \SI{576.1}{\nothing} & \SI{1512}{\nothing}  \\
+$V_{\mathrm{OV}}$                           &   \eqref{eq:vov}   & \si{\milli\volt}         & \SI{118.2}{\nothing} & \SI{106.9}{\nothing} & \SI{-96.1}{\nothing} & \SI{-107.9}{\nothing} & \SI{173.9}{\nothing} & \SI{173.9}{\nothing} & \SI{23.9}{\nothing}  & \SI{23.9}{\nothing}  \\ \midrule
+$I_{\mathrm{D}}$                            &   \texttt{id}      & \si{\micro\ampere}       & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$g_{\mathrm{m}}$                            &   \texttt{gm}      & \si{\micro\siemens}      & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\nicefrac{g_{\mathrm{m}}}{I_{\mathrm{D}}}$ &            -       & \si{\siemens\per\ampere} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\ \midrule
+$Q_{\mathrm{D}}$                            &   \texttt{qd}      & \si{\coulomb}            & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$Q_{\mathrm{G}}$                            &   \texttt{qg}      & \si{\coulomb}            & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$Q_{\mathrm{S}}$                            &   \texttt{qs}      & \si{\coulomb}            & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$Q_{\mathrm{B}}$                            &   \texttt{qb}      & \si{\coulomb}            & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\ \midrule
+$V_{\mathrm{M}}$                            &   \eqref{eq:vm}    & \si{\milli\volt}         & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\ \midrule
+
+
+\end{tabular}
+\label{tab:opp-nmos}
+\end{table}
+
+
+
+The charges $Q_{i}$ are associated with each terminal and will be 
+explained later.
+Some values in Tab.~\ref{tab:opp-nmos} were calculated:
+
+\begin{equation}\label{eq:vgs}
+V_{\mathrm{GS}} = V_{\mathrm{S}} - V_{\mathrm{S}}
+\end{equation}
+
+\begin{equation}\label{eq:vds}
+V_{\mathrm{DS}} = V_{\mathrm{D}} - V_{\mathrm{S}}
+\end{equation}
+
+\begin{equation}\label{eq:vov}
+V_{\mathrm{OV}} = V_{\mathrm{GS}} - V_{\mathrm{T}}
+\end{equation}
+
+\begin{equation}\label{eq:vm}
+V_{\mathrm{M}} = V_{\mathrm{DS}} - V_{\mathrm{OV}}
+\end{equation}
+
+The reported capacitances are rather odd, because they are sometimes
+negative.
+This is why we will denote them with a calligraphic $\mathcal{C}$.
+
+\medskip
+
+When we arrange the capacitances as a matrix
+\begin{equation}
+\begin{bmatrix}
+\mathcal{C}_{\mathrm{dd}} & \mathcal{C}_{\mathrm{gd}} & \mathcal{C}_{\mathrm{sd}} & \mathcal{C}_{\mathrm{bd}} \\
+\mathcal{C}_{\mathrm{dg}} & \mathcal{C}_{\mathrm{gg}} & \mathcal{C}_{\mathrm{sg}} & \mathcal{C}_{\mathrm{bg}} \\
+\mathcal{C}_{\mathrm{ds}} & \mathcal{C}_{\mathrm{gs}} & \mathcal{C}_{\mathrm{ss}} & \mathcal{C}_{\mathrm{bs}} \\
+\mathcal{C}_{\mathrm{db}} & \mathcal{C}_{\mathrm{gb}} & \mathcal{C}_{\mathrm{sb}} & \mathcal{C}_{\mathrm{bb}} \\
+\end{bmatrix}
+\end{equation}
+we can identify the following characteristics:
+\begin{itemize}
+  \item $\mathcal{C}_{ii}$ is always positive.
+  \item Capacitances are not reciprocal, i.e. $\mathcal{C}_{ij}\neq\mathcal{C}_{ji}$
+    nor $\mathcal{C}_{ij}\neq-\mathcal{C}_{ji}$.
+  \item The capacitances in each column or row add up approximately to zero 
+    (Tab.~\ref{tab:summ-cap}, Fig.~\ref{fig:cap-sum-vis}).
+\end{itemize}
+
+
+\begin{table}[H]
+\centering
+\caption{Summation of capacitances}
+\begin{tabular}{cc||cccc|cccc}
+\toprule
+\textbf{Sum}                       & \textbf{Unit}        & \multicolumn{4}{c|}{\textbf{Sizing A}}                                                & \multicolumn{4}{c}{\textbf{Sizing B}}                                                   \\ \midrule
+$\sum_j \mathcal{C}_{\mathrm{d}j}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_j \mathcal{C}_{\mathrm{g}j}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_j \mathcal{C}_{\mathrm{s}j}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_j \mathcal{C}_{\mathrm{b}j}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\ \midrule
+$\sum_i \mathcal{C}_{i\mathrm{d}}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_i \mathcal{C}_{i\mathrm{g}}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_i \mathcal{C}_{i\mathrm{s}}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\
+$\sum_i \mathcal{C}_{i\mathrm{b}}$ & \si{\pico\farad}     & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing} & \SI{1512}{\nothing}  & \SI{1512}{\nothing} & \SI{1512}{\nothing}  \\ \bottomrule
+\end{tabular}
+\label{tab:summ-cap}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.5]
+    \node[] at (-3, 3) {$\mathcal{C}_{\mathrm{dd}}$};
+    \node[] at (-3, 1) {$\mathcal{C}_{\mathrm{dg}}$};
+    \node[] at (-3,-1) {$\mathcal{C}_{\mathrm{ds}}$};
+    \node[] at (-3,-3) {$\mathcal{C}_{\mathrm{db}}$};
+    \node[] at (-1, 3) {$\mathcal{C}_{\mathrm{gd}}$};
+    \node[] at (-1, 1) {$\mathcal{C}_{\mathrm{gg}}$};
+    \node[] at (-1,-1) {$\mathcal{C}_{\mathrm{gs}}$};
+    \node[] at (-1,-3) {$\mathcal{C}_{\mathrm{gb}}$}; 
+    \node[] at ( 1, 3) {$\mathcal{C}_{\mathrm{sd}}$};
+    \node[] at ( 1, 1) {$\mathcal{C}_{\mathrm{sd}}$};
+    \node[] at ( 1,-1) {$\mathcal{C}_{\mathrm{ss}}$};
+    \node[] at ( 1,-3) {$\mathcal{C}_{\mathrm{sb}}$};  
+    \node[] at ( 3, 3) {$\mathcal{C}_{\mathrm{bd}}$};
+    \node[] at ( 3, 1) {$\mathcal{C}_{\mathrm{bg}}$};
+    \node[] at ( 3,-1) {$\mathcal{C}_{\mathrm{bs}}$};
+    \node[] at ( 3,-3) {$\mathcal{C}_{\mathrm{bb}}$};  
+    
+    \node[anchor=west,font=\small,inner sep=1pt] at (3.7,-3) {$\rightarrow \sum=0$}; 
+    \node[anchor=west,font=\small,inner sep=1pt] at (3.7,-1) {$\rightarrow \sum=0$}; 
+    \node[anchor=west,font=\small,inner sep=1pt] at (3.7,1) {$\rightarrow \sum=0$};  
+    \node[anchor=west,font=\small,inner sep=1pt] at (3.7,3) {$\rightarrow \sum=0$};  
+    
+    \node[anchor=north,font=\small,inner sep=1pt] (a) at (-3,-3.5) {$\downarrow$}; 
+    \node[anchor=north,font=\small,inner sep=1pt] (b) at (-1,-3.5) {$\downarrow$}; 
+    \node[anchor=north,font=\small,inner sep=1pt] (c) at (1,-3.5) {$\downarrow$};  
+    \node[anchor=north,font=\small,inner sep=1pt] (d) at (3,-3.5) {$\downarrow$};    
+    
+    \node[anchor=north,font=\small,inner sep=1pt] () at (a.south)  {$\sum=0$}; 
+    \node[anchor=north,font=\small,inner sep=1pt] () at (b.south)  {$\sum=0$}; 
+    \node[anchor=north,font=\small,inner sep=1pt] () at (c.south)  {$\sum=0$}; 
+    \node[anchor=north,font=\small,inner sep=1pt] () at (d.south)  {$\sum=0$}; 
+  \end{tikzpicture}
+  \caption{Capacitance summation visualized}
+  \label{fig:cap-sum-vis}
+\end{figure}
 
 \cite{meyer-moscaps-71}
 
@@ -30,7 +207,7 @@ flowing into the node".
 \cite{yang-chargeconvmos-83}
 
 
-\cite{cirit-revisitmeyer-89}
+\cite{circit-revisitmeyer-89}
 
 
 \cite{najm-csim-10}
@@ -38,7 +215,7 @@ flowing into the node".
 
 \cite{chen-bsim3-02}
 
-\cite{bsim480-man}
+
 \cite{liu-mosfetmodel-01}
 \cite{tsividis-mosfetmodel-11}
 
@@ -48,86 +225,62 @@ flowing into the node".
 Q_{\mathrm{D}}+Q_{\mathrm{S}}+Q_{\mathrm{G}}+Q_{\mathrm{B}}=0.
 \end{equation}
 
+The calligraphic $\mathcal{C}$ is used to denote transcapitances.
+
 \begin{equation}\label{eq:capacitance}
-c_{ij}=\frac{\partial Q_{i}}{\partial V_{j}},
+\mathcal{C}_{ij}=\frac{\partial Q_{i}}{\partial V_{j}},
 \end{equation}
 
 
 \begin{equation}\label{eq:dgl-g-1}
-i_{\mathrm{G}}(t) = 
-  c_{\mathrm{GG}} \frac{\partial v_{\mathrm{G}}(t)}{\partial t} 
-+ c_{\mathrm{GD}} \frac{\partial v_{\mathrm{D}}(t)}{\partial t} 
-+ c_{\mathrm{GS}} \frac{\partial v_{\mathrm{S}}(t)}{\partial t} 
-+ c_{\mathrm{GB}} \frac{\partial v_{\mathrm{B}}(t)}{\partial t}
+i_{\mathrm{G}} = 
+  \mathcal{C}_{\mathrm{gg}} \dv{v_{\mathrm{G}}}{t} 
++ \mathcal{C}_{\mathrm{gd}} \dv{v_{\mathrm{D}}}{t} 
++ \mathcal{C}_{\mathrm{gs}} \dv{v_{\mathrm{S}}}{t} 
++ \mathcal{C}_{\mathrm{gb}} \dv{v_{\mathrm{B}}}{t}
 \end{equation}
 \begin{equation}\label{eq:dgl-d-1}
-i_{\mathrm{D}}(t) = 
-  c_{\mathrm{DG}} \frac{\partial v_{\mathrm{G}}(t)}{\partial t} 
-+ c_{\mathrm{DD}} \frac{\partial v_{\mathrm{D}}(t)}{\partial t} 
-+ c_{\mathrm{DS}} \frac{\partial v_{\mathrm{S}}(t)}{\partial t} 
-+ c_{\mathrm{DB}} \frac{\partial v_{\mathrm{B}}(t)}{\partial t}
+i_{\mathrm{D}} = 
+  \mathcal{C}_{\mathrm{dg}} \dv{v_{\mathrm{G}}}{t} 
++ \mathcal{C}_{\mathrm{dd}} \dv{v_{\mathrm{D}}}{t} 
++ \mathcal{C}_{\mathrm{ds}} \dv{v_{\mathrm{S}}}{t} 
++ \mathcal{C}_{\mathrm{db}} \dv{v_{\mathrm{B}}}{t}
 \end{equation}
 \begin{equation}\label{eq:dgl-s-1}
-i_{\mathrm{S}}(t) = 
-  c_{\mathrm{SG}} \frac{\partial v_{\mathrm{G}}(t)}{\partial t} 
-+ c_{\mathrm{SD}} \frac{\partial v_{\mathrm{D}}(t)}{\partial t} 
-+ c_{\mathrm{SS}} \frac{\partial v_{\mathrm{S}}(t)}{\partial t} 
-+ c_{\mathrm{SB}} \frac{\partial v_{\mathrm{B}}(t)}{\partial t}
+i_{\mathrm{S}} = 
+  \mathcal{C}_{\mathrm{sg}} \dv{v_{\mathrm{G}}}{t} 
++ \mathcal{C}_{\mathrm{sd}} \dv{v_{\mathrm{D}}}{t} 
++ \mathcal{C}_{\mathrm{ss}} \dv{v_{\mathrm{S}}}{t} 
++ \mathcal{C}_{\mathrm{sb}} \dv{v_{\mathrm{B}}}{t}
 \end{equation}
 \begin{equation}\label{eq:dgl-b-1}
-i_{\mathrm{B}}(t) = 
-  c_{\mathrm{BG}} \frac{\partial v_{\mathrm{G}}(t)}{\partial t} 
-+ c_{\mathrm{BD}} \frac{\partial v_{\mathrm{D}}(t)}{\partial t} 
-+ c_{\mathrm{BS}} \frac{\partial v_{\mathrm{S}}(t)}{\partial t} 
-+ c_{\mathrm{BB}} \frac{\partial v_{\mathrm{B}}(t)}{\partial t}
+i_{\mathrm{B}} = 
+  \mathcal{C}_{\mathrm{bg}} \dv{v_{\mathrm{G}}}{t} 
++ \mathcal{C}_{\mathrm{bd}} \dv{v_{\mathrm{D}}}{t} 
++ \mathcal{C}_{\mathrm{bs}} \dv{v_{\mathrm{S}}}{t} 
++ \mathcal{C}_{\mathrm{bb}} \dv{v_{\mathrm{B}}}{t}
+\end{equation}
+
+With the continuation equation%
+\footnote{Obtained by deriving \eqref{eq:charge}.} 
+\begin{equation}\label{eq:cont-eq}
+i_{\mathrm{G}}+i_{\mathrm{D}}+i_{\mathrm{S}}+i_{\mathrm{B}}=0
+\end{equation}
+and \cref{eq:dgl-g-1,eq:dgl-d-1,eq:dgl-s-1,eq:dgl-b-1} follows
+\begin{equation}\label{eq:cap-sum-1}
+\sum_{j} \mathcal{C}_{ij} = 0. 
+\end{equation}
+
+When we set $\dv{v_{\mathrm{i}}}{t}\neq0$ and $\dv{v_{\mathrm{j}}}{t}=0$
+with $j\neq i$ follows with \eqref{eq:cont-eq}
+\begin{equation}\label{eq:cap-sum-2}
+\sum_{i} \mathcal{C}_{ij} = 0. 
 \end{equation}
 
 
-\begin{equation}\label{eq:cap_sum}
-\sum_{i} c_{ij} = \sum_{j} c_{ij} = 0. 
-\end{equation}
 
 
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[scale=0.75]
-    \node[] at (-3,3) {$c_{{\scriptscriptstyle\mathrm{DD}}}$};
-    \node[] at (-3,1) {$c_{{\scriptscriptstyle\mathrm{DG}}}$};
-    \node[] at (-3,-1) {$c_{{\scriptscriptstyle\mathrm{DS}}}$};
-    \node[] at (-3,-3) {$c_{{\scriptscriptstyle\mathrm{DB}}}$};
-    \node[] at (-1,3) {$c_{{\scriptscriptstyle\mathrm{GD}}}$};
-    \node[] at (-1,1) {$c_{{\scriptscriptstyle\mathrm{GG}}}$};
-    \node[] at (-1,-1) {$c_{{\scriptscriptstyle\mathrm{GS}}}$};
-    \node[] at (-1,-3) {$c_{{\scriptscriptstyle\mathrm{GB}}}$}; 
-    \node[] at (1,3) {$c_{{\scriptscriptstyle\mathrm{SD}}}$};
-    \node[] at (1,1) {$c_{{\scriptscriptstyle\mathrm{SG}}}$};
-    \node[] at (1,-1) {$c_{{\scriptscriptstyle\mathrm{SS}}}$};
-    \node[] at (1,-3) {$c_{{\scriptscriptstyle\mathrm{SB}}}$};  
-    \node[] at (3,3) {$c_{{\scriptscriptstyle\mathrm{BD}}}$};
-    \node[] at (3,1) {$c_{{\scriptscriptstyle\mathrm{BG}}}$};
-    \node[] at (3,-1) {$c_{{\scriptscriptstyle\mathrm{BS}}}$};
-    \node[] at (3,-3) {$c_{{\scriptscriptstyle\mathrm{BB}}}$};  
-    
-    \node[anchor=west,font=\footnotesize,inner sep=1pt] at (3.7,-3) {$\rightarrow \sum=0$}; 
-    \node[anchor=west,font=\footnotesize,inner sep=1pt] at (3.7,-1) {$\rightarrow \sum=0$}; 
-    \node[anchor=west,font=\footnotesize,inner sep=1pt] at (3.7,1) {$\rightarrow \sum=0$};  
-    \node[anchor=west,font=\footnotesize,inner sep=1pt] at (3.7,3) {$\rightarrow \sum=0$};  
-    
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] (a) at (-3,-3.5) {$\downarrow$}; 
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] (b) at (-1,-3.5) {$\downarrow$}; 
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] (c) at (1,-3.5) {$\downarrow$};  
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] (d) at (3,-3.5) {$\downarrow$};    
-    
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] () at (a.south)  {$\sum=0$}; 
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] () at (b.south)  {$\sum=0$}; 
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] () at (c.south)  {$\sum=0$}; 
-    \node[anchor=north,font=\footnotesize,inner sep=1pt] () at (d.south)  {$\sum=0$}; 
-  \end{tikzpicture}
-  \caption{Kapazitäten als Tabelle angeordnet}
-  \label{fig:caps}
-\end{figure}
 
-\si{100.00}
 
 
 \begin{table}[H]
@@ -135,9 +288,9 @@ i_{\mathrm{B}}(t) =
 \caption{Various operating points of }
 \begin{tabular}{cccccccc}
 \toprule
-Property                                    & Unit                 &  ~         &  ~         &  ~         &     ~      &  ~         &     ~      \\ \midrule 
-$V_{\mathrm{S}}$                            & \si{\milli\volt}     & \si{200.0} & \si{200.0} & \si{200.0} & \si{200.0} & \si{200.0} & \si{200.0} \\
-$V_{\mathrm{B}}$                            & \si{\milli\volt}     & \si{100.0} & \si{100.0} & \si{100.0} & \si{100.0} & \si{100.0} & \si{100.0} \\
+Property                                    & Unit                 &  ~                   &  ~         &  ~         &     ~      &  ~         &     ~      \\ \midrule 
+$V_{\mathrm{S}}$                            & \si{\volt}           & \SI{0.3}{\nothing}   & \si{200.0} & \si{200.0} & \si{200.0} & \si{200.0} & \si{200.0} \\
+$V_{\mathrm{B}}$                            & \si{\milli\volt}     & \SI{0.1}{\nothing}   & \si{100.0} & \si{100.0} & \si{100.0} & \si{100.0} & \si{100.0} \\
 $V_{\mathrm{G}}$                            & \si{\milli\volt}     &  ~         &  ~         &  ~         &     ~      &  ~         &     ~      \\
 $V_{\mathrm{D}}$                            & \si{\milli\volt}     &  ~         &  ~         &  ~         &     ~      &  ~         &     ~      \\ \midrule
 $V_{\mathrm{GS}}$                           & \si{\volt}           &  ~         &  ~         &  ~         &     ~      &  ~         &     ~      \\
@@ -177,12 +330,50 @@ $C_{\mathrm{BB}}$                           & \si{\farad}          &  ~         
 \end{table}
 
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.9]
+    \input{./../../tikzlib/figs/mosfet-equivalent-circuit-f.tex}
+  \end{tikzpicture}
+  \caption{Capacitance summation visualized}
+  \label{fig:x2}
+\end{figure}
+
 \begin{align}\label{eq:bsim3v3-caps}
-C_{\mathrm{GS}} &= - c_{{\scriptscriptstyle \mathrm{GS}}}  &  C_{\mathrm{DS}} &= - c_{{\scriptscriptstyle \mathrm{SD}}}  &  C_{\mathrm{m}}  &=  c_{{\scriptscriptstyle \mathrm{GD}}} - c_{{\scriptscriptstyle \mathrm{DG}}} \nonumber\\
-C_{\mathrm{GD}} &= - c_{{\scriptscriptstyle \mathrm{GD}}}  &  C_{\mathrm{SB}} &= - c_{{\scriptscriptstyle \mathrm{BS}}}  &  C_{\mathrm{mb}} &=  c_{{\scriptscriptstyle \mathrm{BD}}} - c_{{\scriptscriptstyle \mathrm{DB}}} \\
-C_{\mathrm{GB}} &= - c_{{\scriptscriptstyle \mathrm{GB}}}  &  C_{\mathrm{DB}} &= - c_{{\scriptscriptstyle \mathrm{BD}}}  &  C_{\mathrm{mx}} &=  c_{{\scriptscriptstyle \mathrm{GB}}} - c_{{\scriptscriptstyle \mathrm{BG}}} \nonumber
+C_{\mathrm{gs}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{gs}}}  &  C_{\mathrm{ds}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{sd}}}  &  C_{\mathrm{m}}  &=  \mathcal{C}_{{\scriptscriptstyle \mathrm{gd}}} - \mathcal{C}_{{\scriptscriptstyle \mathrm{dg}}} \nonumber\\
+C_{\mathrm{gd}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{gd}}}  &  C_{\mathrm{sb}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{bs}}}  &  C_{\mathrm{mb}} &=  \mathcal{C}_{{\scriptscriptstyle \mathrm{bd}}} - \mathcal{C}_{{\scriptscriptstyle \mathrm{db}}} \\
+C_{\mathrm{gb}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{gb}}}  &  C_{\mathrm{db}} &= - \mathcal{C}_{{\scriptscriptstyle \mathrm{bd}}}  &  C_{\mathrm{mx}} &=  \mathcal{C}_{{\scriptscriptstyle \mathrm{gb}}} - \mathcal{C}_{{\scriptscriptstyle \mathrm{bg}}} \nonumber
 \end{align}
 
+
+\begin{equation}
+s
+\begin{bmatrix}
+\mathcal{C}_{\mathrm{dd}} & \mathcal{C}_{\mathrm{gd}} & \mathcal{C}_{\mathrm{sd}} & \mathcal{C}_{\mathrm{bd}} \\
+\mathcal{C}_{\mathrm{dg}} & \mathcal{C}_{\mathrm{gg}} & \mathcal{C}_{\mathrm{sg}} & \mathcal{C}_{\mathrm{bg}} \\
+\mathcal{C}_{\mathrm{ds}} & \mathcal{C}_{\mathrm{gs}} & \mathcal{C}_{\mathrm{ss}} & \mathcal{C}_{\mathrm{bs}} \\
+\mathcal{C}_{\mathrm{db}} & \mathcal{C}_{\mathrm{gb}} & \mathcal{C}_{\mathrm{sb}} & \mathcal{C}_{\mathrm{bb}} \\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+s
+\begin{bmatrix}
+C_{\mathrm{gd}}+C_{\mathrm{ds}}+C_{\mathrm{db}}    &  -C_{\mathrm{gd}}                                & -C_{\mathrm{ds}}                                  & -C_{\mathrm{db}}                                \\
+-C_{\mathrm{gd}}                                   &  C_{\mathrm{gs}}+C_{\mathrm{gd}}+C_{\mathrm{gb}} & -C_{\mathrm{gs}}                                  & -C_{\mathrm{gb}}                                \\
+-C_{\mathrm{ds}}                                   &  -C_{\mathrm{gs}}                                & C_{\mathrm{gs}}+C_{\mathrm{ds}}+C_{\mathrm{sb}}   & -C_{\mathrm{sb}}                                \\
+-C_{\mathrm{db}}                                   &  -C_{\mathrm{gb}}                                & -C_{\mathrm{sb}}                                  & C_{\mathrm{gb}}+C_{\mathrm{sb}}+C_{\mathrm{db}} \\
+\end{bmatrix}
+\end{equation}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.9]
+    \input{./../../tikzlib/figs/mosfet-equivalent-circuit-a.tex}
+  \end{tikzpicture}
+  \caption{Capacitance summation visualized}
+  \label{fig:x1}
+\end{figure}
 
 \printbibliography
 \end{document}

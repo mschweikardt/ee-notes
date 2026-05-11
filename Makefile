@@ -2,6 +2,8 @@ FILE=main
 COMPILER=pdflatex
 
 ${FILE}.pdf: ${FILE}.tex ./../../literature.bib
+	git config --global --add safe.directory /__w/ee-notes/ee-notes
+	python ./../../extr_vars.py
 	${COMPILER} -shell-escape ${FILE}.tex
 	biber ${FILE}
 	${COMPILER} -shell-escape ${FILE}.tex
@@ -49,3 +51,4 @@ clean:
 	rm -f  *.vrb
 	rm -f  *.nav
 	rm -f  *.snm
+	rm -f vars.tex
