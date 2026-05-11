@@ -5,12 +5,7 @@
 
 \include{./../../tikzlib/preamble.tex}
 
-
 \def \title  {Bode Plot}
-\def \date   {September 19, 2025}
-
-\def \pdfurl {https://mschweikardt.github.io/ee-notes/bode-plot.pdf}
-\def \srcurl {https://github.com/mschweikardt/ee-notes/tree/main/notes/bode-plot}
 
 \usepackage[scale=5]{draftwatermark}
 
@@ -63,12 +58,33 @@
   \label{fig:bode:pole}
 \end{figure}
 
-
-
+\begin{table}[H]
+\centering
+\caption{Single Pole Values}
+\begin{tabular}{rrr}
+\toprule
+$\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|$ / \si{\decibel} & $\arg\left(\underline{F}(j\omega)\right)$ / \si{\degree} \\ \midrule
+0.10                                      & -0.04                                                 & -5.71                                                    \\ 
+0.27                                      & -0.31                                                 & -15.00                                                   \\ 
+0.41                                      & -0.67                                                 & -22.50                                                   \\ 
+0.51                                      & -1.00                                                 & -27.01                                                   \\ 
+0.58                                      & -1.26                                                 & -30.00                                                   \\ 
+1.00                                      & -3.01                                                 & -45.00                                                   \\ 
+1.47                                      & -5.00                                                 & -55.77                                                   \\ 
+1.73                                      & -6.01                                                 & -60.00                                                   \\ 
+2.41                                      & -8.33                                                 & -67.50                                                   \\ 
+3.00                                      & -10.00                                                & -71.57                                                   \\ 
+3.73                                      & -11.74                                                & -75.00                                                   \\ 
+5.53                                      & -15.00                                                & -79.75                                                   \\ 
+10.00                                     & -20.04                                                & -84.29                                                   \\
+100.00                                    & -40.00                                                & -89.43                                                   \\  \toprule
+\end{tabular}
+\label{tab:single-pole}
+\end{table}
 
 \section{Single Zero}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \begin{tikzpicture}
     \begin{axis}[ ylabel=$\left|\underline{F}(j\omega)\right|$ in \si{\decibel}
