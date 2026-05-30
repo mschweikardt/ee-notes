@@ -64,20 +64,20 @@
 \begin{tabular}{rrr}
 \toprule
 $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|$ / \si{\decibel} & $\arg\left(\underline{F}(j\omega)\right)$ / \si{\degree} \\ \midrule
-0.10                                      & -0.04                                                 & -5.71                                                    \\ 
-0.27                                      & -0.31                                                 & -15.00                                                   \\ 
-0.41                                      & -0.67                                                 & -22.50                                                   \\ 
+\textbf{0.10}                             & -0.04                                                 & -5.71                                                    \\ 
+0.27                                      & -0.31                                                 & \textbf{-15.00}                                          \\ 
+0.41                                      & -0.67                                                 & \textbf{-22.50}                                          \\ 
 0.51                                      & -1.00                                                 & -27.01                                                   \\ 
-0.58                                      & -1.26                                                 & -30.00                                                   \\ 
-1.00                                      & -3.01                                                 & -45.00                                                   \\ 
-1.47                                      & -5.00                                                 & -55.77                                                   \\ 
-1.73                                      & -6.01                                                 & -60.00                                                   \\ 
-2.41                                      & -8.33                                                 & -67.50                                                   \\ 
-3.00                                      & -10.00                                                & -71.57                                                   \\ 
-3.73                                      & -11.74                                                & -75.00                                                   \\ 
-5.53                                      & -15.00                                                & -79.75                                                   \\ 
-10.00                                     & -20.04                                                & -84.29                                                   \\
-100.00                                    & -40.00                                                & -89.43                                                   \\  \toprule
+0.58                                      & -1.26                                                 & \textbf{-30.00}                                          \\ 
+\textbf{1.00}                             & -3.01                                                 & \textbf{-45.00}                                          \\ 
+1.47                                      & \textbf{-5.00}                                        & -55.77                                                   \\ 
+1.73                                      & -6.01                                                 & \textbf{-60.00}                                          \\ 
+2.41                                      & -8.33                                                 & \textbf{-67.50}                                          \\ 
+\textbf{3.00}                             & \textbf{-10.00}                                       & -71.57                                                   \\ 
+3.73                                      & -11.74                                                & \textbf{-75.00}                                          \\ 
+5.53                                      & \textbf{-15.00}                                       & -79.75                                                   \\ 
+\textbf{10.00}                            & -20.04                                                & -84.29                                                   \\
+\textbf{100.00}                           & -40.00                                                & -89.43                                                   \\  \toprule
 \end{tabular}
 \label{tab:single-pole}
 \end{table}
@@ -134,7 +134,7 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
 \end{equation}
 
 \begin{equation}
-\omega_{\mathrm{p}} > \omega_{\mathrm{z}} > 0
+\omega_{\mathrm{p}},\omega_{\mathrm{z}} > 0
 \end{equation}
 
 \begin{figure}[ht]
@@ -159,8 +159,14 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
 \end{equation}
 
 \begin{equation}
-\left|\underline{F}(j\omega)\right|_{\mathrm{dB}} = 10 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right)
-                                                  - 10 \cdot\log\left(1+\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right)
+\begin{split}
+\left|\underline{F}(j\omega)\right|_{\mathrm{dB}} &= 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{p}}}\right)^2\right) \\
+                                                  &= 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 20 \cdot\log\left(1+\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\lim_{\omega \rightarrow \infty} \left|\underline{F}(j\omega)\right|_{\mathrm{dB}} = 20 \cdot\log\left(\delta\right)
 \end{equation}
 
 \begin{equation}
@@ -170,19 +176,32 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
 \end{split}
 \end{equation}
 
-
-
 \begin{tikzpicture}
   \begin{axis}[ ylabel=$\left|\underline{F}(j\omega)\right|$ in \si{\decibel}
               , xlabel=$\nicefrac{\omega}{\omega_{\mathrm{z}}}$
               , xmode=log
-              , ymin=-2
+              , ymin=-32
               , ymax=42
               , xmin=0.1
               , xmax=1000
               , grid=both
               , width=7.5cm
+              , height=12cm
               ]
+
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.316225)^2))};     
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.1)^2))};
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.0316225)^2))};
+
 
      \addplot[ domain=0.1:1000
              , samples=31
@@ -201,6 +220,12 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
              , smooth
              , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/100)^2))}; 
 
+      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+        at (axis cs:310,-29.5) {$\delta=0.0316$};
+      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+        at (axis cs:375,-19.5) {$\delta=0.1$};
+      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+        at (axis cs:345,-9.5) {$\delta=0.316$};
       \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
         at (axis cs:380,9.5) {$\delta=3.16$};
       \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
@@ -215,14 +240,28 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
   \begin{axis}[ ylabel=$\arg\left(\underline{F}(j\omega)\right)$ in \si{\degree}
               , xlabel=$\nicefrac{\omega}{\omega_{\mathrm{z}}}$
               , xmode=log
-              , ymin=0
-              , ymax=90
+              , ymin=-75
+              , ymax=98.5
               , xmin=0.1
               , xmax=1000
               , grid=both
               , width=7.5cm
-              , ytick={0,15,...,90}
+              , height=12cm
+              , ytick={-90,-75,...,90}
               ]
+
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {atan(x)-atan(x/0.316225)}; 
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {atan(x)-atan(x/0.1)}; 
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {atan(x)-atan(x/0.0316225)}; 
 
      \addplot[ domain=0.1:1000
              , samples=31
@@ -241,59 +280,79 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
              , smooth
              , thick] {atan(x)-atan(x/100)}; 
 
-     \addplot[ domain=0.005:0.5
-             , samples=31
+     \addplot[ domain=0.005:0.6
+             , samples=51
              , smooth
              , densely dashed
              , thick] ({1/sqrt(x)},{atan(1/sqrt(x))-atan(sqrt(x))}); 
+     \addplot[ domain=0.6:50
+             , samples=51
+             , smooth
+             , densely dashed
+             , thick] ({1/sqrt(x)},{atan(1/sqrt(x))-atan(sqrt(x))}); 
+
+      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (a)
+        at (axis cs:10,-30) {$\delta=0.316$};
+      \draw[thin,gray] (a.west) -- (axis cs:1.5,-22);
+
+      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (b)
+        at (axis cs:3,-50) {$\delta=0.1$};
+      \draw[thin,gray] (b.west) -- (axis cs:0.5,-52);
+
+      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (c)
+        at (axis cs:1,-70) {$\delta=0.0316$};
+      \draw[thin,gray] (c.west) -- (axis cs:0.3,-67);
 
       \node[anchor=east,font=\small,fill=white,inner sep=0.5pt,rotate=-50] 
         at (axis cs:7.9,10) {$\delta=3.16$};
       \node[anchor=east,font=\small,fill=white,inner sep=0.5pt,rotate=-62] 
         at (axis cs:13,27) {$\delta=10$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt,rotate=-64] 
+      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt,rotate=-66] 
         at (axis cs:26,47) {$\delta=31.6$};
       \node[anchor=north,font=\small,fill=white,inner sep=0.5pt,rotate=-65] 
         at (axis cs:63,55) {$\delta=100$};
   \end{axis}
 \end{tikzpicture}
 
-Peak of phase (dashed line) at
+Minima or maxima of phase (dashed line) at
 \begin{equation}
 \frac{\omega_{\mathrm{m}}}{\omega_{\mathrm{z}}} = \sqrt{\delta}
 \end{equation}
-with
+with phase boost/decrese
 \begin{equation}
 \arg\left(\underline{F}(j\omega_{\mathrm{m}})\right) = 
   \arctan\left(\sqrt{\delta}\right)-\arctan\left(\frac{1}{\sqrt{\delta}}\right)
 \end{equation}
 
-
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \begin{tikzpicture}
     \begin{axis}[ ylabel=$\arg\left(\underline{F}(j\omega_{\mathrm{m}})\right)$ in \si{\degree}
                 , xlabel=$\delta$
                 , xmode=log
-                , ymin=0
+                , ymin=-90
                 , ymax=90
-                , xmin=1
-                , xmax=1000
+                , xmin=0.01
+                , xmax=100
                 , grid=both
-                , width=8cm
-                , ytick={0,15,...,90}
+                , width=12cm
+                , height=7.5cm
+                , ytick={-90,-75,...,90}
                 ]
 
-       \addplot[ domain=1:1000
-               , samples=31
+       \addplot[ domain=0.01:100
+               , samples=51
                , smooth
                , thick] {atan(sqrt(x))-atan(1/sqrt(x))}; 
-
     \end{axis}
   \end{tikzpicture}
-  \caption{Maximum peak of phase boost}
-  \label{fig:phase-boost}
+  \caption{Phase boost/decrease}
+  \label{fig:phase-boost-dec}
 \end{figure}
+
+
+
+\section{Pole and Zero-Pole Doublet}
 
 
 
