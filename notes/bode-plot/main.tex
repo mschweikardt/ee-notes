@@ -5,15 +5,17 @@
 
 \include{./../../tikzlib/preamble.tex}
 
-\def \title  {Bode Plot}
+\def \title  {Bode~Plot}
 
 \usepackage[scale=5]{draftwatermark}
+
+\tikzstyle{plotannolabel} = [ font=\small,fill=white,inner sep=0.5pt]
 
 \begin{document}
 
 \notetitle
 
-\section{Single Pole}
+\section{Single~Pole}
 
 \begin{figure}[ht]
   \centering
@@ -32,7 +34,7 @@
        \addplot[ domain=0.01:100
                , samples=16
                , smooth
-               , thick] {-20*log10(sqrt(1+x^2))};
+               , thick] {-10*log10(1+x^2)};
     \end{axis}
   \end{tikzpicture}
   \begin{tikzpicture}
@@ -101,7 +103,7 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
        \addplot[ domain=0.01:100
                , samples=16
                , smooth
-               , thick] {20*log10(sqrt(1+x^2))};
+               , thick] {10*log10(1+x^2)};
     \end{axis}
   \end{tikzpicture}
   \begin{tikzpicture}
@@ -160,8 +162,8 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
 
 \begin{equation}
 \begin{split}
-\left|\underline{F}(j\omega)\right|_{\mathrm{dB}} &= 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{p}}}\right)^2\right) \\
-                                                  &= 20 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 20 \cdot\log\left(1+\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) 
+\left|\underline{F}(j\omega)\right|_{\mathrm{dB}} &= 10 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 10 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{p}}}\right)^2\right) \\
+                                                  &= 10 \cdot\log\left(1+\left(\frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) - 10 \cdot\log\left(1+\left(\frac{1}{\delta} \frac{\omega}{\omega_{\mathrm{z}}}\right)^2\right) 
 \end{split}
 \end{equation}
 
@@ -192,47 +194,46 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
      \addplot[ domain=0.1:1000
              , samples=31
              , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.316225)^2))};     
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/0.316225)^2)};     
      \addplot[ domain=0.1:1000
              , samples=31
              , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.1)^2))};
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/0.1)^2)};
      \addplot[ domain=0.1:1000
              , samples=31
              , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/0.0316225)^2))};
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/0.0316225)^2)};
 
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/3.16225)^2)};             
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/10)^2)}; 
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/31.6225)^2)};
+     \addplot[ domain=0.1:1000
+             , samples=31
+             , smooth
+             , thick] {10*log10(1+x^2)-10*log10(1+(x/100)^2)}; 
 
-     \addplot[ domain=0.1:1000
-             , samples=31
-             , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/3.16225)^2))};             
-     \addplot[ domain=0.1:1000
-             , samples=31
-             , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/10)^2))}; 
-     \addplot[ domain=0.1:1000
-             , samples=31
-             , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/31.6225)^2))};
-     \addplot[ domain=0.1:1000
-             , samples=31
-             , smooth
-             , thick] {20*log10(sqrt(1+x^2))-20*log10(sqrt(1+(x/100)^2))}; 
-
-      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=south, plotannolabel] 
         at (axis cs:310,-29.5) {$\delta=0.0316$};
-      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=south, plotannolabel] 
         at (axis cs:375,-19.5) {$\delta=0.1$};
-      \node[anchor=south,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=south, plotannolabel] 
         at (axis cs:345,-9.5) {$\delta=0.316$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=north, plotannolabel] 
         at (axis cs:380,9.5) {$\delta=3.16$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=north, plotannolabel] 
         at (axis cs:390,19.5) {$\delta=10$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=north, plotannolabel] 
         at (axis cs:380,29.5) {$\delta=31.6$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt] 
+      \node[anchor=north, plotannolabel] 
         at (axis cs:390,38.5) {$\delta=100$};
   \end{axis}
 \end{tikzpicture}
@@ -291,25 +292,25 @@ $\nicefrac{\omega}{\omega_{\mathrm{p}}}$  & $\left|\underline{F}(j\omega)\right|
              , densely dashed
              , thick] ({1/sqrt(x)},{atan(1/sqrt(x))-atan(sqrt(x))}); 
 
-      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (a)
+      \node[anchor=west, plotannolabel] (a)
         at (axis cs:10,-30) {$\delta=0.316$};
       \draw[thin,gray] (a.west) -- (axis cs:1.5,-22);
 
-      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (b)
+      \node[anchor=west, plotannolabel] (b)
         at (axis cs:3,-50) {$\delta=0.1$};
       \draw[thin,gray] (b.west) -- (axis cs:0.5,-52);
 
-      \node[anchor=west,font=\small,fill=white,inner sep=0.5pt] (c)
+      \node[anchor=west, plotannolabel] (c)
         at (axis cs:1,-70) {$\delta=0.0316$};
       \draw[thin,gray] (c.west) -- (axis cs:0.3,-67);
 
-      \node[anchor=east,font=\small,fill=white,inner sep=0.5pt,rotate=-50] 
+      \node[anchor=east, plotannolabel, rotate=-50]
         at (axis cs:7.9,10) {$\delta=3.16$};
-      \node[anchor=east,font=\small,fill=white,inner sep=0.5pt,rotate=-62] 
+      \node[anchor=east, plotannolabel, rotate=-62]
         at (axis cs:13,27) {$\delta=10$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt,rotate=-66] 
+      \node[anchor=north, plotannolabel, rotate=-66]
         at (axis cs:26,47) {$\delta=31.6$};
-      \node[anchor=north,font=\small,fill=white,inner sep=0.5pt,rotate=-65] 
+      \node[anchor=north, plotannolabel, rotate=-65]
         at (axis cs:63,55) {$\delta=100$};
   \end{axis}
 \end{tikzpicture}
@@ -318,7 +319,7 @@ Minima or maxima of phase (dashed line) at
 \begin{equation}
 \frac{\omega_{\mathrm{m}}}{\omega_{\mathrm{z}}} = \sqrt{\delta}
 \end{equation}
-with phase boost/decrese
+with phase boost/decrease
 \begin{equation}
 \arg\left(\underline{F}(j\omega_{\mathrm{m}})\right) = 
   \arctan\left(\sqrt{\delta}\right)-\arctan\left(\frac{1}{\sqrt{\delta}}\right)
@@ -349,12 +350,6 @@ with phase boost/decrese
   \caption{Phase boost/decrease}
   \label{fig:phase-boost-dec}
 \end{figure}
-
-
-
-\section{Pole and Zero-Pole Doublet}
-
-
 
 \printbibliography
 \end{document}
