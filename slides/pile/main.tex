@@ -77,6 +77,16 @@ Then, it fell into oblivion.}
 
 \end{frame}
 
+\begin{frame}[fragile]
+Ken Thompson 
+
+\vspace{0.5cm}
+
+\begin{quote}
+When in doubt, use brute force.
+\end{quote}
+\end{frame}
+
 
 \begin{frame}[fragile]
 \cite{knuth-taocp1-97}
@@ -126,26 +136,50 @@ a program.
 
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Quality Aspect}
+\frametitle{Relevant Aspects}
 \begin{columns}
 \column{.5\textwidth}
 
-We want
+\textbf{Quality}
 \begin{itemize}
-  \item higher speed
-  \item lesser power
-  \item higher reliability
-  \item higher resolution
-  \item smaller area
-  \item higher accuracy
+  \item speed
+  \item power
+  \item reliability
+  \item resolution
+  \item area
+  \item accuracy
   \item ...
 \end{itemize}
+\note[item]{These are properties we can find on a datasheet.}
+\note[item]{Academia: push to the limits}
+\note[item]{Industry: satisfy management/customer spec.}
 
 \column{.5\textwidth}
+\textbf{Productivity/Efficiency}
+\begin{itemize}
+  \item fewer errors
+  \item fewer iterations
+  \item less manual work
+  \item reduce execution cost
+  \begin{itemize}
+    \item setup time
+    \item runtime
+    \item hardware
+    \item licenses
+  \end{itemize}
+  \item more accurate (simulation) results
+  \item ...
+\end{itemize}
+\note[item]{execution: actually doing the design}
+\end{columns}
+\end{frame}
 
-We achieve that by:
+\begin{frame}
+\frametitle{How to improve Quality and Productivity?}
+\begin{columns}
+\column{.5\textwidth}
+
 \begin{itemize}
   \item technology
   \item architecture
@@ -153,34 +187,22 @@ We achieve that by:
   \item sizing
   \item layout
 \end{itemize}
-\end{columns}
-\end{frame}
-
-\begin{frame}
-\frametitle{Productivity Aspect}
-
-
-\begin{columns}
-\column{.5\textwidth}
-
-We want
-\begin{itemize}
-  \item reduce execution cost (runtime, hardware, licenses)
-  \item more accurate results
-  \item fewer errors $\rightarrow$ fewer iterations
-  \item less manual work
-  \item ...
-\end{itemize}
 
 \column{.5\textwidth}
-
-We achieve that by:
 \begin{itemize}
+  \item re-use
+  \begin{itemize}
+    \item standardization
+    \item documentation
+  \end{itemize}
+  \item collaboration
   \item methods
   \item tools
 \end{itemize}
+
 \end{columns}
 \end{frame}
+
 
 \begin{frame}
 \frametitle{Taxonomy of EDA-Tools (by example)}
@@ -209,12 +231,21 @@ We achieve that by:
   \item new stuff
   \begin{itemize}
     \item algorithm
-    \item hardware interface, e.g. GPU
+    \note[item]{Develop new algorithms or apply existing algorithms for EDA purposes}
+    \item utilities
+    \note[item]{Apply new utilities for EDA purposes}
+    \begin{itemize}
+      \item hardware, e.g. GPU
+      \note[item]{Decrease runtime of simulator or DRC with GPU}
+      \item programming languages
+      \note[item]{New HDL with existing programming language: SpinalHDL (Scala), Amaranth (Python)}
+      \item programming libraries
+    \end{itemize} 
     \item user interface
     \item assistants
   \end{itemize}
 
-  \item integration
+  \item integration with/of existing
   \begin{itemize}
     \item tools
     \item file formats
@@ -291,7 +322,7 @@ Connecting the new tool with an existing Non FOSS tool
       \item proprietary programming languages
       \item not all features of a tool are available by API (only GUI)
     \end{itemize}
-  \item re-engineering, e.g.
+  \item re-engineering
     \begin{itemize}
       \item violation of NDA
       \item may change with each new version
@@ -304,8 +335,8 @@ Connecting the new tool with an existing Non FOSS tool
 \framesubtitle{Tool Application}
 
 \begin{itemize}
-  \item training
-  \item setup
+  \item training of users
+  \item setup 
   \item execution
   \begin{itemize}
     \item runtime
@@ -321,7 +352,7 @@ Connecting the new tool with an existing Non FOSS tool
 \frametitle{Setup}
 \begin{itemize}
   \item for each new PDK (initial and regular updates)
-    (related to integration cost)
+  \note[item]{related to integration cost}
   \item for each new circuit class (opamp, bandgap,...)
   \item for each new circuit topology (specific netlist or schematic)
   \item for each set of performance parameters (which and how they are extracted)
@@ -401,7 +432,7 @@ handle setup cost: specialization, externalization and sharing
 \textbf{Advantages}
 \begin{itemize}
   \item accurate
-  \item shared setup cost
+  \item shared setup cost (simulation setup)
 \end{itemize}
 \end{center}
 \column{.5\textwidth}
@@ -410,6 +441,7 @@ handle setup cost: specialization, externalization and sharing
 \begin{itemize}
   \item often non-systematic
   \item hard to reproduce
+  \item maybe non-optimal result
   \item time inefficient
 \end{itemize}
 \end{center}
