@@ -1,3 +1,6 @@
 [submodule "tikzlib"]
 	path = tikzlib
 	url = git@github.com:mschweikardt/tikzlib.git
+[submodule "picslib"]
+	path = picslib
+	url = git@github.com:mschweikardt/picslib.git
