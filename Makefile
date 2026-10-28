@@ -2,7 +2,7 @@ FILE=main
 COMPILER=pdflatex
 
 ${FILE}.pdf: ${FILE}.tex ./../../literature.bib
-	#git config --global --add safe.directory /__w/ee-notes/ee-notes
+	git config --global --add safe.directory /__w/ee-notes/ee-notes
 	python ./../../extr_vars.py
 	${COMPILER} -shell-escape ${FILE}.tex
 	biber ${FILE}
